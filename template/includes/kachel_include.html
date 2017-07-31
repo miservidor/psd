@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<div class="artikelliste_kachel">
+	<div class="artikelliste_kachel_bildcontainer">
+		<img ng-src="./{{Artikel.Artikelbild[0]}}"/>
+	</div>
+	<div class="artikelliste_kachel_infocontainer">
+		<table class="table">
+			<tr class="artikelliste_kachel_table_zeile_artikel">
+				<td class="artikelliste_kachel_table_bez">{{Artikel.Bezeichnung}} <span ng-if="!row.hide_artnr_in_list">{{Artikel.Artikelnummer}}</span></td>
+				<td class="artikelliste_kachel_table_bestand">
+					<p ng-if="row.bestandsanzeige_als_zahl && Artikel.Bestand">{{Artikel.Bestand.Value}}</p>
+					<i ng-if="!row.bestandsanzeige_als_zahl && Artikel.Bestand" class="fa fa-circle" uib-tooltip="{{l[Artikel.Bestand.Sprachvariable]}}"
+						ng-class="{'circle_red':Artikel.Bestand.Ampel=='r','circle_yellow':Artikel.Bestand.Ampel=='y','circle_green':Artikel.Bestand.Ampel=='g'}"
+						aria-hidden="true"></i>
+				</td>
+			</tr>
+			<!--             <tr class="artikelliste_kachel_table_zeile_info">
+                <td colspan="2">
+                    <div ng-if="Artikel.Zusatz">{{Artikel.Zusatz}}</div>
+                    <div ng-if="Artikel.EANNummer">{{l.lng_artikelliste_eannummer}} {{Artikel.EANNummer}}</div>
+                    <div ng-if="Artikel.HstArtikelnummer">{{l.lng_artikelliste_hstartikelnummer}} {{Artikel.HstArtikelnummer}}</div>
+                    <div ng-if="Artikel.Gewicht && Artikel.Gewicht>0">{{l.lng_artikelliste_gewicht}} {{Artikel.Gewicht}}</div>
+                    <div ng-if="Artikel.Langtext"><p ng-bind-html="trust(Artikel.Langtext.Text, true)"></p></div>
+                    <div ng-if="Artikel.Matchcode">{{l.lng_artikelliste_matchcode}} {{Artikel.Matchcode}}</div>
+                </td>
+            </tr> -->
+			<tr class="artikelliste_kachel_table_zeile_preis">
+				<td colspan="2" ng-if="kunde.Rechte.PreiseAusblenden!='True'">
+					<div ng-include="'preisdarstellung.html'"></div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>

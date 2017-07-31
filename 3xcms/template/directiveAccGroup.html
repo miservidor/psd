@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<div uib-accordion-group is-open="isOpen" is-disabled="!values || values.length==0" style="margin-top: 20px">
+	<div uib-accordion-heading>
+		<span class="fa" ng-class="{'fa-caret-down': isOpen, 'fa-caret-right': !isOpen}"></span> {{label}} <span ng-if="values.length > 0">({{values.length}})</span>
+		<button class="pull-right btn btn-success btn-xs" ng-click="openZuordnungModal($event, kats, bereich, values, label)"><i class="fa fa-plus"></i></button>
+	</div>
+	<div class="zuordnungGrid">
+		<ul dnd-list="values">
+			<li ng-repeat="value in values" style="cursor: move;" dnd-draggable="value" dnd-effect-allowed="move" dnd-moved="values.splice($index, 1);"
+				dnd-selected="select(image)">
+				<div>{{value.titel}} <button class="pull-right btn btn-danger btn-xs" ng-click="removeZuordnung(values, value)"><i class="fa fa-trash-o"></i></button></div>
+			</li>
+		</ul>
+	</div>
+</div>

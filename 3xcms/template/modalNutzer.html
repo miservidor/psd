@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<form name="form" class="form-horizontal" novalidate>
+	<div class="modal-header">
+		<h3 class="modal-title">Adresse</h3>
+	</div>
+	<div class="modal-body">
+		<div uib-tabset justified="false" class="no-tab-headder">
+			<div uib-tab>
+				<div uib-tab-heading><i class="fa fa-info"></i> Info</div>
+				<div class="row" style="border-bottom: 1px solid #DDD"></div>
+				<div class="row bg-highlight" style="border-bottom: 1px solid #DDD; margin-bottom: 20px;">
+					<div class="col-md-12">
+						<div class="form-group" style="padding-top: 20px" ng-class="{'has-error': form.sub && !form.hk.$valid}">
+							<label class="col-md-4 control-label">Hauptkategorie</label>
+							<div class="col-md-8">
+								<select name="hk" class="form-control" ng-model="hk" ng-options="hk.name for hk in kats[3]" ng-change="n.cat_nr = hk.uks[0].id"
+								 required>
+							<option value="">--- Bitte Wählen ---</option>
+						</select>
+								<span class="help-block" ng-show="form.sub && !form.hk.$valid">Erforderlich!</span>
+							</div>
+						</div>
+						<div class="form-group" ng-class="{'has-error': form.sub && !form.k.$valid}">
+							<label class="col-md-4 control-label">Unterkategorie</label>
+							<div class="col-md-8">
+								<select ng-disabled="!hk" name="k" class="form-control" ng-model="n.cat_nr" ng-options="k.id as k.name for k in hk.uks" required>
+									<option value="">--- Bitte Wählen ---</option>
+								</select>
+								<span class="help-block" ng-show="form.sub && !form.k.$valid">Erforderlich!</span>
+							</div>
+						</div>
+						<div class="form-group" ng-class="{'has-error': form.sub && !form.sort.$valid}">
+							<label class="col-md-4 control-label">Sortierung</label>
+							<div class="col-md-4">
+								<input name="sort" type="number" string-to-number class="form-control" placeholder="Sortnr." ng-model="n.sortindex">
+							</div>
+							<div class="col-md-4">
+								<div ng-show="!rechte.hasRedakteur" class="checkbox">
+									<label><input type="checkbox" ng-model="n.sichtbar" ng-init="n.sichtbar= n.sichtbar ? n.sichtbar : '1'" ng-true-value="'1'" ng-false-value="'0'">Sichtbar</label>
+								</div>
+								<div ng-show="rechte.hasRedakteur == true" class="checkbox">
+									<label><input type="checkbox" ng-model="n.freigabeanforderung" ng-init="n.freigabeanforderung='0'" ng-true-value="'1'" ng-false-value="'0'">Freigabeanforderung</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<small>
+					<div class="form-group">
+						<label class="col-md-4 control-label">Anrede</label>
+						<div class="col-md-8">
+							<select class="form-control" ng-model="n.anrede">
+								<option value="">--- Bitte Wählen ---</option>
+								<option value="Frau">Frau</option>
+								<option value="Herr">Herr</option>
+							</select>
+						</div>
+					</div>
+				<div class="form-group" ng-class="{'has-error': form.sub && !form.name.$valid}">
+					<label class="col-md-4 control-label">Name</label>
+					<div class="col-md-8">
+						<input type="text" name="name" class="form-control" placeholder="Vorname, Nachname" ng-model="n.name2" required>
+						<span class="help-block" ng-show="form.sub && !form.name.$valid">Erforderlich!</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-4 control-label">Firma</label>
+					<div class="col-md-8">
+						<input type="text" class="form-control" placeholder="Firma" ng-model="n.name1">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-4 control-label">Abteilung</label>
+					<div class="col-md-8">
+						<input type="text" class="form-control" placeholder="Abteilung" ng-model="n.name3">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-4 control-label">Funktion</label>
+					<div class="col-md-8">
+						<input type="text" class="form-control" placeholder="Funktion" ng-model="n.funktion">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-4 control-label">Dokument</label>
+					<div class="col-md-8">
+						<div class="input-group" style="width: 100%;">
+							<div ngf-drop="setFile($file)" ngf-select="setFile($file)" ng-model="files.file" ngf-multiple="false" ngf-allow-dir="false">
+								<input type="text" class="form-control" value="{{filename}}" placeholder="Durchsuchen..." readonly>
+							</div>
+							<span ng-show="n.doclink" class="input-group-btn">
+								<a  target="_blank" ng-href="../api/nutzer/nutzer/file/{{n.id}}" type="button" class="btn btn-default"><i class="fa fa-download"></i></a>
+								<button class="btn btn-default" ng-click="removeFile()"><i class="fa fa-trash-o"></i></button>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="form-group" ng-show="n.doclink || files.file">
+					<div class="col-md-offset-4 col-md-8">
+						<input type="text" class="form-control" placeholder="Dokument-Text" ng-model="n.docnotation">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-4 control-label">Information</label>
+					<div class="col-md-4">
+						<textarea style="resize: none; height: 200px;" class="form-control" placeholder="Information" ng-model="n.info"></textarea>
+					</div>
+					<div class="col-md-4">
+						<div>
+							<div class="drop-box" ngf-drop ngf-select ngf-select-disabled="files.bild || n.imglink" ng-model="files.bild" style="height: 200px;"
+								ngf-multiple="false" ngf-allow-dir="false" ngf-resize="{width: 1080, height: 1920}" ngf-resize-if="$width > 1080 || $height > 1920"
+								accept="image/*" ngf-pattern="'image/*'">
+								<div ng-show="!files.bild && !n.imglink" class="center">Klicken oder Reinziehen</div>
+								<div ng-show="files.bild" ng-click="openBildModal()" class="view" ngf-background="files.bild" ngf-resize="{height: 200}"></div>
+								<div ng-show="n.imglink && !files.bild" ng-click="openBildModal()" class="view" style="background-image: url('../api/datei/{{n.imglink}}');"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				</small>
+			</div>
+			<div uib-tab>
+				<div uib-tab-heading><i class="fa fa-envelope-o"></i> Kontakt</div>
+				<div class="row" style="border-bottom: 1px solid #DDD"></div>
+				<small>
+					<div class="form-group" style="padding-top: 20px">
+						<label class="col-md-4 control-label">Straße</label>
+						<div class="col-md-8">
+							<input type="text" class="form-control" placeholder="Straße" ng-model="n.strasse">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">PLZ</label>
+						<div class="col-md-8">
+							<input type="text" class="form-control" placeholder="PLZ" ng-model="n.plz">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">Ort</label>
+						<div class="col-md-8">
+							<input type="text" class="form-control" placeholder="Ort" ng-model="n.ort">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">Land</label>
+						<div class="col-md-8">
+							<input type="text" class="form-control" placeholder="Land" ng-model="n.land">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">Geo-Link</label>
+						<div class="col-md-8">
+							<input type="text" class="form-control" placeholder="URL (Karte / Anfahrtskizze)" ng-model="n.maplink">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">Latitude<br><br>Longtitude</label>
+						<div class="col-md-8">
+							<div class="input-group">
+								<input type="text" class="form-control" placeholder="Latidute" ng-model="n.lat">
+								<input type="text" class="form-control" placeholder="Longtitude" ng-model="n.lng">
+								<span ng-if="n.lat && n.lng" class="input-group-btn">
+									<a target="_blank" ng-href="https://www.google.de/maps/place/{{n.strasse}},+{{n.plz}}+{{n.ort}}/@{{n.lat}},{{n.lng}}" style="height: 68px; padding:0px 12px; line-height:68px;" class="btn btn-block btn-default">
+										<i class="fa fa-globe" aria-hidden="true"></i>
+									</a>
+								</span>
+    						</div>
+						</div>
+					</div>
+					<div class="form-group" ng-show="n.plz && n.ort">
+						<div class="col-md-offset-4 col-md-8">
+							<button class="btn btn-block btn-default" ng-click="getGeocode(n)">Geokoordinaten berechnen</button>
+						</div>
+					</div>
+					<hr>
+					<div class="form-group">
+						<label class="col-md-4 control-label">Telefon 1</label>
+						<div class="col-md-8">
+							<input type="text" class="form-control" placeholder="Telefon" ng-model="n.telefon1">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">Telefon 2</label>
+						<div class="col-md-8">
+							<input type="text" class="form-control" placeholder="Handy / 2. Telefon" ng-model="n.telefon2">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">Fax</label>
+						<div class="col-md-8">
+							<input type="text" class="form-control" placeholder="Fax" ng-model="n.fax">
+						</div>
+					</div>
+					<div class="form-group" ng-class="{'has-error': form.sub && !form.mail.$valid}">
+						<label class="col-md-4 control-label">E-Mail</label>
+						<div class="col-md-8">
+							<input name="mail" type="email" class="form-control" placeholder="E-Mail" ng-model="n.email">
+							<span class="help-block" ng-show="form.sub && !form.mail.$valid">Falsches Format!</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">Internet</label>
+						<div class="col-md-8">
+							<input type="text" class="form-control" placeholder="URL" ng-model="n.web">
+						</div>
+					</div>
+				</small>
+			</div>
+			<div uib-tab ng-if="rechte.admin.rechtev">
+				<div uib-tab-heading><i class="fa fa-cog"></i> Rechte</div>
+				<div class="row" style="border-bottom: 1px solid #DDD"></div>
+				<small>
+	<div class="form-group" style="padding-top: 20px">
+		<label class="col-md-4 control-label">Benutzername</label>
+		<div class="col-md-8">
+			<input type="text" class="form-control" placeholder="Benutzername" ng-model="n.usern" ng-change="n.passwd = null">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-md-4 control-label">Passwort</label>
+		<div class="col-md-8">
+			<input type="password" class="form-control" placeholder="Passwort" ng-model="n.passwd" ng-disabled="!n.usern">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-md-4 control-label">Sprache</label>
+		<div class="col-md-8">
+			<select class="form-control" ng-model="n.sprache" ng-options="l.lang as l.description for l in lang">
+				<option value="">--- Bitte Wählen ---</option>
+			</select>
+		</div>
+	</div>
+	<div ng-show="n.usern">
+		<hr>
+		<div class="form-group">
+			<label class="col-md-4 control-label">Gruppeneinstellungen</label>
+			<div class="col-md-8">
+				<div ng-show="!n.benutzergruppe_von" class="checkbox">
+					<label><input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="n.benutzergruppe">Benutzergruppe</label>
+				</div>
+				<div ng-show="!n.benutzergruppe && n.gruppen">
+					<label class="control-label">Gruppe zuweisen:</label>
+					<select class="form-control" ng-model="n.benutzergruppe_von" ng-options="n.id as n.titel for n in n.gruppen">
+						<option value="">--- Bitte Wählen ---</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-4 control-label">Redaktionseinstellungen</label>
+			<div class="col-md-8">
+				<div ng-show="!n.redakteur_von" class="checkbox" >
+					<label><input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="n.chefredakteur">Chefredakteur</label>
+				</div>
+				<div ng-show="!n.chefredakteur && n.redaktion">
+					<label class="control-label">Redakteur zuweisen:</label>
+					<select class="form-control" ng-model="n.redakteur_von" ng-options="n.id as n.titel for n in n.redaktion">
+						<option value="">--- Bitte Wählen ---</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div ng-show="!n.benutzergruppe_von">
+			<hr>
+			<div class="form-group">
+				<label class="col-md-4 control-label">Hauptrechte</label>
+				<div class="col-md-8 checkbox">
+					<label><input type="checkbox" ng-model="n.r.isAdmin">Administrator</label>
+				</div>
+			</div>
+			<div ng-show="!n.r.isAdmin">
+				<div class="form-group">
+					<label class="col-md-4 control-label">Administration</label>
+					<div class="col-md-8 checkbox">
+						<div><label><input type="checkbox" ng-true-value="'0'" ng-false-value="'1'" ng-model="n.r.admin.noCMS">CMS-Login</label></div>
+						<!--<div><label><input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="n.r.admin.pwv">Passwortänderung / Spracheinstellung</label></div>-->
+						<!--<div><label><input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="n.r.admin.kategv">Kategorieverwaltung</label></div>
+						<div><label><input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="n.r.admin.wbannerv">Werbebannerverwaltung</label></div>
+						<div><label><input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="n.r.admin.rechtev">Rechteverwaltung</label></div>
+						<div><label><input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="n.r.admin.webinf">Web-Informationen</label></div>
+						<div><label><input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="n.r.admin.newsl">Newsletter</label></div>
+						<div><label><input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="n.r.admin.mmatrix">Layoutmanager / Sprachkonfiguration</label></div>
+						<div><label><input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="n.r.admin.gaesteb">Modul</label></div>-->
+					</div>
+				</div>
+				<!--<div class="form-group">
+					<label class="col-md-4 control-label">Editor</label>
+					<div class="col-md-8 checkbox">
+						<div><label><input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="n.r.editor.erweitert">Erweitert</label></div>
+						<div><label><input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="n.r.editor.schriftart">Schriftart</label></div>
+						<div><label><input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="n.r.editor.schriftgroesse">Schriftgröße</label></div>
+						<div><label><input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="n.r.editor.heading">Heading</label></div>
+					</div>
+				</div>-->
+				<div class="form-group">
+					<label class="col-md-4 control-label">Bereich</label>
+					<div class="col-md-8">
+						<table class="table table-condensed">
+							<thead>
+								<tr>
+									<th><strong>Bereich</strong></th>
+									<th>Lesen</th>
+									<th>Ändern</th>
+									<th>Admin</th>
+								</tr>
+							</thead>
+							<colgroup>
+								<col>
+								<col>
+								<col>
+								<col>
+								<col>
+							</colgroup>
+						<tbody>
+							<tr class="bg-highlight">
+								<td><strong><i class="fa fa-cog"></i> Admin</strong></td>
+								<td class="text-center"><div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[0].admin" ng-model="n.r.ber[0].lesen"></div></td>
+								<td class="text-center"><div class="checkbox"><input type="checkbox" disabled></div></td>
+								<td class="text-center"><div class="checkbox"><input type="checkbox" ng-click="n.r.ber[0].lesen=n.r.ber[0].admin" ng-model="n.r.ber[0].admin"></div></td>
+							</tr>
+							<tr class="bg-highlight">
+								<td><strong><i class="fa fa-newspaper-o"></i> News</strong></td>
+								<td class="text-center"><div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[1].admin" ng-model="n.r.ber[1].lesen"></div></td>
+								<td class="text-center"><div class="checkbox"><input type="checkbox" disabled></div></td>
+								<td class="text-center"><div class="checkbox"><input type="checkbox" ng-click="n.r.ber[1].lesen=n.r.ber[1].admin" ng-model="n.r.ber[1].admin"></div></td>
+							</tr>
+							<tr ng-if="n.r.ber[1].lesen && !n.r.ber[1].admin" ng-repeat-start="kat in kats[1]" class="animate-repeat">
+								<td>{{kat.name}}</td>
+								<td class="text-center"><div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[1].hk[kat.id].admin" ng-model="n.r.ber[1].hk[kat.id].lesen"></div></td>
+								<td class="text-center"><div class="checkbox"><input type="checkbox" disabled></div></td>
+								<td class="text-center"><div class="checkbox"><input type="checkbox" ng-click="n.r.ber[1].hk[kat.id].lesen=n.r.ber[1].hk[kat.id].admin" ng-model="n.r.ber[1].hk[kat.id].admin"></div></td>
+							</tr>
+							<tr ng-if="n.r.ber[1].lesen && n.r.ber[1].hk[kat.id].lesen && !n.r.ber[1].admin && !n.r.ber[1].hk[kat.id].admin" ng-repeat-end ng-repeat="uk in kat.uks">
+								<td><small><i class="fa fa-caret-right"></i> {{uk.name}}</small></td>
+				<td class="text-center">
+					<div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[1].hk[kat.id].uk[uk.id].admin" ng-model="n.r.ber[1].hk[kat.id].uk[uk.id].lesen"></div>
+				</td>
+				<td class="text-center">
+					<div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[1].hk[kat.id].uk[uk.id].admin" ng-model="n.r.ber[1].hk[kat.id].uk[uk.id].edit"></div>
+				</td>
+				<td class="text-center">
+					<div class="checkbox"><input type="checkbox" ng-model="n.r.ber[1].hk[kat.id].uk[uk.id].admin"></div>
+				</td>
+				</tr>
+				<tr class="bg-highlight">
+					<td><strong><i class="fa fa-calendar"></i> Termin</strong></td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[2].admin" ng-model="n.r.ber[2].lesen"></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" disabled></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-click="n.r.ber[2].lesen=n.r.ber[2].admin" ng-model="n.r.ber[2].admin"></div>
+					</td>
+				</tr>
+				<tr ng-if="n.r.ber[2].lesen && !n.r.ber[2].admin" ng-repeat-start="kat in kats[2]" class="animate-repeat">
+					<td>{{kat.name}}</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[2].hk[kat.id].admin" ng-model="n.r.ber[2].hk[kat.id].lesen"></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" disabled></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-click="n.r.ber[2].hk[kat.id].lesen=n.r.ber[2].hk[kat.id].admin" ng-model="n.r.ber[2].hk[kat.id].admin"></div>
+					</td>
+				</tr>
+				<tr ng-if="n.r.ber[2].lesen && n.r.ber[2].hk[kat.id].lesen && !n.r.ber[2].admin && !n.r.ber[2].hk[kat.id].admin" ng-repeat-end
+				 ng-repeat="uk in kat.uks">
+					<td><small><i class="fa fa-caret-right"></i> {{uk.name}}</small></td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[2].hk[kat.id].uk[uk.id].admin" ng-model="n.r.ber[2].hk[kat.id].uk[uk.id].lesen"></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[2].hk[kat.id].uk[uk.id].admin" ng-model="n.r.ber[2].hk[kat.id].uk[uk.id].edit"></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-model="n.r.ber[2].hk[kat.id].uk[uk.id].admin"></div>
+					</td>
+				</tr>
+				<tr class="bg-highlight">
+					<td><strong><i class="fa fa-envelope-o"></i> Adresse</strong></td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[3].admin" ng-model="n.r.ber[3].lesen"></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" disabled></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-click="n.r.ber[3].lesen=n.r.ber[3].admin" ng-model="n.r.ber[3].admin"></div>
+					</td>
+				</tr>
+				<tr ng-if="n.r.ber[3].lesen && !n.r.ber[3].admin" ng-repeat-start="kat in kats[3]">
+					<td>{{kat.name}}</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[3].hk[kat.id].admin" ng-model="n.r.ber[3].hk[kat.id].lesen"></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" disabled></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-click="n.r.ber[3].hk[kat.id].lesen=n.r.ber[3].hk[kat.id].admin" ng-model="n.r.ber[3].hk[kat.id].admin"></div>
+					</td>
+				</tr>
+				<tr ng-if="n.r.ber[3].lesen && n.r.ber[3].hk[kat.id].lesen && !n.r.ber[3].admin && !n.r.ber[3].hk[kat.id].admin" ng-repeat-end
+				 ng-repeat="uk in kat.uks">
+					<td><small><i class="fa fa-caret-right"></i> {{uk.name}}</small></td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[3].hk[kat.id].uk[uk.id].admin" ng-model="n.r.ber[3].hk[kat.id].uk[uk.id].lesen"></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[3].hk[kat.id].uk[uk.id].admin" ng-model="n.r.ber[3].hk[kat.id].uk[uk.id].edit"></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-model="n.r.ber[3].hk[kat.id].uk[uk.id].admin"></div>
+					</td>
+				</tr>
+				<tr class="bg-highlight">
+					<td><strong><i class="fa fa-book"></i> Katalog</strong></td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[4].admin" ng-model="n.r.ber[4].lesen"></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" disabled></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-click="n.r.ber[4].lesen=n.r.ber[4].admin" ng-model="n.r.ber[4].admin"></div>
+					</td>
+				</tr>
+				<tr ng-if="n.r.ber[4].lesen && !n.r.ber[4].admin" ng-repeat-start="kat in kats[4]">
+					<td>{{kat.name}}</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[4].hk[kat.id].admin" ng-model="n.r.ber[4].hk[kat.id].lesen"></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" disabled></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-click="n.r.ber[4].hk[kat.id].lesen=n.r.ber[4].hk[kat.id].admin" ng-model="n.r.ber[4].hk[kat.id].admin"></div>
+					</td>
+				</tr>
+				<tr ng-if="n.r.ber[4].lesen && n.r.ber[4].hk[kat.id].lesen && !n.r.ber[4].admin && !n.r.ber[4].hk[kat.id].admin" ng-repeat-end
+				 ng-repeat="uk in kat.uks">
+					<td><small><i class="fa fa-caret-right"></i> {{uk.name}}</small></td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[4].hk[kat.id].uk[uk.id].admin" ng-model="n.r.ber[4].hk[kat.id].uk[uk.id].lesen"></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[4].hk[kat.id].uk[uk.id].admin" ng-model="n.r.ber[4].hk[kat.id].uk[uk.id].edit"></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-model="n.r.ber[4].hk[kat.id].uk[uk.id].admin"></div>
+					</td>
+				</tr>
+				<tr class="bg-highlight">
+					<td><strong><i class="fa fa-picture-o"></i> Galerie</strong></td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[5].admin" ng-model="n.r.ber[5].lesen"></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" disabled></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-click="n.r.ber[5].lesen=n.r.ber[5].admin" ng-model="n.r.ber[5].admin"></div>
+					</td>
+				</tr>
+				<tr ng-if="n.r.ber[5].lesen && !n.r.ber[5].admin" ng-repeat-start="kat in kats[5]">
+					<td>{{kat.name}}</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[5].hk[kat.id].admin" ng-model="n.r.ber[5].hk[kat.id].lesen"></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" disabled></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-click="n.r.ber[5].hk[kat.id].lesen=n.r.ber[5].hk[kat.id].admin" ng-model="n.r.ber[5].hk[kat.id].admin"></div>
+					</td>
+				</tr>
+				<tr ng-if="n.r.ber[5].lesen && n.r.ber[5].hk[kat.id].lesen && !n.r.ber[5].admin && !n.r.ber[5].hk[kat.id].admin" ng-repeat-end
+				 ng-repeat="uk in kat.uks">
+					<td><small><i class="fa fa-caret-right"></i> {{uk.name}}</small></td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[5].hk[kat.id].uk[uk.id].admin" ng-model="n.r.ber[5].hk[kat.id].uk[uk.id].lesen"></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[5].hk[kat.id].uk[uk.id].admin" ng-model="n.r.ber[5].hk[kat.id].uk[uk.id].edit"></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-model="n.r.ber[5].hk[kat.id].uk[uk.id].admin"></div>
+					</td>
+				</tr>
+				<tr class="bg-highlight">
+					<td><strong><i class="fa fa-files-o"></i> Dokument</strong></td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[6].admin" ng-model="n.r.ber[6].lesen"></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" disabled></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-click="n.r.ber[6].lesen=n.r.ber[6].admin" ng-model="n.r.ber[6].admin"></div>
+					</td>
+				</tr>
+				<tr ng-if="n.r.ber[6].lesen && !n.r.ber[6].admin" ng-repeat-start="kat in kats[6]">
+					<td>{{kat.name}}</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[6].hk[kat.id].admin" ng-model="n.r.ber[6].hk[kat.id].lesen"></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" disabled></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-click="n.r.ber[6].hk[kat.id].lesen=n.r.ber[6].hk[kat.id].admin" ng-model="n.r.ber[6].hk[kat.id].admin"></div>
+					</td>
+				</tr>
+				<tr ng-if="n.r.ber[6].lesen && n.r.ber[6].hk[kat.id].lesen && !n.r.ber[6].admin && !n.r.ber[6].hk[kat.id].admin" ng-repeat-end
+				 ng-repeat="uk in kat.uks">
+					<td><small><i class="fa fa-caret-right"></i> {{uk.name}}</small></td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[6].hk[kat.id].uk[uk.id].admin" ng-model="n.r.ber[6].hk[kat.id].uk[uk.id].lesen"></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-disabled="n.r.ber[6].hk[kat.id].uk[uk.id].admin" ng-model="n.r.ber[6].hk[kat.id].uk[uk.id].edit"></div>
+					</td>
+					<td class="text-center">
+						<div class="checkbox"><input type="checkbox" ng-model="n.r.ber[6].hk[kat.id].uk[uk.id].admin"></div>
+					</td>
+				</tr>
+				</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	</div>
+	</div>
+	</small>
+	</div>
+	</div>
+	</div>
+	<div class="modal-footer has-error">
+		<span class="help-block" ng-show="form.sub && !form.$valid">Eingaben überprüfen!</span>
+		<div class="row">
+			<div class="col-md-6" align="left">
+				<button class="btn btn-link btn-sm" type="button" ng-click="close('delete')" ng-show="n.id && (editable || n.cat_nr==0)"><i class="fa fa-trash-o"></i> Löschen</button>
+				<button class="btn btn-link btn-sm" type="button" ng-click="n.id=null; n.name2=null;" ng-show="n.id && (editable || n.cat_nr==0)"><i class="fa fa-clone"></i> Kopieren</button>
+			</div>
+			<div class="col-md-6">
+				<button class="btn btn-primary btn-sm" type="button" ng-click="form.$valid ? close('put') : form.sub=true" ng-show="n.id && (editable || n.cat_nr==0)">Ändern</button>
+				<button class="btn btn-primary btn-sm" type="button" ng-click="form.$valid ? close('post') : form.sub=true" ng-show="!n.id">Erstellen</button>
+				<button class="btn btn-default btn-sm" type="button" ng-click="close('cancel')">Abbrechen</button>
+			</div>
+		</div>
+	</div>
+</form>

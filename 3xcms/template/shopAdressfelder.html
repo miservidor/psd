@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<h1>Adressfelder</h1>
+<hr>
+
+<div class="row" style="margin-bottom:20px;">
+	<div class="col-xs-offset-10 col-xs-2">
+		<select class="form-control" ng-model="l.lang" ng-options="lang.lang as lang.description + ' ('+lang.lang+')' for lang in list"></select>
+	</div>
+</div>
+
+<!--<div ng-if="!data"><center><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw margin-bottom"></i></center></div>-->
+<div ng-show="!data" class="text-center margin-bottom"><img class="xxx-rotate" src="../template/images/loading.png"></div>
+
+<div ng-if="data">
+	<table class="table table-hover table-bordered">
+		<thead>
+			<tr>
+				<th>Feld</th>
+				<th>Sichtbar</th>
+				<th>Alternative Lieferadresse</th>
+				<th>Editierbar</th>
+				<th>Pflichtfeld</th>
+				<th>Sichtbar wenn leer</th>
+				<th>Sichtbar wenn nicht eingeloggt</th>
+				<th>Maildruck</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody id="tab" dnd-list="data">
+			<tr ng-repeat="d in data" style="cursor: move;" dnd-draggable="d" dnd-moved="data.splice($index,1);save(data)">
+				<dnd-nodrag>
+					<td style="cursor: move;" dnd-handle class="handle"><label style="cursor: move;">{{d.feldname}}</label></td>
+					<td style="text-align:center;padding-top:15px;"><input type="checkbox" ng-model="d.sichtbar" ng-init="d.sichtbar = d.sichtbar==1 ? true : false" ng-click="save(data)"
+						/></td>
+					<td style="text-align:center;padding-top:15px;"><input type="checkbox" ng-model="d.sichtbar_al" ng-init="d.sichtbar_al = d.sichtbar_al==1 ? true : false" ng-click="save(data)"
+						/></td>
+					<td style="text-align:center;padding-top:15px;"><input type="checkbox" ng-model="d.editierbar" ng-init="d.editierbar = d.editierbar==1 ? true : false" ng-click="save(data)"
+						/></td>
+					<td style="text-align:center;padding-top:15px;"><input type="checkbox" ng-model="d.pflichtfeld" ng-init="d.pflichtfeld = d.pflichtfeld==1 ? true : false" ng-click="save(data)"
+						/></td>
+					<td style="text-align:center;padding-top:15px;"><input type="checkbox" ng-model="d.sichtbarwennleer" ng-init="d.sichtbarwennleer = d.sichtbarwennleer==1 ? true : false"
+							ng-click="save(data)" /></td>
+					<td style="text-align:center;padding-top:15px;"><input type="checkbox" ng-model="d.sichtbarnichteingeloggt" ng-init="d.sichtbarnichteingeloggt = d.sichtbarnichteingeloggt==1 ? true : false"
+							ng-click="save(data)" /></td>
+					<td style="text-align:center;padding-top:15px;"><input type="checkbox" ng-model="d.sichtbarmaildruck" ng-init="d.sichtbarmaildruck = d.sichtbarmaildruck==1 ? true : false"
+							ng-click="save(data)" /></td>
+					<td><input type="text" class="form-control" ng-model="d[l.lang]" ng-focus="moveToEnd($event, d[l.lang])" ng-blur="save(data)"
+						/></td>
+				</dnd-nodrag>
+			</tr>
+		</tbody>
+	</table>
+</div>

@@ -1,0 +1,51 @@
+RewriteEngine On
+
+# Base an Ordnerpfad anpassen
+RewriteBase /
+
+# Weiterleitung HTTPS
+#RewriteCond %{HTTPS} off
+#RewriteCond %{REQUEST_URI} !^/3xios/transfer/
+#RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI}  [R,L]
+
+# Weiterleitung zum Prerender
+RewriteCond %{HTTPS} =on
+RewriteRule ^(.*)$ - [env=ps:https]
+RewriteCond %{HTTPS} !=on
+RewriteRule ^(.*)$ - [env=ps:http]
+RewriteCond %{HTTP_USER_AGENT} baiduspider|facebookexternalhit/1.1|Facebot|twitterbot|rogerbot|linkedinbot|embedly|quora\ link\ preview|showyoubot|outbrain|pinterest|slackbot|vkShare|WhatsApp|W3C_Validator [NC,OR]
+RewriteCond %{QUERY_STRING} _escaped_fragment_
+RewriteRule ^(?!.*?(\.css|\.xml|\.less|\.png|\.jpg|\.jpeg|\.gif|\.pdf|\.doc|\.txt|\.ico|\.rss|\.zip|\.mp3|\.rar|\.exe|\.wmv|\.doc|\.avi|\.ppt|\.mpg|\.mpeg|\.tif|\.wav|\.mov|\.psd|\.ai|\.xls|\.mp4|\.m4a|\.swf|\.dat|\.dmg|\.iso|\.flv|\.m4v|\.torrent|\.ttf|\.woff))(.*) http://seo.dako-it.com:3000/%{ENV:ps}://%{HTTP_HOST}/$2 [P,L]
+
+# Weiterleitung Api-Anfragen
+RewriteRule ^api(.*)$ api/api.php [L]
+
+# Weiterleitung zu robots.txt und sitemap.xml
+RewriteRule ^sitemap\.xml$  api/seo/sitemap [L]
+RewriteRule ^robots\.txt$  api/seo/robots [L]
+
+# Weiterleitung zur index.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php
+
+# Vorschalt-Login .htpasswd Path kann über domain.de/3xcms/_info_.php ermittelt werden
+#AuthType Basic
+#AuthName "Vorschalt-Login"
+#AuthUserFile C:/xampp/htdocs/sl-web/.htpasswd
+#<RequireAny>
+#    Require ip 127.0.0.1    
+#    Require ip ::1          
+#    Require valid-user    
+#</RequireAny>
+
+# Vorschalt-Login (Für alte Server) .htpasswd Path kann über domain.de/3xcms/_info_.php ermittelt werden
+#Order deny,allow
+#Deny from all
+#AuthType Basic
+#AuthName "Vorschalt-Login"
+#AuthUserFile C:/xampp/htdocs/sl-web/.htpasswd
+#Require valid-user
+#allow from 80.67.232.57
+#allow from 91.64.19.65
+#Satisfy Any

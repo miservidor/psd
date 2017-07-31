@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<div class="visible-xs">
+	<div class="col-xs-12">
+		<a ng-if="row.liste_anzeigen_bez" ui-sref="article({id:Artikel.Bezeichnung,artnr:Artikel.Artikelnummer})">
+			<h5>{{Artikel.Bezeichnung}}</h5>
+		</a>
+	</div>
+	<div class="col-xs-3">
+		<a ui-sref="article({id:Artikel.Bezeichnung,artnr:Artikel.Artikelnummer})">
+			<div class="artikelliste_liste_bildcontainer"><img ng-src="./{{Artikel.Artikelbild[0]}}"></div>
+		</a>
+	</div>
+	<div class="col-xs-3">
+		<p>{{l.lng_artikeldetail_menge}}</p>
+		<input ng-if="kunde.Rechte.RechtWK=='True' && Artikel.Artikeltyp!=21" ng-init="Artikel.Menge=1" class="form-control" style="text-align:center;"
+		 type="text" ng-model="Artikel.Menge">
+	</div>
+	<div class="col-xs-4">
+		<p>{{l.lng_artikeldetail_preis}}</p>
+		<div ng-if="kunde.Rechte.PreiseAusblenden!='True'" ng-include="'preisdarstellung.html'"></div>
+	</div>
+	<div class="col-xs-2 wk_button_icon_container">
+		<i ng-if="kunde.Rechte.RechtWK=='True' && Artikel.Artikeltyp!=21" ng-show="Artikel.Menge>0 && (Artikel.Artikelpreis.Netto || Artikel.Artikelpreis.Brutto)"
+		 ng-click="pushToWarenkorb(Artikel)" class="fa fa-shopping-cart"></i>
+	</div>
+</div>
+
+<div class="hidden-xs">
+	<div class="col-xs-2">
+		<a ui-sref="article({id:Artikel.Bezeichnung,artnr:Artikel.Artikelnummer})">
+			<div class="artikelliste_liste_bildcontainer"><img ng-src="./{{Artikel.Artikelbild[0]}}"></div>
+		</a>
+	</div>
+	<div class="col-xs-4">
+		<a ng-if="row.liste_anzeigen_bez" ui-sref="article({id:Artikel.Bezeichnung,artnr:Artikel.Artikelnummer})">
+			<h5>{{Artikel.Bezeichnung}} {{Artikel.Artikelnummer}}</h5>
+		</a>
+		<p>Letzte Bestellung: {{Artikel.letztesDatum}}</p>
+		<!--<p>{{Artikel}}</p>-->
+	</div>
+	<div class="col-xs-1" style="padding-top:10%">
+		<i class="fa fa-circle" ng-if="Artikel.Bestand" uib-tooltip="{{l[Artikel.Bestand.Sprachvariable]}}" ng-class="{'circle_red':Artikel.Bestand.Ampel=='r','circle_yellow':Artikel.Bestand.Ampel=='y','circle_green':Artikel.Bestand.Ampel=='g'}"
+		 aria-hidden="true"></i>
+	</div>
+	<div class="col-xs-2" style="padding-top:9%">
+		<input ng-if="kunde.Rechte.RechtWK=='True' && Artikel.Artikeltyp!=21" placeholder="{{l.lng_artikeldetail_menge}}" ng-init="Artikel.Menge=1"
+		 class="form-control" style="text-align:center;" type="text" ng-model="Artikel.Menge">
+	</div>
+	<div class="col-xs-2" style="padding-top:9%">
+		<div ng-if="kunde.Rechte.PreiseAusblenden!='True'" ng-include="'preisdarstellung.html'"></div>
+	</div>
+	<div class="col-xs-1 wk_button_icon_container" style="padding-top:6%">
+		<i ng-if="kunde.Rechte.RechtWK=='True' && Artikel.Artikeltyp!=21" ng-show="Artikel.Menge>0 && (Artikel.Artikelpreis.Netto || Artikel.Artikelpreis.Brutto)"
+		 ng-click="pushToWarenkorb(Artikel)" class="fa fa-shopping-cart"></i>
+	</div>
+</div>

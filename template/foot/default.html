@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<div class="row" style="margin-top:20px;">
+	<div class="col-xs-12 col-sm-12 hidden-md hidden-lg foot_logos">
+		<a href="http://www.facebook.de" target="_blank"><img src="template/images/fb.png"></a>
+		<a href="http://www.twitter.com" target="_blank"><img src="template/images/twitter.png"></a>
+		<img src="template/images/linkedin.png">
+		<img src="template/images/mail.png">
+	</div>
+	<div class="hidden-xs hidden-sm col-md-12">
+		<div class="foot1"></div>
+	</div>
+	<div class="hidden-xs hidden-sm col-md-9 foot2">
+		<ul class="nav nav-pills nav-justified">
+			<li role="presentation" ng-if="t.tmg_id != 8" ng-repeat="t in tmg">
+				<a ui-sref="{{t.tmg_angabe| lowercase}}">{{l[t.sprachvariable_link]}}</a>
+			</li>
+			<li role="presentation">
+				<a href="./3xcms" target="_blank" rel="nofollow">3xcms</a>
+			</li>
+		</ul>
+	</div>
+	<div class="hidden-xs hidden-sm col-md-3">
+		<div ng-show="newsletterSubscribed != 'OK'">
+			<form ng-submit="subscribeNewsletter(mail)">
+				<div class="input-group">
+					<input id="newsletter" class="form-control" ng-model="mail" type="email" placeholder="Newsletter anmelden" required>
+					<span class="input-group-btn">
+						<button type="submit" class="btn btn-primary">OK</button>
+					</span>
+				</div>
+			</form>
+		</div>
+		<div ng-show="newsletterSubscribed" class="animate-switch-container" ng-switch on="newsletterSubscribed">
+			<div class="animate-switch" ng-switch-when="OK">{{l.lng_nl_subscribe}}</div>
+			<div class="animate-switch" ng-switch-when="ALREADY">{{l.lng_nl_already_subscribed}}</div>
+			<div class="animate-switch" ng-switch-default>Ooops, ERROR!</div>
+		</div>
+	</div>
+</div>

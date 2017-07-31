@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<div class="col-md-offset-4 col-md-4">
+	<div class="panel panel-primary  ">
+		<div class="panel-heading">
+			<h1 class="panel-title">{{domain}}</h1>
+		</div>
+		<div class="panel-body">
+			<form ng-submit="login(loginInfo)">
+				<div class="form-group">
+					<label for="Nutzername">Nutzername</label>
+					<input type="text" class="form-control" id="Nutzername" placeholder="Nutzername" ng-model="loginInfo.usern" required>
+				</div>
+				<div class="form-group">
+					<label for="Password">Passwort</label>
+					<input type="password" class="form-control" id="Password" placeholder="Passwort" ng-model="loginInfo.passwd">
+				</div>
+				<hr>
+				<div class="text-right">
+					<button type="submit" class="btn btn-success">Anmelden</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

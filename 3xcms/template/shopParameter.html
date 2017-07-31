@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<h1>Parameter</h1>
+<hr>
+<!--<div ng-if="!data"><center><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw margin-bottom"></i></center></div>-->
+<div ng-show="!data" class="text-center margin-bottom"><img class="xxx-rotate" src="../template/images/loading.png"></div>
+
+<div ng-if="data">
+	<table class="table table-hover table-borderd">
+		<tr ng-repeat="d in data">
+			<td><label>{{d.bezeichner}}</label></td>
+			<td>
+				<p ng-if="d.felder[0]=='breite'">Breite:</p>
+				<p ng-if="d.felder[0]=='mailadresse'">Mailadresse:</p>
+				<p ng-if="d.felder[0]=='anzahl_integer'">Anzahl:</p>
+				<p ng-if="d.felder[0]=='tabellenfeld'">Tab.Feld:</p>
+				<p ng-if="d.felder[0]=='janein'">Ja/Nein:</p>
+				<p ng-if="d.felder[0]=='wert_float'">Anzahl:</p>
+				<p ng-if="d.felder[0]=='wert'">Wert:</p>
+			</td>
+			<td><input type="text" class="form-control" ng-model="d[d.felder[0]]" ng-blur="save(data)"></td>
+			<td>
+				<p ng-if="d.felder[1] && d.felder[1]=='hoehe'">Höhe:</p>
+				<p ng-if="d.felder[1] && d.felder[1]=='mailname'">Mailname:</p>
+			</td>
+			<td><input ng-if="d.felder[1]" type="text" class="form-control" ng-model="d[d.felder[1]]" ng-blur="save(data)"></td>
+			<td><button class="btn btn-default" uib-tooltip="{{d.infotext}}" tooltip-placement="right"><i class="fa fa-info" aria-hidden="true"></i></button></td>
+		</tr>
+	</table>
+</div>

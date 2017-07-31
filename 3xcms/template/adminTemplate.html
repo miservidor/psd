@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<form class="form-horizontal" novalidate>
+    <div class="col-md-6" ng-repeat="section in templates">
+        <h3>{{section.titel}}</h3>
+        <div class="form-group" ng-repeat="item in section.items">
+            <label class="col-md-4 control-label"><small>{{item.name}}</small></label>
+            <div class="col-md-8">
+                <!--<div class="input-group">-->
+                <select class="form-control" ng-model="defaults[item.id]" ng-options="i.url as i.name for i in item.templates" ng-change="updateDefaults()"></select>
+                <!--<span class="input-group-btn">
+                        <button disabled class="btn btn-default" type="button" ng-click="openModal((item.templates | filter:{url: defaults[item.id]})[0])"><i class="fa fa-pencil"></i></button>
+                        <button disabled class="btn btn-default" type="button" ng-click="openModal()"><i class="fa fa-plus"></i></button>
+                    </span>-->
+                <!--</div>-->
+            </div>
+        </div>
+    </div>
+</form>
+
+<!--<script type="text/ng-template" id="template/adminTemplateModal.html">
+    <form name="form" class="form-horizontal" novalidate>
+        <div class="modal-header">
+            <h3 class="modal-title">Template bearbeiten</h3>
+        </div>
+        <div class="modal-body">
+            <div ng-class="{'has-error': form.sub && !form.name.$valid}">
+                <input ng-disabled="item.name == 'default.html'" name="name" ng-pattern="/^[\w,\s-]+\.html$/" class="form-control" type="text" ng-model="item.name"
+                    required>
+                <span class="help-block" ng-show="form.sub && form.name.$error.required">Erforderlich!</span>
+                <span class="help-block" ng-show="form.sub && form.name.$error.pattern">Format: "name.html"</span>
+            </div>
+
+            <hr>
+            <textarea ng-disabled="item.name == 'default.html'" class="form-control" style="width: 100%; height: 600px" ng-model="item.template"></textarea>
+        </div>
+        <div class="modal-footer has-error">
+            <span class="help-block" ng-show="form.sub && !form.$valid">Eingaben überprüfen!</span>
+            <div class="pull-left">
+                <a class="btn btn-link btn-sm" type="button" ng-href="../template/{{item.url}}" target="_blank" download="{{item.url}}"><i class="fa fa-download"></i> Download</a>
+                <button disabled class="btn btn-link btn-sm" type="button" ng-click="item.name=null;"><i class="fa fa-clone"></i> Kopieren</button>
+            </div>
+            <button class="btn btn-default btn-sm" type="button" ng-click="close()">Abbrechen</button>
+            <button ng-disabled="item.name == 'default.html'" class="btn btn-primary btn-sm" type="button" ng-click="form.$valid ? save() : form.sub=true">Speichern</button>
+        </div>
+    </form>
+</script>-->

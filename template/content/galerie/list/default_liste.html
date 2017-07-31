@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<!--<pre class="code">{{ data | json }}</pre>-->
+<div ng-show="!data" class="text-center" ng-include="'loading.html'"></div>
+<div class="gallist" ng-controller="GalerieCtrl">
+    <!--<h5 class="italic" ng-show="dokdesc && data.items[0]">{{dokdesc}}</h5>-->
+    <div class="col-xs-12" ng-repeat="hk in data.items">
+        <h3 ng-if="data.items.length > 1">{{hk.name}}</h3>
+        <p class="teasertext" ng-if="hk.notation && !dokdesc" ng-bind-html="trust(hk.notation)"></p>
+        <div class="col-xs-12" ng-repeat="uk in hk.items">
+            <h4 ng-if="hk.items.length > 1">{{uk.name}}</h4>
+            <p class="teasertext" ng-if="uk.notation && !dokdesc" ng-bind-html="trust(uk.notation)"></p>
+            <div class="col-xs-12 col-sm-4 col-md-3 galerie0vorschau" ng-repeat="g in uk.items" ng-show="!data.current" ng-click="data.current = g;">
+                <div class="galerie0bild">
+                    <img ng-src="{{file+g.img[0].thumb}}" style="width:100%;">
+                </div>
+                <div class="galerie0titel">
+                    <h5 ng-if="!hidetitel">{{g.titel}}</h5>
+                </div>
+            </div>
+            <div>
+                <div class="col-xs-10">
+                    <h5 ng-if="!hidetitel" ng-show="data.current">{{data.current.titel}}</h5>
+                </div>
+                <div class="col-xs-2 return-right" ng-show="data.current" ng-click="data.current = null">Zurück</div>
+                <div class="gal_list animated fadeIn" ng-if="!daten.darstellung || daten.darstellung=='grid'">
+                    <div ng-class="{'hidden-xs col-sm-12 col-md-12 col-lg-12': daten.anzahlprozeile && daten.anzahlprozeile=='1',
+									'hidden-xs col-sm-6 col-md-6 col-lg-6': daten.anzahlprozeile && daten.anzahlprozeile=='2',
+									'hidden-xs col-sm-6 col-md-4 col-lg-4': daten.anzahlprozeile && daten.anzahlprozeile=='3',
+									'hidden-xs col-sm-6 col-md-4 col-lg-3': (!daten.anzahlprozeile || daten.anzahlprozeile=='4')}" class="galeriepic" ng-repeat="img in data.current.img track by $index" ng-if="(data.items.length== 1 && data.items[0].items.length==1) || ($index < bilderprozeile && !daten.anzahlprozeile)">
+                        <div class="row galerie_imgg" ng-show="!img.weblink && ($index < daten.anzahl || !daten.anzahl)">
+                            <div class="galspace">
+                                <a class="img_cursor" ng-click="openGalerie($index,data.current.img,file,'lg')">
+                                    <div class="galbild_vorsch">
+                                        <img ng-src="{{file+img.thumb}}">
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row galerie_imgg" ng-if="img.weblink && ($index < daten.anzahl || !daten.anzahl)">
+                            <div class="galspace">
+                                <a class="img_cursor" href="{{img.weblink}}" target="{{img.Target}}">
+                                    <div class="galbild_vorsch">
+                                        <img ng-src="{{file+img.thumb}}">
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row galerie_caption">
+                            <center>{{img.imgnotation}}</center>
+                        </div>
+                    </div>
+                    <div class="hidden-sm hidden-md hidden-lg">
+                        <div uib-carousel class="carousel" active="active" no-transition="false" interval="5000">
+                            <div uib-slide ng-repeat="img in data.current.img track by $index" index="$index">
+                                <img ng-if="!img.weblink" ng-src="{{file}}{{img.img}}" style="width: 100%; max-width: 100%;">
+                                <a class="img_cursor100" ng-if="img.weblink" ng-href="{{img.weblink}}" target="{{img.Target}}"><img ng-if="img.weblink" ng-src="{{file}}{{img.img}}"></a>
+                                <center>{{img.imgnotation}}</center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<!--<pre class="code">{{ data | json }}</pre> -->
+<div ng-show="!data" class="text-center" ng-include="'loading.html'"></div>
+<div class="doklist" ng-repeat="hk in data.items">
+	<h3 ng-if="data.items.length > 1">{{hk.name}}</h3>
+	<p class="teasertext" ng-if="hk.notation && !dokdesc" ng-bind-html="trust(hk.notation)"></p>
+	<div ng-repeat="uk in hk.items">
+		<h4 ng-if="hk.items.length > 1">{{uk.name}}</h4>
+		<p class="teasertext" ng-if="uk.notation && !dokdesc" ng-bind-html="trust(uk.notation)"></p>
+		<div ng-repeat="d in uk.items" ng-class="{'itemnichtsichtbar':d.sichtbar=='0'}">
+			<a ng-href="{{file}}{{d.doclink}}" target="_blank" class="symbolspace"><span class="fa fa-file-o fa-2x" ng-class="{'fa-file-pdf-o': d.typ=='pdf', 'fa-file-excel-o': d.typ=='xls' || d.typ=='xlsx', 'fa-file-text-o': d.typ=='txt', 'fa-file-image-o': d.typ=='jpg' || d.typ=='jpeg' || d.typ=='png' || d.typ=='gif'}"></span> {{d.titel}}</a>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<div class="modal-header">
+	<button type="button" class="close" ng-click="closeModal()">&times;</button>
+	<h3 ng-if="data.Belegtyp == 'b'" class="modal-title">{{l.lng_warenkorb_modal_titel}}</h3>
+    <h3 ng-if="data.Belegtyp == 'a'" class="modal-title">{{l.lng_angebot_modal_titel}}</h3>
+</div>
+<div class="modal-body" ng-init="Artikel = data.Artikel">
+    <div class="row">
+        <div class="col-xs-12 col-sm-4">
+            <div class="artikelmodal_bildcontainer"><img ng-src="./{{Artikel.Artikelbild[0]}}" /></div>
+        </div>
+        <div class="col-xs-12 col-sm-8">
+            <h3>{{Artikel.Bezeichnung}}</h3>
+            <p>{{l.lng_artikelliste_artikelnummer}} {{Artikel.Artikelnummer}}</p>
+            <p>{{l.lng_warenkorb_modal_menge}} {{Artikel.Menge}} {{Artikel.Mengeneinheit}}</p>
+            <p ng-if="Artikel.Bemerkung">{{Artikel.Bemerkung}}</p>
+			<div ng-include="'preisdarstellung.html'"></div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer" style="text-align:left">
+    <button class="btn btn-default pull-left" ng-click="closeModal()">{{l.lng_warenkorb_modal_weitershoppen}}</button>
+    <button class="btn btn-default pull-right" ng-click="goToWarenkorb(data.Belegtyp)">
+        <span ng-if="data.Belegtyp == 'b'">{{l.lng_warenkorb_modal_zum_wk}}</span>
+        <span ng-if="data.Belegtyp == 'a'">{{l.lng_warenkorb_modal_zur_anfrage}}</span>
+    </button>
+</div>

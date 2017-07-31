@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<div class="alert alert-danger alert-dismissible" ng-show="error">
+	<button type="button" class="close" data-dismiss="alert" aria-label="Schließen" ng-click="error = !error"><span aria-hidden="true">&times;</span></button>
+	<p>Ländergruppe mit eingegebener ID bereits vorhanden!</p>
+</div>
+
+<h1>Grundeinstellungen</h1>
+<hr>
+
+<div class="btn-group btn-group-justified" style="margin-bottom:20px;">
+	<div class="btn-group"><button class="btn btn-default" ng-class="{'btn-primary':l.option==1}" ng-model="l.option" uib-btn-radio="1">Optionen</button></div>
+	<div class="btn-group"><button class="btn btn-default" ng-class="{'btn-primary':l.option==6}" ng-model="l.option" uib-btn-radio="6">Spaltenauswahl</button></div>
+	<div class="btn-group"><button class="btn btn-default" ng-class="{'btn-primary':l.option==2}" ng-model="l.option" uib-btn-radio="2">Länder / Ländergruppen</button></div>
+	<div class="btn-group"><button class="btn btn-default" ng-class="{'btn-primary':l.option==3}" ng-model="l.option" uib-btn-radio="3">Standardrechte</button></div>
+	<div class="btn-group"><button class="btn btn-default" ng-class="{'btn-primary':l.option==4}" ng-model="l.option" uib-btn-radio="4">Kundenrechte</button></div>
+	<div class="btn-group"><button class="btn btn-default" ng-class="{'btn-primary':l.option==5}" ng-model="l.option" uib-btn-radio="5">Bezeichnungen</button></div>
+</div>
+
+<div class="row" style="margin-bottom:20px;" ng-if="l.option!=3 && l.option!=6">
+	<div ng-class="{'col-xs-12':l.option==4,'col-xs-10':l.option!=4}">
+		<input ng-if="l.option!=2" type="text" class="form-control" placeholder="Suche nach..." ng-model="l.search">
+	</div>
+	<div ng-class="{'col-xs-2':(l.option!=4)}" ng-if="l.option!=4">
+		<select class="form-control" ng-model="l.lang" ng-options="lang.lang as lang.description + ' ('+lang.lang+')' for lang in list"></select>
+	</div>
+</div>
+
+<!--Optionen-->
+<div ng-if="l.option==1">
+	<uib-accordion ng-if="bereiche" close-others="true">
+		<div uib-accordion-group class="panel-default" is-open="b.open" ng-repeat="b in bereiche">
+			<uib-accordion-heading>
+				<div class="row" ng-click="!b.open ? get('optionen', b.Bereich) : ''">
+					<div class="col-xs-10"><span>{{b.Bereich}}</span></div>
+					<div class="col-xs-2"><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': b.open, 'glyphicon-chevron-right': !b.open}"></i></div>
+				</div>
+			</uib-accordion-heading>
+			<table class="table table-hover">
+				<tr ng-repeat="v in values" ng-if="values" ng-class="{'success':v.value}" style="cursor:pointer;" ng-click="v.value = !v.value; update('optionen',v)">
+					<td><label>{{v.Beschreibung}}</label></td>
+					<td><i ng-if="v.value" class="fa fa-check" aria-hidden="true"></i></td>
+				</tr>
+			</table>
+		</div>
+	</uib-accordion>
+	<!--<div ng-if="!bereiche"><center><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw margin-bottom"></i></center></div>-->
+	<div ng-show="!bereiche" class="text-center margin-bottom"><img class="xxx-rotate" src="../template/images/loading.png"></div>
+</div>
+
+<!--Länder / Ländergruppen-->
+<div ng-if="l.option==2">
+	<uib-tabset active="active" ng-init="active=0">
+		<uib-tab index="0" heading="Länderliste" ng-click="active=0">
+			<h3>Länderliste</h3>
+			<form class="form-inline" ng-init="x = {}" style="margin-bottom:20px;">
+				<label>Neues Land hinzufügen:</label><br>
+				<div class="form-group"><input type="text" style="width:100px" class="form-control" placeholder="ID" ng-model="x.sl_kuerzel" /></div>
+				<div class="form-group"><input type="text" style="width:300px" class="form-control" placeholder="Bezeichnung" ng-model="x[l.lang]" /></div>
+				<button ng-disabled="!x.sl_kuerzel || !x[l.lang]" class="btn btn-success" ng-click="create('land',x);x={}"><i class="fa fa-plus" aria-hidden="true"></i></button>
+			</form>
+			<table class="table" ng-if="data.liste">
+				<thead>
+					<tr>
+						<th width="10%">SL Kürzel</th>
+						<th width="40%">Bezeichnung</th>
+						<th>Standard</th>
+						<th width="10%"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="d in data.liste | filter:l.search">
+						<td><input type="text" class="form-control" ng-model="d.sl_kuerzel" ng-blur="update('land',d)" /></td>
+						<td><input type="text" class="form-control" ng-model="d[l.lang]" ng-blur="update('land',d)" /></td>
+						<td style="padding-left:20px;padding-top:15px;"><input type="checkbox" ng-click="setStandard($index)" ng-model="d.standard" /></td>
+						<td><button class="btn btn-danger" ng-click="data.liste.splice($index,1);delete('land',d.sl_kuerzel)"><i class="fa fa-minus" aria-hidden="true"></i></button></td>
+					</tr>
+				</tbody>
+			</table>
+		</uib-tab>
+		<uib-tab index="1" heading="Ländergruppen" ng-click="active=1">
+			<h3>Ländergruppen</h3>
+			<form class="form-inline" ng-init="y = {}" style="margin-bottom:20px;">
+				<label>Neue Ländergruppe erstellen:</label><br>
+				<div class="form-group"><input type="text" style="width:100px" class="form-control" placeholder="ID" ng-model="y.LgNr" /></div>
+				<div class="form-group"><input type="text" style="width:300px" class="form-control" placeholder="Bezeichnung" ng-model="y.Bez" /></div>
+				<button ng-disabled="!y.LgNr || !y.Bez" class="btn btn-success" ng-click="create('laendergruppen',y);y={}"><i class="fa fa-plus" aria-hidden="true"></i></button>
+			</form>
+			<table class="table" ng-if="data.gruppen">
+				<thead>
+					<tr>
+						<th width="10%">ID</th>
+						<th width="20%">Bezeichnung</th>
+						<th width="20%">Hinzufügen</th>
+						<th width="40%">Länder</th>
+						<th width="10%"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="d in data.gruppen | filter:l.search">
+						<td><input type="text" class="form-control" ng-model="d.LgNr" ng-blur="update('laendergruppen',d)" /></td>
+						<td><input type="text" class="form-control" ng-model="d.Bez" ng-blur="update('laendergruppen',d)" /></td>
+						<td><select class="form-control" ng-options="item as item[l.lang] for item in data.liste | remove:d.Values" ng-model="land"
+								ng-change="add(land,d.LgNr,$index)"><option value="">Land wählen</option></select></td>
+						<td><span ng-repeat="v in d.Values" style="cursor:pointer;" ng-click="d.Values.splice($index,1);delete('laendergruppen', d.LgNr+'/'+v.Land)"><span ng-if="$index>0">,</span>{{v[l.lang]}}</span>
+						</td>
+						<td><button class="btn btn-danger" ng-click="data.gruppen.splice($index,1);delete('laendergruppen',d.LgNr)"><i class="fa fa-minus" aria-hidden="true"></i></button></td>
+					</tr>
+				</tbody>
+			</table>
+		</uib-tab>
+	</uib-tabset>
+</div>
+
+<!--Standardrechte-->
+<div ng-if="l.option==3">
+	<table class="table table-hover" ng-if="data">
+		<tr ng-repeat="d in data" ng-class="{'success':d.value}" style="cursor:pointer;" ng-click="d.value = !d.value; update('standardrechte',d)">
+			<td><label style="cursor:pointer;">{{d.Bezeichnung}}</label></td>
+			<td><label style="cursor:pointer;">{{d.Beschreibung}}</label><i ng-if="d.value" style="float:right;" class="fa fa-check" aria-hidden="true"></i></td>
+		</tr>
+	</table>
+
+	<table class="table" ng-if="data">
+		<tr class="bg-danger">
+			<td>
+				<p><b>ACHTUNG!</b><br> Wenn Sie die Rechte für alle Kunden übernehmen, gehen die vorhandenen Einstellungen verloren.</p>
+			</td>
+			<td><button type="button" class="btn btn-block btn-danger" ng-click="update('standardrechte')">Einstellung für alle Kunden übernehmen</button></td>
+		</tr>
+	</table>
+	<!--<div ng-if="!data"><center><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw margin-bottom"></i></center></div>	-->
+	<div ng-show="!data" class="text-center margin-bottom"><img class="xxx-rotate" src="../template/images/loading.png"></div>
+
+</div>
+
+<!--Kundenrechte-->
+<div ng-if="l.option==4">
+	<table class="table table-hover table-bordered table-striped" ng-if="data">
+		<tr>
+			<th>Nummer</th>
+			<th>Firma</th>
+			<th>Name</th>
+			<th>Vorname</th>
+			<th>Zusatz</th>
+			<th></th>
+		</tr>
+		<tr ng-repeat="k in data.values">
+			<td>{{k.Nummer}}</td>
+			<td>{{k.Firma}}</td>
+			<td>{{k.Name}}</td>
+			<td>{{k.Vorname}}</td>
+			<td>{{k.Zusatz}}</td>
+			<td style="text-align:center;"><button type="button" class="btn btn-default" ng-click="openKundenrechtModal(k)"><i class="fa fa-pencil" aria-hidden="true"></i></button></td>
+		</tr>
+	</table>
+	<div ng-show="!data" class="text-center margin-bottom"><img class="xxx-rotate" src="../template/images/loading.png"></div>
+	<!--<div ng-if="!data"><center><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw margin-bottom"></i></center></div>	-->
+</div>
+
+<!--Bezeichnungen-->
+<div ng-if="l.option==5">
+	<table class="table" ng-if="data">
+		<tr>
+			<th>ID</th>
+			<th>Beschreibung</th>
+			<th>Bezeichnung</th>
+			<th></th>
+		</tr>
+		<tr ng-repeat="d in data.values" ng-if="data">
+			<td><label>{{d.ID}}</label></td>
+			<td><textarea disabled class="form-control">{{d.Beschreibung}}</textarea></td>
+			<td><textarea class="form-control" ng-model="d.Bezeichnung"></textarea></td>
+			<td><button style="margin-top:20px;" ng-click="update('bezeichnungen',d);" class="btn btn-success btn-sm">Ändern</button></td>
+		</tr>
+	</table>
+	<!--<div ng-if="!data">
+		<center><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw margin-bottom"></i></center>
+	</div>-->
+	<div ng-show="!data" class="text-center margin-bottom"><img class="xxx-rotate" src="../template/images/loading.png"></div>
+</div>
+
+<div ng-if="l.option==6">
+
+	<!--<input type="text" class="form-control" placeholder="Suche nach..." ng-model="fieldsearch">-->
+
+	<table class="table table-hover table-bordered table-striped" ng-if="data">
+		<tr>
+			<th style="width:25%">Feldbezeichnung</th>
+			<th style="text-align: center;">Artikelliste</th>
+			<th style="text-align: center;">Artikeldetail</th>
+		</tr>
+		<tr ng-repeat="d in data" ng-hide="$index==0">
+			<td>{{d.Feldname}}</td>
+			<td style="text-align: center; cursor:pointer;" ng-class="{'success':d.Liste=='True', 'danger':d.Liste=='False'}" ng-click="update_selected_spalten(d,'Liste')">
+				<span class="glyphicon" ng-class="{'glyphicon-ok':d.Liste=='True', 'glyphicon-remove':d.Liste=='False'}" aria-hidden="true"></span>
+			</td>
+			<td style="text-align: center; cursor:pointer;" ng-class="{'success':d.Detail=='True', 'danger':d.Detail=='False'}" ng-click="update_selected_spalten(d, 'Detail')">
+				<span class="glyphicon" ng-class="{'glyphicon-ok':d.Detail=='True', 'glyphicon-remove':d.Detail=='False'}"  aria-hidden="true"></span>
+			</td>
+		</tr>
+	</table>
+</div>
+
+<div style="text-align:center;" ng-if="l.option==4 || l.option==5">
+	<ul ng-if="data.anz" uib-pagination total-items="data.anz" first-text="<<" last-text=">>" next-text=">" previous-text="<" ng-model="l.currentPage" max-size="10" items-per-page="10" class="pagination-sm" boundary-links="true" rotate="false"></ul>
+</div>
+
+<script type="text/ng-template" id="template/modalShopGrundeinstellungRechte.html">
+	<div class="modal-header">
+		<h3 class="modal-title">Kundenrechte ({{Kunde.Nummer}} - {{Kunde.Name}})</h3>
+	</div>
+	<div class="modal-body">
+		<table class="table table-hover">
+			<tr ng-repeat="d in Rechte" ng-if="Rechte" ng-class="{'success':d.value}" style="cursor:pointer;" ng-click="d.value = !d.value; update(d)">
+				<td><label style="cursor:pointer;">{{d.Bezeichnung}}</label></td>
+				<td><label style="cursor:pointer;">{{d.Beschreibung}}</label></td>
+				<td><i ng-if="d.value" class="fa fa-check" aria-hidden="true"></i></td>
+			</tr>
+		</table>
+		<!--<div ng-if="!Rechte" ><center><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw margin-bottom"></i></center></div>-->
+		<div ng-show="!Rechte" class="text-center"><img class="xxx-rotate" src="../template/images/loading.png"></div>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-default" type="button" ng-click="cancel()">Schließen</button>
+	</div>
+</script>

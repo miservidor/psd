@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+
+<div id="anchorscroll" ng-controller="HeadCtrl" class="headimg">
+	<div ng-show="(lang| filter:{activ: true}).length > 1" ng-repeat="l in lang | filter:{activ: true}" ng-click="!l.select && setSprache(l.lang)"
+	 style="cursor: pointer; float:left; font-size: 30px; margin-left: 10px;border-radius: 5px;" class="hidden-sm pull-right flag-icon flag-icon-{{l.flag}}">
+		<div class="xxx-hover" ng-style="l.select && {'background-color': 'rgba(255,255,255,0.0)'}"></div>
+	</div>
+	<div>
+		<a ng-href="home "><img src="./template/images/head_logo.png "></a>
+	</div>
+</div>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<div ng-show="!Kundenfelder" class="text-center" ng-include="'loading.html'"></div>
+<div ng-if="Kundenfelder" style="margin-top:50px;">
+	<form name="register" id="registerForm" class="row form-horizontal">
+		<!--Kundenfelder-->
+		<!--<div class="form-group" ng-class="{'has-error' : !register.{{feld.feldname}}.$valid && register.submit}" ng-repeat="feld in Kundenfelder">
+			<label class="col-xs-4 col-sm-3 col-md-2 control-label" for="{{feld.feldname}}">{{l[feld.sprachvariable]}}<span ng-if="feld.pflichtfeld == 1"><sup>*</sup></span></label>
+			<div class="col-xs-8 col-sm-9 col-md-10">
+				<select ng-if="feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" id="{{feld.feldname}}" name="{{feld.feldname}}" ng-options="land.sl_kuerzel as land.land for land in Laenderauswahl" ng-required="feld.pflichtfeld == 1 ? true : false"></select>
+				<input ng-if="!feld.pulldowntabelle" class="form-control" ng-init="data[feld.feldname]=''" id="{{feld.feldname}}" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="feld.pflichtfeld == 1 ? true : false">
+			</div>
+		</div>-->
+		<div class="col-xs-12 col-sm-5">
+			<div ng-repeat="feld in Kundenfelder">
+				<!--Anrede-->
+				<div class="col-xs-12" ng-if="feld.feldname=='Anrede'">
+					<div class="form-group" ng-class="{'has-error' : !register.{{feld.feldname}}.$valid && register.submit}">
+						<input ng-if="!feld.pulldowntabelle" placeholder="{{l[feld.sprachvariable]}}" class="form-control" ng-init="data[feld.feldname]=''"
+						 id="{{feld.feldname}}" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="feld.pflichtfeld == 1 ? true : false">
+					</div>
+				</div>
+				<!--Vorname-->
+				<div class="col-xs-12 col-sm-6" ng-if="feld.feldname=='Vorname'">
+					<div class="form-group" ng-class="{'has-error' : !register.{{feld.feldname}}.$valid && register.submit}">
+						<input ng-if="!feld.pulldowntabelle" placeholder="{{l[feld.sprachvariable]}}" class="form-control" ng-init="data[feld.feldname]=''"
+						 id="{{feld.feldname}}" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="feld.pflichtfeld == 1 ? true : false">
+					</div>
+				</div>
+				<!--Name-->
+				<div class="col-xs-12 col-sm-6" ng-if="feld.feldname=='Name'">
+					<div class="form-group" ng-class="{'has-error' : !register.{{feld.feldname}}.$valid && register.submit}">
+						<input ng-if="!feld.pulldowntabelle" placeholder="{{l[feld.sprachvariable]}}" class="form-control" ng-init="data[feld.feldname]=''"
+						 id="{{feld.feldname}}" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="feld.pflichtfeld == 1 ? true : false">
+					</div>
+				</div>
+				<!--Firma-->
+				<div class="col-xs-12" ng-if="feld.feldname=='Firma'">
+					<div class="form-group" ng-class="{'has-error' : !register.{{feld.feldname}}.$valid && register.submit}">
+						<input ng-if="!feld.pulldowntabelle" placeholder="{{l[feld.sprachvariable]}}" class="form-control" ng-init="data[feld.feldname]=''"
+						 id="{{feld.feldname}}" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="feld.pflichtfeld == 1 ? true : false">
+					</div>
+				</div>
+				<!--Zusatz-->
+				<div class="col-xs-12" ng-if="feld.feldname=='Zusatz'">
+					<div class="form-group" ng-class="{'has-error' : !register.{{feld.feldname}}.$valid && register.submit}">
+						<input ng-if="!feld.pulldowntabelle" placeholder="{{l[feld.sprachvariable]}}" class="form-control" ng-init="data[feld.feldname]=''"
+						 id="{{feld.feldname}}" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="feld.pflichtfeld == 1 ? true : false">
+					</div>
+				</div>
+				<!--Zusatz2-->
+				<div class="col-xs-12 col-sm-6" ng-if="feld.feldname=='Zusatz2'">
+					<div class="form-group" ng-class="{'has-error' : !register.{{feld.feldname}}.$valid && register.submit}">
+						<input ng-if="!feld.pulldowntabelle" placeholder="{{l[feld.sprachvariable]}}" class="form-control" ng-init="data[feld.feldname]=''"
+						 id="{{feld.feldname}}" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="feld.pflichtfeld == 1 ? true : false">
+					</div>
+				</div>
+				<!--Zusatz3-->
+				<div class="col-xs-12 col-sm-6" ng-if="feld.feldname=='Zusatz3'">
+					<div class="form-group" ng-class="{'has-error' : !register.{{feld.feldname}}.$valid && register.submit}">
+						<input ng-if="!feld.pulldowntabelle" placeholder="{{l[feld.sprachvariable]}}" class="form-control" ng-init="data[feld.feldname]=''"
+						 id="{{feld.feldname}}" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="feld.pflichtfeld == 1 ? true : false">
+					</div>
+				</div>
+				<!--Strasse-->
+				<div class="col-xs-12" ng-if="feld.feldname=='Strasse'">
+					<div class="form-group" ng-class="{'has-error' : !register.{{feld.feldname}}.$valid && register.submit}">
+						<input ng-if="!feld.pulldowntabelle" placeholder="{{l[feld.sprachvariable]}}" class="form-control" ng-init="data[feld.feldname]=''"
+						 id="{{feld.feldname}}" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="feld.pflichtfeld == 1 ? true : false">
+					</div>
+				</div>
+				<!--PLZ-->
+				<div class="col-xs-12 col-sm-6" ng-if="feld.feldname=='Plz'">
+					<div class="form-group" ng-class="{'has-error' : !register.{{feld.feldname}}.$valid && register.submit}">
+						<input ng-if="!feld.pulldowntabelle" placeholder="{{l[feld.sprachvariable]}}" class="form-control" ng-init="data[feld.feldname]=''"
+						 id="{{feld.feldname}}" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="feld.pflichtfeld == 1 ? true : false">
+					</div>
+				</div>
+				<!--Ort-->
+				<div class="col-xs-12 col-sm-6" ng-if="feld.feldname=='Ort'">
+					<div class="form-group" ng-class="{'has-error' : !register.{{feld.feldname}}.$valid && register.submit}">
+						<input ng-if="!feld.pulldowntabelle" placeholder="{{l[feld.sprachvariable]}}" class="form-control" ng-init="data[feld.feldname]=''"
+						 id="{{feld.feldname}}" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="feld.pflichtfeld == 1 ? true : false">
+					</div>
+				</div>
+				<!--Land-->
+				<div class="col-xs-12" ng-if="feld.feldname=='Land'">
+					<div class="form-group" ng-class="{'has-error' : !register.{{feld.feldname}}.$valid && register.submit}">
+						<select ng-if="feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" id="{{feld.feldname}}" name="{{feld.feldname}}"
+						 ng-options="land.sl_kuerzel as land.land for land in Laenderauswahl" ng-required="feld.pflichtfeld == 1 ? true : false"></select>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-12 col-sm-offset-2 col-sm-5">
+			<div ng-repeat="feld in Kundenfelder">
+				<div class="col-xs-12" ng-if="feld.feldname=='Telefon1'">
+					<div class="form-group" ng-class="{'has-error' : !register.{{feld.feldname}}.$valid && register.submit}">
+						<input ng-if="!feld.pulldowntabelle" placeholder="{{l[feld.sprachvariable]}}" class="form-control" ng-init="data[feld.feldname]=''"
+						 id="{{feld.feldname}}" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="feld.pflichtfeld == 1 ? true : false">
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6" ng-if="feld.feldname=='Telefon2'">
+					<div class="form-group" ng-class="{'has-error' : !register.{{feld.feldname}}.$valid && register.submit}">
+						<input ng-if="!feld.pulldowntabelle" placeholder="{{l[feld.sprachvariable]}}" class="form-control" ng-init="data[feld.feldname]=''"
+						 id="{{feld.feldname}}" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="feld.pflichtfeld == 1 ? true : false">
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6" ng-if="feld.feldname=='Telefon3'">
+					<div class="form-group" ng-class="{'has-error' : !register.{{feld.feldname}}.$valid && register.submit}">
+						<input ng-if="!feld.pulldowntabelle" placeholder="{{l[feld.sprachvariable]}}" class="form-control" ng-init="data[feld.feldname]=''"
+						 id="{{feld.feldname}}" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="feld.pflichtfeld == 1 ? true : false">
+					</div>
+				</div>
+				<div class="col-xs-12" ng-if="feld.feldname=='Fax'">
+					<div class="form-group" ng-class="{'has-error' : !register.{{feld.feldname}}.$valid && register.submit}">
+						<input ng-if="!feld.pulldowntabelle" placeholder="{{l[feld.sprachvariable]}}" class="form-control" ng-init="data[feld.feldname]=''"
+						 id="{{feld.feldname}}" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="feld.pflichtfeld == 1 ? true : false">
+					</div>
+				</div>
+				<div class="col-xs-12" ng-if="feld.feldname=='EMail'">
+					<div class="form-group" ng-class="{'has-error' : !register.{{feld.feldname}}.$valid && register.submit}">
+						<input ng-if="!feld.pulldowntabelle" placeholder="{{l[feld.sprachvariable]}}" class="form-control" ng-init="data[feld.feldname]=''"
+						 id="{{feld.feldname}}" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="feld.pflichtfeld == 1 ? true : false">
+					</div>
+				</div>
+				<div class="col-xs-12" ng-if="feld.feldname=='Homepage'">
+					<div class="form-group" ng-class="{'has-error' : !register.{{feld.feldname}}.$valid && register.submit}">
+						<input ng-if="!feld.pulldowntabelle" placeholder="{{l[feld.sprachvariable]}}" class="form-control" ng-init="data[feld.feldname]=''"
+						 id="{{feld.feldname}}" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="feld.pflichtfeld == 1 ? true : false">
+					</div>
+				</div>
+				<div class="col-xs-12" ng-if="feld.feldname=='Postfach'">
+					<div class="form-group" ng-class="{'has-error' : !register.{{feld.feldname}}.$valid && register.submit}">
+						<input ng-if="!feld.pulldowntabelle" placeholder="{{l[feld.sprachvariable]}}" class="form-control" ng-init="data[feld.feldname]=''"
+						 id="{{feld.feldname}}" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="feld.pflichtfeld == 1 ? true : false">
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6" ng-if="feld.feldname=='PostfachPLZ'">
+					<div class="form-group" ng-class="{'has-error' : !register.{{feld.feldname}}.$valid && register.submit}">
+						<input ng-if="!feld.pulldowntabelle" placeholder="{{l[feld.sprachvariable]}}" class="form-control" ng-init="data[feld.feldname]=''"
+						 id="{{feld.feldname}}" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="feld.pflichtfeld == 1 ? true : false">
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-6" ng-if="feld.feldname=='PostfachOrt'">
+					<div class="form-group" ng-class="{'has-error' : !register.{{feld.feldname}}.$valid && register.submit}">
+						<input ng-if="!feld.pulldowntabelle" placeholder="{{l[feld.sprachvariable]}}" class="form-control" ng-init="data[feld.feldname]=''"
+						 id="{{feld.feldname}}" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="feld.pflichtfeld == 1 ? true : false">
+					</div>
+				</div>
+				<div class="col-xs-12" ng-if="feld.feldname=='PostfachLand'">
+					<div class="form-group" ng-class="{'has-error' : !register.{{feld.feldname}}.$valid && register.submit}">
+						<select ng-if="feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" id="{{feld.feldname}}" name="{{feld.feldname}}"
+						 ng-options="land.sl_kuerzel as land.land for land in Laenderauswahl" ng-required="feld.pflichtfeld == 1 ? true : false"></select>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<!--Passwort-->
+				<div class="form-group" ng-class="{'has-error' : !register.password1.$valid && register.submit}">
+					<input class="form-control" id="password1" name="password1" type="password" placeholder="{{l.lng_register_passwort}}" ng-model="data.Password1"
+					 required minlength="5">
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<!--Passwort bestätigen-->
+				<div class="form-group" ng-class="{'has-error' : !register.password2.$valid && register.submit}">
+					<input class="form-control" id="password2" name="password2" type="password" placeholder="{{l.lng_register_passwort_check}}"
+					 ng-model="data.Password2" required minlength="5" checkpw="{{data.Password1}}">
+				</div>
+			</div>
+			<!--<div class="col-xs-12">
+				<div class="form-group" ng-class="{'has-error' : !register.upload.$valid && register.submit}">
+					<input class="form-control" ngf-select="setUpload($file)" name="upload" value="{{uploaddocname}}" ngf-max-size="20MB" placeholder="Datei hochladen"
+					 readonly required>
+				</div>
+			</div>-->
+		</div>
+		<!--Pflichtfelderbemerkung-->
+		<div class="col-xs-12">
+			<!--<p>{{l.lng_register_bemerkung}}</p>-->
+		</div>
+		<div class="col-xs-12">
+			<input type="checkbox" name="agb" ng-model="data.AGB" style="margin-right:5px" required><a style="text-decoration:underline;color:blue"
+			 ui-sref="agb" target="_blank">{{l.lng_register_agb_gelesen}}</a>
+		</div>
+		<div class="col-xs-12 col-sm-4" style="margin-top:10px;margin-bottom:10px">
+			<button ng-disabled="loading" ng-click="register.$valid ? create('registrierung',data) : register.submit = true" class="btn btn-block btn-primary">{{l.lng_register_registerbtn}}</button>
+		</div>
+		<div class="col-xs-12 col-sm-8" style="margin-top:10px;margin-bottom:10px">
+			<p class="text-danger">{{ret.error}}</p>
+		</div>
+	</form>
+</div>

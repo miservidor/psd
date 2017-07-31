@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<form name="form" class="form-horizontal" novalidate>
+	<div class="modal-header">
+		<h3 class="modal-title">Galerie</h3>
+	</div>
+	<div class="modal-body" style="padding-top: 0px;">
+		<div class="row" style="border-bottom: 1px solid #DDD; padding-top: 20px; margin-bottom: 20px;background-color: rgba(66,139,202,0.05);">
+			<div class="col-md-12">
+				<div class="form-group" ng-class="{'has-error': form.sub && !form.hk.$valid}">
+					<label class="col-md-4 control-label">Hauptkategorie</label>
+					<div class="col-md-8">
+						<select name="hk" class="form-control" ng-model="hk" ng-options="hk.name for hk in kats[5]" ng-change="galerie.cat_nr = hk.uks[0].id"
+							required>
+							<option value="">--- Bitte Wählen ---</option>
+						</select>
+						<span class="help-block" ng-show="form.sub && !form.hk.$valid">Erforderlich!</span>
+					</div>
+				</div>
+				<div class="form-group" ng-class="{'has-error': form.sub && !form.k.$valid}">
+					<label class="col-md-4 control-label">Unterkategorie</label>
+					<div class="col-md-8">
+						<select ng-disabled="!hk" name="k" class="form-control" ng-model="galerie.cat_nr" ng-options="k.id as k.name for k in hk.uks"
+							required>
+							<option value="">--- Bitte Wählen ---</option>
+						</select>
+						<span class="help-block" ng-show="form.sub && !form.k.$valid">Erforderlich!</span>
+					</div>
+				</div>
+				<div class="form-group" ng-class="{'has-error': form.sub && !form.sort.$valid}">
+					<label class="col-md-4 control-label">Sortierung</label>
+					<div class="col-md-4">
+						<input name="sort" type="number" string-to-number class="form-control" placeholder="Sortnr." ng-model="galerie.sortindex">
+					</div>
+					<div class="col-md-4">
+						<div ng-show="!rechte.hasRedakteur" class="checkbox">
+							<label><input type="checkbox" ng-model="galerie.sichtbar" ng-init="galerie.sichtbar= galerie.sichtbar ? galerie.sichtbar : '1'" ng-true-value="'1'" ng-false-value="'0'">Sichtbar</label>
+						</div>
+						<div ng-show="rechte.hasRedakteur" class="checkbox">
+							<label><input type="checkbox" ng-model="galerie.freigabeanforderung" ng-init="galerie.freigabeanforderung='0'" ng-true-value="'1'" ng-false-value="'0'">Freigabeanforderung</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<small>
+			<div class="form-group" ng-class="{'has-error': form.sub && !form.name.$valid}">
+				<label class="col-md-4 control-label">Galeriename</label>
+				<div class="col-md-8">
+					<input type="text" class="form-control" name="name" placeholder="Name" ng-model="galerie.titel" required>
+					<span class="help-block" ng-show="form.sub && !form.name.$valid">Erforderlich!</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label">Schlagwörter</label>
+				<div class="col-md-8">
+					<textarea class="form-control" placeholder="Information" ng-model="galerie.schlagwoerter"></textarea>
+				</div>
+			</div>
+		</small>
+		<hr>
+		<div ng-show="galerie.id">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="galerieGrid">
+						<ul dnd-list="galerie.img" dnd-horizontal-list="true" class="itemlist">
+							<li ng-repeat="image in galerie.img track by $index" dnd-draggable="image" dnd-type="'itemType'" dnd-effect-allowed="move"
+								dnd-moved="galerie.img.splice($index, 1);" dnd-selected="select($index)">
+								<div class="thumbnail thumb" style="background-image: url('../api/datei/{{image.thumb}}');width: 100px;height: 100px;background-size: cover;background-position: center;border-radius: .25em;cursor: move;"></div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div ng-class="{'has-error': !form.drop.$valid}">
+						<div ngf-drop="upload($files)" ngf-select="upload($files)" name="drop" ng-model="bilder" class="drop-box" ngf-multiple="true"
+							ngf-allow-dir="true" ngf-max-size="20MB" ngf-resize="{width: 1920, height: 1080}" ngf-resize-if="$width > 1920 || $height > 1080"
+							accept="image/*" ngf-pattern="'image/*'">
+							<p class="center">Klicken oder Reinziehen</p>
+						</div>
+						<span class="help-block" ng-show="!form.drop.$valid">Fehler!</span>
+						<span class="help-block" ng-show="form.drop.$error.maxSize">Datei ist zu groß! (maximal 20MB)</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer has-error">
+		<span class="help-block" ng-show="form.sub && !form.$valid">Eingaben überprüfen!</span>
+		<div class="row">
+			<div class="col-md-6" align="left">
+				<button ng-show="galerie.id &&  (editable || galerie.cat_nr==0)" class="btn btn-link btn-sm" type="button" ng-click="close('delete')"><i class="fa fa-trash-o"></i> Löschen</button>
+				<button ng-show="galerie.id &&  (editable || galerie.cat_nr==0)" class="btn btn-link btn-sm" type="button" ng-click="galerie.id=null;galerie.titel=null"><i class="fa fa-clone"></i> Kopieren</button>
+			</div>
+			<div class="col-md-6">
+				<button ng-show="galerie.id &&  (editable || galerie.cat_nr==0)" class="btn btn-primary btn-sm" type="button" ng-click="form.$valid ? close('put') : form.sub=true">Ändern</button>
+				<button ng-show="!galerie.id" class="btn btn-primary btn-sm" type="button" ng-click="form.$valid ? close('post') : form.sub=true">Erstellen</button>
+				<button class="btn btn-default btn-sm" type="button" ng-click="close('cancel')">Abbrechen</button>
+			</div>
+		</div>
+	</div>
+</form>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<h1>{{title}}</h1>
+<hr>
+<form name="form" class="form-horizontal" novalidate ng-submit="form.$valid && same && changePW()" ng-init="same=true;">
+	<div class="form-group">
+		<label class="col-md-4 control-label">Altes Passwort</label>
+		<div class="col-md-8">
+			<input type="password" name="old" class="form-control" ng-model="pw.old">
+		</div>
+	</div>
+	<div class="form-group" ng-class="{'has-error': form.sub && (!form.new.$valid || !same)}">
+		<label class="col-md-4 control-label">Neues Passwort</label>
+		<div class="col-md-8">
+			<input type="password" name="new" ng-change="same = (pw.confirm==pw.new)" class="form-control" ng-model="pw.new">
+			<span class="help-block" ng-show="form.sub && form.new.$error.required">Erforderlich!</span>
+			<span class="help-block" ng-show="form.sub && !same">Passwörter stimmen nicht überein</span>
+		</div>
+	</div>
+	<div class="form-group" ng-class="{'has-error': form.sub && (!form.confirm.$valid || !same)}">
+		<label class="col-md-4 control-label">Passwort Wiederholen</label>
+		<div class="col-md-8">
+			<input type="password" name="confirm" ng-change="same = (pw.confirm==pw.new)" class="form-control" ng-model="pw.confirm">
+			<span class="help-block" ng-show="form.sub && form.confirm.$error.required">Erforderlich!</span>
+			<span class="help-block" ng-show="form.sub && !same">Passwörter stimmen nicht überein</span>
+		</div>
+	</div>
+	<hr>
+	<div class="pull-right has-error">
+		<span class="help-block" ng-show="form.sub && (!same || !form.$valid)">Eingaben überprüfen!</span>
+		<button type="submit" ng-click="form.sub = true" class="pull-right btn btn-success">Ändern</button>
+	</div>
+</form>

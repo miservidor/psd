@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<div ng-if="Bestellvorschlag.Eigvorschlag.length>0">
+	<h3>Eigene Bestellvorschläge</h3>
+	<div class="row" ng-repeat="Artikel in Bestellvorschlag.Eigvorschlag" ng-include="'template/includes/list2_include.html'" style="margin-bottom:10px;"></div>
+</div>
+<div ng-if="Bestellvorschlag.KGVorschlag.length>0">
+	<h3>Kundengruppen Bestellvorschläge</h3>
+	<div class="row" ng-repeat="Artikel in Bestellvorschlag.KGVorschlag" ng-include="'template/includes/list2_include.html'" style="margin-bottom:10px;"></div>
+</div>	

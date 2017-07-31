@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<div style="margin-top:20px;" ng-init="hideModel = {}">
+    <div ng-show="!data" class="text-center" ng-include="'loading.html'"></div>
+    <!--Filter-->
+    <div class="col-xs-12" ng-if="data.Shop.Anzahl > 0 && data.CMS.Anzahl > 0">
+        <div class="row">
+            <div class="btn-group">
+                <label ng-if="data.Shop.Anzahl>0" class="btn btn-default" ng-model="hideModel.Shop" uib-btn-checkbox>Shop ({{data.Shop.Anzahl}}  {{hideModel.Shop}})</label>
+                <label ng-repeat="(key,values) in data.CMS.Values" ng-if="data.CMS.Anzahl>0 && values.length>0" class="btn btn-default" ng-model="hideModel[key]" uib-btn-checkbox>{{key}} ({{values.length}})</label>
+            </div>
+        </div>
+    </div>
+    <!--Ende Filter-->
+    <!--Shopergebnisse-->
+    <div class="col-xs-12" ng-if="data && dynalink">
+        <div ng-include="'template/content/search/dynalink.html'"></div>
+    </div>
+    <div class="col-xs-12" style="text-align:center;" ng-if="data.Shop.Anzahl == 0 && data.CMS.Anzahl == 0">
+        <p>{{l.lng_artikelliste_keine_ergebnisse}}</p>
+    </div>
+    <div class="col-xs-12" ng-if="data.Shop.Anzahl>0 && !hideModel.Shop">
+        <div class="row">
+            <h3>{{l.lng_search_title}}</h3>
+            <div class="row">
+                <div class="pull-left artikelliste_darstellung_text hidden-xs col-sm-12" style="margin-bottom:20px;" ng-init="darstellung='liste'">
+                    <span ng-click="darstellung='liste'" ng-class="{'aktiv':darstellung == 'liste'}"><i class="fa fa-th-list" aria-hidden="true"></i></span>
+                    <span> | </span>
+                    <span ng-click="darstellung='kachel'" ng-class="{'aktiv':darstellung == 'kachel'}"><i class="fa fa-th-large" aria-hidden="true"></i></span>
+                    <div class="artikelliste_limit_text pull-right">
+                        <span ng-click="list.limitTo = 10" ng-class="{'aktiv':list.limitTo == 10}">10</span><span> | </span>
+                        <span ng-click="list.limitTo = 25" ng-class="{'aktiv':list.limitTo == 25}">25</span><span> | </span>
+                        <span ng-click="list.limitTo = 50" ng-class="{'aktiv':list.limitTo == 50}">50</span>
+                    </div>
+                </div>
+                <div class="hidden-xs col-sm-6 col-md-4 col-lg-3" ng-repeat="Artikel in data.Shop.Values" ng-if="darstellung=='kachel'">
+                    <a ui-sref="article({id:Artikel.Bezeichnung,artnr:Artikel.Artikelnummer})">
+                        <div ng-include="'template/includes/kachel_include.html'"></div>
+                    </a>
+                </div>
+                <div class="hidden-xs col-sm-12" ng-if="darstellung=='liste'">
+                    <div ng-include="'template/includes/list_include.html'"></div>
+                </div>
+                <div class="col-xs-12 hidden-sm hidden-md hidden-lg" ng-repeat="Artikel in data.Shop.Values">
+                    <a ui-sref="article({id:Artikel.Bezeichnung,artnr:Artikel.Artikelnummer})">
+                        <div ng-include="'template/includes/kachel_include.html'"></div>
+                    </a>
+                </div>
+                <div class="col-xs-12" style="text-align:center" ng-if="data.Shop.Anzahl > 10">
+                    <div uib-pagination class="pagination-sm xxx-pagination" total-items="data.Shop.Anzahl" ng-model="list.page" items-per-page="list.limitTo" max-size="10" previous-text="<" next-text=">" first-text="<<" last-text=">>" boundary-links="true"></div>
+                </div>
+            </div>
+        </div>
+        <div style="text-align:center">
+            <span><sup>*</sup> {{l[data.Shop.Preisbemerkung]}}</span><a ui-sref="lieferbedingungen" ng-if="row.versandlink_hinter_steuerinfo" style="text-decoration:underline;">{{l.lng_artikelliste_zzgl_versand}}</a>
+        </div>
+    </div>
+    <!--Ende Shopergebnisse-->
+    <!--CMS Ergebnisse-->
+    <div class="col-xs-12" ng-if="data.CMS.Anzahl>0">
+        <div class="row" ng-repeat="(key,values) in data.CMS.Values" ng-if="values.length>0 && !hideModel[key]">
+            <h3>{{key}}</h3>
+            <div ng-if="detail.id && key=='Galerie'" ng-repeat="detail in values">
+                <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <a ng-if="detail.titel" ui-sref="{{key | lowercase}}({id:detail.id})">
+                        <h5 class="detailheader">{{detail.titel}}</h5>
+                    </a>
+                    <div ng-if="detail.imgthumb && detail.imgthumb !='k_'" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 galbild_vorsch">
+                        <a ng-if="detail.imgthumb" ui-sref="{{key | lowercase}}({id:detail.id})">
+                            <img ng-src="{{file+detail.imgthumb}}">
+                        </a>
+                    </div>
+                    <div class="teasertext" style="cursor: pointer;" ui-sref="{{key | lowercase}}({id:detail.id})" ng-if="detail.schlagwoerter" ng-bind-html="trust(detail.schlagwoerter)"></div>
+                </div>
+            </div>
+
+            <div ng-if="d.id && key=='Dokument'" ng-repeat="d in values">
+                <a ng-href="{{file}}{{d.doclink}}" target="_blank"><span class="fa fa-file-o fa-2x" ng-class="{'fa-file-pdf-o': d.typ=='pdf', 'fa-file-excel-o': d.typ=='xls' || d.typ=='xlsx', 'fa-file-text-o': d.typ=='txt', 'fa-file-image-o': d.typ=='jpg' || d.typ=='jpeg' || d.typ=='png' || d.typ=='gif'}"></span> {{d.titel}}</a>
+            </div>
+
+            <div class="adresse" ng-if="n.id && key=='Nutzer'" ng-repeat="n in values">
+                <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                    <div ng-if="n.imgthumb" class="galbild_vorsch">
+                        <img ng-click="openBild(file+n.imglink)" ng-src="{{file+n.imglink}}">
+                    </div>
+                    <p ng-if="n.imgnotation">{{n.imgnotation}}</p>
+                </div>
+                <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
+                    <div class="row" ng-if="n.name2">
+                        <p class="col-xs-4 labelb">{{l.lng_nutzer_name}}</p>
+                        <p class="col-xs-8">{{n.anrede}} {{n.name2}}</p>
+                    </div>
+                    <div class="row" ng-if="n.name1">
+                        <p class="col-xs-4 labelb">{{l.lng_suche_nutzer_firma}}</p>
+                        <p class="col-xs-8">{{n.name1}}</p>
+                    </div>
+                    <div class="row" ng-if="n.name3">
+                        <p class="col-xs-4 labelb">{{l.lng_suche_nutzer_abteilung}}</p>
+                        <p class="col-xs-8">{{n.name3}}</p>
+                    </div>
+                    <div class="row" ng-if="n.funktion">
+                        <p class="col-xs-4 labelb">{{l.lng_suche_nutzer_funktion}}</p>
+                        <p class="col-xs-8">{{n.funktion}}</p>
+                    </div>
+                    <div class="row" ng-if="n.strasse">
+                        <p class="col-xs-4 labelb">{{l.lng_suche_nutzer_strasse}}</p>
+                        <p class="col-xs-8">{{n.strasse}}</p>
+                    </div>
+                    <div class="row" ng-if="n.plz">
+                        <p class="col-xs-4 labelb">{{l.lng_suche_nutzer_plz}}</p>
+                        <p class="col-xs-8">{{n.plz}}</p>
+                    </div>
+                    <div class="row" ng-if="n.ort">
+                        <p class="col-xs-4 labelb">{{l.lng_suche_nutzer_ort}}</p>
+                        <p class="col-xs-8">{{n.ort}}</p>
+                    </div>
+                    <div class="row" ng-if="n.telefon1">
+                        <p class="col-xs-4 labelb">{{l.lng_suche_nutzer_tel1}}</p>
+                        <p class="col-xs-8">{{n.telefon1}}</p>
+                    </div>
+                    <div class="row" ng-if="n.telefon2">
+                        <p class="col-xs-4 labelb">{{l.lng_suche_nutzer_tel2}}</p>
+                        <p class="col-xs-8">{{n.telefon2}}</p>
+                    </div>
+                    <div class="row" ng-if="n.fax">
+                        <p class="col-xs-4 labelb">{{l.lng_suche_nutzer_fax}}</p>
+                        <p class="col-xs-8">{{n.fax}}</p>
+                    </div>
+                    <div class="row" ng-if="n.email">
+                        <p class="col-xs-4 labelb">{{l.lng_suche_nutzer_email}}</p>
+                        <p class="col-xs-8"><a href="mailto:{{n.email}}">{{n.email}}</a></p>
+                    </div>
+                    <div class="row" ng-if="n.web">
+                        <p class="col-xs-4 labelb">{{l.lng_suche_nutzer_web}} </p>
+                        <p class="col-xs-8"><a ng-href="{{n.web}}" target="_blank">{{n.web}}</a></p>
+                    </div>
+                    <div class="row" ng-if="n.doclink">
+                        <p class="col-xs-4 labelb">{{l.lng_suche_nutzer_download}}</p>
+                        <p class="col-xs-8"><a ng-href="{{n.doclink}}" target="_blank">{{n.docnotation}}</a></p>
+                    </div>
+                    <div class="row" ng-if="n.maplink">
+                        <p class="col-xs-4 labelb">{{l.lng_suche_nutzer_maplink}}</p>
+                        <p class="col-xs-8"><a ng-href="{{n.maplink}}" target="_blank">{{l.lng_suche_nutzer_maplink_description}}</a></p>
+                    </div>
+                    <div class="row" ng-if="n.info">
+                        <!--<p class="hidden-xs col-sm-4"></p>-->
+                        <p class="col-xs-12">{{n.info}}</p>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <hr>
+                </div>
+            </div>
+
+            <div ng-if="detail.inhalt && key=='Katalog' || key=='News' || key=='Termin'" ng-repeat="detail in values">
+                <div ui-sref="{{key | lowercase}}({id:detail.id})" class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <a ng-if="detail.titel">
+                        <h5 class="detailheader">{{detail.titel}}</h5>
+                    </a>
+                    <div ng-if="detail.imgthumb && detail.imgthumb !='k_'" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 galbild_vorsch">
+                        <a ng-if="detail.imgthumb" ui-sref="{{key | lowercase}}({id:detail.id})">
+                            <img ng-src="{{file+detail.imgthumb}}">
+                        </a>
+                    </div>
+                    <div class="termin" ng-if="modul.bereich=='Termin'">
+                        <p>
+                            <span ng-if="detail.date1">{{detail.date1 |	date:'dd.MM.yyyy'}}</span>
+                            <span ng-if="detail.date2"> - {{detail.date2 |	date:'dd.MM.yyyy'}}</span>
+                        </p>
+                    </div>
+                    <div class="termin" ng-if="modul.bereich=='Termin'">
+                        <p>
+                            <span ng-if="detail.time1">{{detail.time1 |	date:'HH:mm'}}</span>
+                            <span ng-if="detail.time2"> - {{detail.time2 |	date:'HH:mm'}}</span>
+                            <span ng-if="detail.time1||detail.time2"> Uhr</span>
+                        </p>
+                    </div>
+                    <div class="termin" ng-if="detail.ort && modul.bereich=='Termin'">
+                        <p>{{detail.ort}}</p>
+                    </div>
+                    <div class="teasertext" style="cursor: pointer;" ui-sref="{{key | lowercase}}({id:detail.id})" ng-if="detail.inhalt" ng-bind-html="trust(detail.inhalt)"></div>
+                    <p class="teasertext" ui-sref="{{key | lowercase}}({id:detail.id})" ng-if="detail.inhalt" ng-bind-html="trust(detail.inhalt)" style="cursor: pointer;"></p>
+                    <!--<p class="teaser_button" ng-if="detail.inhalt.endsWith('hellip;')">-->
+                    <p class="teaser_button " ng-if="detail.inhalt.indexOf('hellip;')>0">
+                        <span class="btn btn-primary btn-xs" role="button">{{l.lng_teaser_link_description}}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Ende CMS Ergebnisse-->
+</div>

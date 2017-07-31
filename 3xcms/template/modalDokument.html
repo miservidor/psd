@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<form name="form" class="form-horizontal" novalidate>
+	<div class="modal-header">
+		<h3 class="modal-title">Dokument</h3>
+	</div>
+	<div class="modal-body" style="padding-top: 0px;">
+		<div class="row" style="border-bottom: 1px solid #DDD; padding-top: 20px; margin-bottom: 20px;background-color: rgba(66,139,202,0.05);">
+			<div class="col-md-12">
+				<div class="form-group" ng-class="{'has-error': form.sub && !form.hk.$valid}">
+					<label class="col-md-4 control-label">Hauptkategorie</label>
+					<div class="col-md-8">
+						<select name="hk" class="form-control" ng-model="hk" ng-options="hk.name for hk in kats[6]" ng-change="dokument.cat_nr = hk.uks[0].id"
+							required>
+							<option value="">--- Bitte Wählen ---</option>
+							</select>
+							<span class="help-block" ng-show="form.sub && !form.hk.$valid">Erforderlich!</span>
+					</div>
+				</div>
+				<div class="form-group" ng-class="{'has-error': form.sub && !form.k.$valid}">
+					<label class="col-md-4 control-label">Unterkategorie</label>
+					<div class="col-md-8">
+						<select ng-disabled="!hk" name="k" class="form-control" ng-model="dokument.cat_nr" ng-options="k.id as k.name for k in hk.uks"
+							required>
+							<option value="">--- Bitte Wählen ---</option>
+							</select>
+							<span class="help-block" ng-show="form.sub && !form.k.$valid">Erforderlich!</span>
+					</div>
+				</div>
+				<div class="form-group" ng-class="{'has-error': form.sub && !form.sort.$valid}">
+					<label class="col-md-4 control-label">Sortierung</label>
+					<div class="col-md-4">
+						<input name="sort" type="number" string-to-number class="form-control" placeholder="Sortnr." ng-model="dokument.sortindex">
+					</div>
+					<div class="col-md-4">
+						<div ng-show="!rechte.hasRedakteur" class="checkbox">
+							<label><input type="checkbox" ng-model="dokument.sichtbar" ng-init="dokument.sichtbar= dokument.sichtbar ? dokument.sichtbar : '1'" ng-true-value="'1'" ng-false-value="'0'">Sichtbar</label>
+						</div>
+						<div ng-show="rechte.hasRedakteur == true" class="checkbox">
+							<label><input type="checkbox" ng-model="dokument.freigabeanforderung" ng-init="dokument.freigabeanforderung='0'" ng-true-value="'1'" ng-false-value="'0'">Freigabeanforderung</label>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<small>
+			<div class="form-group" ng-class="{'has-error': form.sub && !form.name.$valid}">
+				<label class="col-md-4 control-label">Name</label>
+				<div class="col-md-8">
+					<input type="text" class="form-control" name="name" placeholder="Name" ng-model="dokument.titel" required>
+					<span class="help-block" ng-show="form.sub && !form.name.$valid">Erforderlich!</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label">Schlagwörter</label>
+				<div class="col-md-4">
+					<textarea style="resize: none; height: 200px;" class="form-control" placeholder="Information" ng-model="dokument.schlagwoerter"></textarea>
+				</div>
+				<div class="col-md-4">
+					<div>
+						<div class="drop-box" ngf-drop ngf-select ngf-select-disabled="bild || dokument.imglink" ng-model="bild" style="height: 200px;"
+							ngf-multiple="false" ngf-allow-dir="false" ngf-resize="{width: 1080, height: 1920}" ngf-resize-if="$width > 1080 || $height > 1920"
+							accept="image/*" ngf-pattern="'image/*'">
+							<div ng-show="!bild && !dokument.imglink" class="center">Klicken oder Reinziehen</div>
+							<div ng-show="bild" ng-click="bild = null" class="view" ngf-background="bild" ngf-resize="{height: 200}"></div>
+							<div ng-show="dokument.imglink && !bild" ng-click="delImg()" class="view" style="background-image: url('../api/datei/{{dokument.imglink}}');"></div>
+
+							
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label">Datei</label>
+				<div class="col-md-8">
+					<div class="input-group">
+						<div ngf-drop="setFile($file)" ngf-select="setFile($file)" ng-model="file" ngf-multiple="false" ngf-allow-dir="false">
+							<input type="text" class="form-control" value="{{filename}}" placeholder="Durchsuchen..." readonly>
+						</div>
+						<span ng-if="dokument.doclink" class="input-group-btn">
+							<a  target="_blank" ng-href="../api/dokument/file/{{dokument.id}}" type="button" class="btn btn-default"><i class="fa fa-download"></i> Download</a>
+						</span>
+					</div>
+				</div>
+			</div>
+		</small>
+	</div>
+	<div class="modal-footer has-error">
+		<span class="help-block" ng-show="form.sub && !form.$valid">Eingaben überprüfen!</span>
+		<div class="row">
+			<div class="col-md-6" align="left">
+				<button class="btn btn-link btn-sm" type="button" ng-click="close('delete')" ng-show="dokument.id && (editable || dokument.cat_nr==0)"><i class="fa fa-trash-o"></i> Löschen</button>
+				<button class="btn btn-link btn-sm" type="button" ng-click="dokument.id=null;dokument.titel=null" ng-show="dokument.id && (editable || katdokumentalog.cat_nr==0)"><i class="fa fa-clone"></i> Kopieren</button>
+			</div>
+			<div class="col-md-6">
+				<button class="btn btn-primary btn-sm" type="button" ng-click="form.$valid ? close('put') : form.sub=true" ng-show="dokument.id && (editable || dokument.cat_nr==0)">Ändern</button>
+				<button class="btn btn-primary btn-sm" type="button" ng-click="form.$valid ? close('post') : form.sub=true" ng-show="!dokument.id  && filename">Erstellen</button>
+				<button class="btn btn-default btn-sm" type="button" ng-click="close('cancel')">Abbrechen</button>
+			</div>
+		</div>
+	</div>
+</form>

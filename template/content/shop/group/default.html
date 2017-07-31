@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<div class="row">
+	<div class="hidden-xs col-sm-4" ng-repeat="Artikelgruppe in Artikelgruppen">
+		<div class="col-xs-12 artikelgruppen_container">
+			<a ui-sref="{{Artikelgruppe.state}}({id:Artikelgruppe.values.action.value})">
+				<div class="row artikelgruppen_container_image">
+					<img ng-src="./3xios/agimages/{{Artikelgruppe.values.action.image}}">
+				</div>
+				<div class="row">
+					<div class="col-xs-12 artikelgruppen_container_titel">
+						{{Artikelgruppe.values.titel}}
+					</div>
+				</div>
+			</a>
+		</div>
+	</div>
+
+
+	<div class="col-xs-12 hidden-sm hidden-md hidden-lg">
+		<div uib-carousel active="0" interval="7000">
+			<div uib-slide ng-repeat="Artikelgruppe in Artikelgruppen track by $index" index="$index">
+				<div class="col-xs-12 artikelgruppen_container" style="text-align:center;">
+					<a ui-sref="{{Artikelgruppe.state}}({id:Artikelgruppe.values.action.value})">
+						<div class="row artikelgruppen_container_image">
+							<img ng-src="./3xios/agimages/{{Artikelgruppe.values.action.image}}">
+							<div class="artikelgruppen_container_image_layer"><span>{{Artikelgruppe.values.titel}}</span></div>
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,25 @@
+/* Datei funktioniert nicht in lokalen Umgebungen, sondern nur auf frei erreichbaren Webservern */
+/* fuer kundenspezifischen Style eine Datei alternativ_hcoFastLane.css erstellen - erforderlichen Style aus dieser hcoFastLane.css uebernehmen, da Datei ausgetauscht wird */
+#userInfoBlock {
+        display: none;
+}
+
+#addressBlock {
+        display: none;
+}
+
+#contactBlock {
+        display: none;
+}
+
+#spacer1, #spacer2, #spacer3, .bar {
+        display: none;
+}
+
+#notMandatoryRow {
+        display: none;
+}
+
+#paymentSelection {
+
+}

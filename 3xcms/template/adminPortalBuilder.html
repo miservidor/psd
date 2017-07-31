@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<div id="hide" ng-style="'display: none;'">
+	<h1>{{title}}</h1>
+	<hr>
+	<div>
+		<div ng-show="portale && portale.length > 0 && portal.id">
+			<div class="row">
+				<div class="col-md-6">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-md-3 control-label">Portale</label>
+							<div class="col-md-9">
+								<div class="input-group">
+									<select class="form-control" ng-model="portal" ng-options="p as p.name for p in portale"></select>
+									<span class="input-group-btn">
+										<button class="btn btn-default" type="button" ng-click="portal={fields: []}"><i class="fa fa-plus"></i></button>
+									</span>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<hr>
+		</div>
+		<form class="form-horizontal" name="form" novalidate>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group" ng-class="{'has-error': form.sub && !form.name.$valid}">
+						<label class="col-md-3 control-label">Name</label>
+						<div class="col-md-9">
+							<input type="text" name="name" class="form-control" ng-model="portal.name" required>
+							<span class="help-block" ng-show="form.sub && !form.name.$valid">Erforderlich!</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<button class="btn btn-success btn-sm pull-right" ng-click="addField(null)">Neues Feld</button>
+				</div>
+			</div>
+			<hr>
+			<div gridster="gridsterOpts">
+				<div gridster-item="field" ng-repeat="field in portal.fields" uib-tooltip="{{field.data.artikelnummer || field.data.artikelgruppe || field.data.kennzeichen.key}}">
+					<div class="vcenter">
+						<div class="text-center">{{field.data.bereich}}</div>
+						<div class="row">
+							<button ng-show="!field.data.bereich" class="btn btn-success btn-sm" ng-click="openModal(field)"><i class="fa fa-plus"></i></button>
+							<button ng-show="field.data.bereich" class="btn btn-default btn-sm" ng-click="openModal(field)"><i class="fa fa-pencil"></i></button>
+							<button ng-show="field.data.bereich" class="btn btn-default btn-sm" ng-click="addField(field.data)"><i class="fa fa-clone"></i></button>
+							<button class="btn btn-danger btn-sm" ng-click="portal.fields.splice($index, 1);change();"><i class="fa fa-trash-o"></i></button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div ng-show="portal.fields && portal.fields.length > 0" class="has-error">
+				<hr>
+				<div class="text-right">
+					<span class="help-block" ng-show="form.sub && !form.$valid">Eingaben überprüfen!</span>
+				</div>
+				<div class="pull-left">
+					<button class="btn btn-link btn-sm" ng-show="portal.id" ng-click="delete()"><i class="fa fa-trash-o"></i> Löschen</button>
+					<button class="btn btn-link btn-sm" ng-show="portal.id" ng-click="portal.id=null; portal.name=null"><i class="fa fa-trash-o"></i> Kopieren</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+<script type="text/ng-template" id="template/adminPortalBuilderModalAdd.html">
+	<div class="modal-header">
+		<h3 class="modal-title">Modulauswahl</h3>
+	</div>
+	<form class="form-horizontal" name="form">
+		<div class="modal-body">
+			<div class="form-group">
+				<label class="col-md-3 control-label">Modul</label>
+				<div class="col-md-9">
+					<select class="form-control" ng-model="data.bereich" ng-options="b for b in bereiche">
+						<option value="">-- Bitte Wählen --</option>
+					</select>
+				</div>
+			</div>
+			<div ng-show="data.bereich">
+				<hr>
+				<div class="form-group">
+					<label class="col-md-3 control-label"><small>Überschrift</small></label>
+					<div class="col-md-9">
+						<input class="form-control" type="text" ng-model="data.ueberschrift">
+					</div>
+				</div>
+				<div ng-if="values" class="form-group">
+					<label class="col-md-3 control-label"><small>Zuweisung</small></label>
+					<div class="col-md-9">
+						<select class="form-control" ng-model="data.id" ng-options="v.id as v.titel for v in values">
+							<option value="">-- Bitte Wählen --</option>
+						</select>
+					</div>
+				</div>
+				<div ng-if="data.bereich == 'Galerie'">
+					<div class="form-group">
+						<label class="col-md-3 control-label"><small>Bildanzahl</small></label>
+						<div class="col-md-9">
+							<input class="form-control" min="1" max="50" type="number" string-to-number ng-model="data.anzahl" ng-init="data.anzahl = data.anzahl || 3" required>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label"><small>Bildtitel</small></label>
+						<div class="col-md-9">
+							<div class="checkbox"><label><input type="checkbox" ng-model="data.bildtitel">anzeigen</label></div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label"><small>Darstellung</small></label>
+						<div class="col-md-9">
+							<label class="radio-inline"><input type="radio" ng-model="data.darstellung" value="slide">Slider</label>
+							<label class="radio-inline"><input type="radio" ng-model="data.darstellung" value="grid">Raster</label>
+						</div>
+					</div>
+					<div ng-show="data.darstellung == 'grid'" class="form-group">
+						<label class="col-md-3 control-label"><small>Anzahl pro Zeile</small></label>
+						<div class="col-md-9">
+							<input class="form-control" min="1" max="50" type="number" string-to-number ng-model="data.anzahlprozeile" ng-init="data.anzahlprozeile = data.anzahlprozeile || 3" required>
+						</div>
+					</div>
+					<div ng-show="data.darstellung == 'slide'" class="form-group">
+						<label class="col-md-3 control-label"><small>Effekt</small></label>
+						<div class="col-md-9" ng-init="data.effect= data.effect || 'slide';">
+							<div class="radio"><label><input type="radio" ng-model="data.effect" value="slide">Bewegen</label></div>
+							<div class="radio"><label><input type="radio" ng-model="data.effect" value="fade">Blenden</label></div>
+						</div>
+					</div>
+					<div ng-show="data.darstellung == 'slide'" class="form-group">
+						<label class="col-md-3 control-label"><small>Geschwindigkeit</small></label>
+						<div class="col-md-9" ng-init="data.speed= data.speed || '5000';">
+							<div class="radio"><label><input type="radio" ng-model="data.speed" value="7000">langsam</label></div>
+							<div class="radio"><label><input type="radio" ng-model="data.speed" value="5000">normal</label></div>
+							<div class="radio"><label><input type="radio" ng-model="data.speed" value="3000">schnell</label></div>
+						</div>
+					</div>
+				</div>
+				<div ng-if="data.bereich == 'News' || data.bereich == 'Termin' || data.bereich == 'Katalog'" class="form-group">
+					<label class="col-md-3 control-label"><small>Beitragsanzahl</small></label>
+					<div class="col-md-9">
+						<input class="form-control" min="1" max="50" type="number" string-to-number ng-model="data.anzahl" ng-init="data.anzahl = data.anzahl || 3" required>
+					</div>
+				</div>
+				<div ng-if="data.bereich == 'News' || data.bereich == 'Termin' || data.bereich == 'Katalog'" class="form-group">
+					<label class="col-md-3 control-label"><small>Maximale Zeichen</small></label>
+					<div class="col-md-9">
+						<input class="form-control" min="1" max="500" type="number" string-to-number ng-model="data.zeichen" ng-init="data.zeichen = data.zeichen || 100" required>
+					</div>
+				</div>
+				<div ng-if="data.bereich == 'News' || data.bereich == 'Termin' || data.bereich == 'Katalog'" class="form-group">
+					<label class="col-md-3 control-label"><small>Hauptkategorie</small></label>
+					<div class="col-md-9">
+						<select class="form-control" ng-model="data.hk" ng-options="hk.id as hk.name for hk in kats[data.bereich == 'News' ? 1 : data.bereich == 'Termin' ? 2 : 4]">
+							<option value="">-- Alle--</option>
+						</select>
+					</div>
+				</div>
+				<div ng-if="data.bereich == 'News' || data.bereich == 'Termin' || data.bereich == 'Katalog'" class="form-group">
+					<label class="col-md-3 control-label"><small>Unterkategorie</small></label>
+					<div class="col-md-9">
+						<select class="form-control" ng-disabled="!data.hk" ng-model="data.uk" ng-options="uk.id as uk.name for uk in (kats[data.bereich == 'News' ? 1 : data.bereich == 'Termin' ? 2 : 4] | filter:{id: data.hk}:true)[0].uks">
+							<option value="">-- Alle --</option>
+						</select>
+					</div>
+				</div>
+				<div ng-if="data.bereich == 'News' || data.bereich == 'Katalog'" class="form-group">
+					<label class="col-md-3 control-label"><small>Sortierung</small></label>
+					<div class="col-md-9">
+						<div class="radio"><label><input type="radio" ng-model="data.sortierung" value="sortindex">Nummer</label></div>
+						<div class="radio"><label><input type="radio" ng-model="data.sortierung" value="date1">Startdatum</label></div>
+						<div class="radio"><label><input type="radio" ng-model="data.sortierung" value="stamp">Änderungsdatum</label></div>
+					</div>
+				</div>
+				<div ng-if="data.bereich == 'News' || data.bereich == 'Katalog'" class="form-group">
+					<label class="col-md-3 control-label"><small>Reihenfolge</small></label>
+					<div class="col-md-9">
+						<div class="radio"><label><input type="radio" ng-model="data.reihenfolge" value="DESC">Absteigend</label></div>
+						<div class="radio"><label><input type="radio" ng-model="data.reihenfolge" value="ASC">Aufsteigend</label></div>
+					</div>
+				</div>
+				<div ng-if="data.bereich == 'HTML'" class="form-group">
+					<div class="col-md-12">
+						<div text-angular ta-unsafe-sanitizer="true" ta-toolbar="[['p','h1','h2','h3'],['bold','italics','underline'],['ul','ol'], ['indent','outdent'], ['insertLink','html']]"
+							ng-model="data.inhalt" ta-show-html="true"></div>
+					</div>
+				</div>
+				<div ng-if="data.bereich == 'News' || data.bereich == 'Termin' || data.bereich == 'Katalog'">
+					<hr>
+					<div class="form-group">
+						<label class="col-md-4 control-label">Detail</label>
+						<div class="col-md-8">
+							<select class="form-control" ng-model="data.template.detail" ng-options="t.url as t.name for t in suggestions.templates.content.knt.detail" required></select>
+						</div>
+					</div>
+				</div>
+				<div ng-if="data.bereich == 'Artikel'" class="form-group" ng-init="data.darstellung = data.darstellung || 'artikelnummer'; data.artikelanzahl = data.artikelanzahl || 1">
+					<label class="col-md-3 control-label"><small>Auswahl</small></label>
+					<div class="col-md-9">
+						<div class="radio"><label><input type="radio" ng-model="data.darstellung" ng-change="data.artikelanzahl=1;data.kennzeichen=null;data.artikelgruppe=null;data.artikelnummer=null;" value="artikelnummer">Artikel</label></div>
+						<div class="radio"><label><input type="radio" ng-model="data.darstellung" ng-change="data.artikelanzahl=3;data.kennzeichen=null;data.artikelgruppe=null;data.artikelnummer=null;" value="artikelgruppe">Artikelgruppe</label></div>
+						<div class="radio"><label><input type="radio" ng-model="data.darstellung" ng-change="data.artikelanzahl=3;data.kennzeichen=null;data.artikelgruppe=null;data.artikelnummer=null;" value="aktion">Aktionen</label></div>
+						<div class="radio"><label><input type="radio" ng-model="data.darstellung" ng-change="data.artikelanzahl=3;data.kennzeichen=null;data.artikelgruppe=null;data.artikelnummer=null;" value="kennzeichen">Kennzeichen</label></div>
+					</div>
+				</div>
+				<div ng-if="data.bereich == 'Artikel' && data.darstellung == 'artikelnummer'" class="form-group">
+					<label class="col-md-3 control-label"><small>Artikel</small></label>
+					<div class="col-md-9">
+						<ui-select ng-model="data.artikelnummer" ui-select-required>
+							<ui-select-match>{{$select.selected.id}} {{$select.selected.titel}}</ui-select-match>
+							<ui-select-choices repeat="item.id as item in itemArray track by item.id" refresh="searchArticle($select.search)" refresh-delay="300">
+								{{item.id}} {{item.titel}}
+							</ui-select-choices>
+						</ui-select>
+					</div>
+				</div>
+				<div ng-if="data.bereich == 'Artikel' && data.darstellung == 'artikelgruppe'" class="form-group">
+					<label class="col-md-3 control-label"><small>Artikelgruppe</small></label>
+					<div class="col-md-9">
+						<ui-select ng-model="data.artikelgruppe" ui-select-required>
+							<ui-select-match>{{$select.selected.id}} {{$select.selected.titel}}</ui-select-match>
+							<ui-select-choices repeat="item.id as item in itemGroupsArray track by item.id" refresh="searchGroup($select.search)" refresh-delay="300">
+								{{item.id}} {{item.titel}}
+							</ui-select-choices>
+						</ui-select>
+					</div>
+				</div>
+				<div ng-if="data.bereich == 'Artikel' && data.darstellung == 'kennzeichen'">
+					<div class="form-group">
+						<label class="col-md-3 control-label"><small>Key</small></label>
+						<div class="col-md-9">
+							<select class="form-control" ng-model="data.kennzeichen.key" ng-options="f.Field as f.Field for f in suggestions.felder">
+								<option value="">-- Bitte Wählen --</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label"><small>Value</small></label>
+						<div class="col-md-9">
+							<input class="form-control" type="text" ng-model="data.kennzeichen.value" required>
+						</div>
+					</div>
+				</div>
+				<div ng-if="data.bereich == 'Artikel' && data.darstellung != 'artikelnummer'" class="form-group">
+					<label class="col-md-3 control-label"><small>Anzahl Artikel</small></label>
+					<div class="col-md-9">
+						<input class="form-control" min="1" type="number" string-to-number ng-model="data.artikelanzahl" required>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-primary btn-sm" type="button" ng-click="save()">OK</button>
+			<button class="btn btn-default btn-sm" type="button" ng-click="close()">Abbrechen</button>
+		</div>
+	</form>
+</script>

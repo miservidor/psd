@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<h1>{{title}}</h1>
+<hr>
+<div class="row">
+	<div class="col-md-6">
+		<button class="btn btn-default btn-sm" ng-click="openModalLayout()">Layout</button>
+		<button class="btn btn-default btn-sm" ng-click="openModalVerteiler()">Verteiler</button>
+		<button class="btn btn-default btn-sm" ng-click="openModalAdressen()">Adressen</button>
+	</div>
+	<div class="col-md-6 text-right">
+		<button class="btn btn-success" ng-click="openModalNeu()"><i class="fa fa-plus"></i> Neu</button>
+	</div>
+</div>
+<hr>
+<div>
+	<table class="table table-condensed table-hover">
+		<thead ng-init="sortType='stamp';sortReverse=true">
+			<tr>
+				<th class="hidden-xs hidden-sm"></th>
+				<th>Name</th>
+				<th class="hidden-xs">Letzte Aktion</th>
+				<th align="right" class="text-right">Status</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr style="cursor: pointer;" ng-repeat="row in rows" ng-click="openModalNeu(row.id)">
+<td class="hidden-xs hidden-sm"><i class="fa fa-envelope-o fa-2x"></i></td>
+<td style="width: 70%"><strong>{{row.titel}}</strong><br><small>Verfasser: {{row.name}}</small></td>
+<td class="hidden-xs"><small>{{row.stamp}}</small></td>
+<td align="right">
+	<a ng-click="$event.stopPropagation();" target="_blank" ng-href="../api/newsletter/show/{{row.rand_id}}" type="button" class="btn btn-default btn-sm"><i class="fa fa-eye"></i></a>
+	<button type="button" class="btn btn-sm" ng-class="row.abgeschickt=='1' ? 'btn-success':'btn-danger'"><span class="fa fa-fw" ng-class="row.abgeschickt=='1' ? 'fa-check':'fa-times'"></span></button>
+
+</td>
+<td><button ng-show="row.abgeschickt=='0'" type="button" class="btn btn-sm btn-default" ng-click="$event.stopPropagation();send(row.id);">Senden</button></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<script type="text/ng-template" id="template/adminNewsletterModalNeu.html">
+	<div class="modal-header">
+		<h3 class="modal-title">Newsletter</h3>
+	</div>
+	<form class="form-horizontal" name="form" novalidate>
+		<div class="modal-body">
+			<div ng-show="!nl.abgeschickt">
+				<div class="form-group">
+					<label class="col-md-4 control-label">Versenden an</label>
+					<div class="col-md-8">
+						<label class="radio-inline"><input type="radio" ng-model="an" value="adressen" ng-change="nl.intern=null;nl.extern=null;nl.verteiler=null">Adressen</label>
+						<label class="radio-inline"><input type="radio" ng-model="an" value="verteiler" ng-change="nl.intern=null;nl.extern=null;nl.verteiler=null">Verteiler</label>
+					</div>
+				</div>
+				<div class="form-group" ng-show="an=='adressen'">
+					<label class="col-md-4 control-label">Adressen</label>
+					<div class="col-md-8">
+						<label class="checkbox-inline"><input type="checkbox" ng-model="nl.intern">Intern</label>
+						<label class="checkbox-inline"><input type="checkbox" ng-model="nl.extern">Extern</label>
+					</div>
+				</div>
+				<div class="form-group" ng-show="an=='verteiler'">
+					<label class="col-md-4 control-label">Verteiler</label>
+					<div class="col-md-8">
+						<label ng-repeat="v in suggestions.verteiler" class="checkbox-inline"><input type="checkbox" ng-false-value="" ng-model="nl.verteiler[v.id]">{{v.name}}</label>
+					</div>
+				</div>
+				<div ng-show="an">
+					<div class="form-group">
+						<label class="col-md-4 control-label">Betreff</label>
+						<div class="col-md-8">
+							<input type="text" class="form-control" ng-model="nl.betreff">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">Überschrift</label>
+						<div class="col-md-8">
+							<input type="text" class="form-control" ng-model="nl.ueberschrift">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">SMTP</label>
+						<div class="col-md-4">
+							<select class="form-control" ng-model="nl.smtp" ng-options="s.id as s.name for s in suggestions.smtp" required></select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">Portal</label>
+						<div class="col-md-4">
+							<select class="form-control" ng-model="nl.portal" ng-options="p.id as p.name for p in suggestions.portale" required></select>
+						</div>
+						<div class="col-md-4 text-right">
+							<button type="button" class="btn btn-link" ng-click="createPortal()">Portal erstellen</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div ng-show="an && !nl.abgeschickt">
+				<hr>
+			</div>
+			<div ng-show="nl.portal && an">
+				<div style="width: 100%; height: 400px;overflow: scroll;">
+					<div style="display: table; margin: 0 auto;">
+						<style>
+							td {
+								padding: 10px;
+							}
+						</style>
+						<div ng-bind-html="suggestions.portal"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal-footer">
+			<div class="row">
+				<div class="col-md-6" align="left">
+					<button ng-show="!nl.abgeschickt" class="btn btn-link btn-sm" type="button" ng-click="delete()" ng-if="nl.id"><i class="fa fa-trash-o"></i> Löschen</button>
+					<button class="btn btn-link btn-sm" type="button" ng-click="nl.id=null;nl.abgeschickt=null" ng-if="nl.id"><i class="fa fa-clone"></i> Kopieren</button>
+					<a class="btn btn-link btn-sm" target="_blank" ng-href="../api/newsletter/status/{{nl.id}}" ng-if="nl.abgeschickt"><i class="fa fa-clone"></i> Sendebericht</a>
+				</div>
+				<div class="col-md-6">
+					<!--<button ng-show="!nl.id && check()" class="btn btn-primary btn-sm" type="button" ng-click="create(true)">Erstellen & Senden</button>
+					<button ng-show="nl.id && check()" class="btn btn-primary btn-sm" type="button" ng-click="change(true)">Ändern & Senden</button>-->
+					<button ng-show="!nl.id && check()" class="btn btn-primary btn-sm" type="button" ng-click="create()">Erstellen</button>
+					<button ng-show="nl.id && check()" class="btn btn-primary btn-sm" type="button" ng-click="change()">Ändern</button>
+					<button class="btn btn-default btn-sm" type="button" ng-click="close()">Abbrechen</button>
+				</div>
+			</div>
+
+		</div>
+	</form>
+</script>
+
+<script type="text/ng-template" id="template/adminNewsletterModalVerteiler.html">
+	<div class="modal-header">
+		<h3 class="modal-title">Verteiler</h3>
+	</div>
+	<form class="form-horizontal" name="form" novalidate>
+		<div class="modal-body">
+			<div ng-if="verteiler.list && verteiler.list.length > 0">
+				<div class="form-group">
+					<label class="col-md-4 control-label">Verteiler</label>
+					<div class="col-md-8">
+						<div class="input-group">
+							<select class="form-control" ng-model="verteiler.current" ng-options="v as v.bezeichnung for v in verteiler.list"></select>
+							<span class="input-group-btn"><button class="btn btn-default" type="button" ng-click="verteiler.current=null"><i class="fa fa-plus"></i></button></span>
+						</div>
+					</div>
+				</div>
+				<hr>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label">Bezeichung</label>
+				<div class="col-md-8"><input class="form-control " ng-model="verteiler.current.bezeichnung"></div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label"></label>
+				<div class="col-md-4 checkbox"><label><input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="verteiler.current.sichtbar">Sichtbar</label></div>		
+				<div class="col-md-4 text-right">
+					<button type="button" class="btn btn-default btn-sm" ng-show="!verteiler.current.v_id" ng-disabled="!verteiler.current.bezeichnung" ng-click="add()">Erstellen</button>
+					<button type="button" class="btn btn-link btn-sm" ng-show="verteiler.current.v_id" ng-click="delete()">Entfernen</button>
+					<button type="button" class="btn btn-default btn-sm" ng-show="verteiler.current.v_id" ng-click="change()">Ändern</button>
+				</div>	
+			</div>
+			<hr>
+			<div class="form-group">
+				<label class="col-md-4 control-label">Hauptkategorie</label>
+				<div class="col-md-8">
+					<select name="hk" class="form-control" ng-model="hk" ng-options="hk.name for hk in kats[3]" ng-change="n.cat_nr = hk.uks[0].id" required>
+						<option value="">--- Alle ---</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-4 control-label">Unterkategorie</label>
+				<div class="col-md-8">
+					<select ng-disabled="!hk" name="k" class="form-control" ng-model="uk" ng-options="k as k.name for k in hk.uks" required>
+						<option value="">--- Alle ---</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-4 control-label">Stichwort</label>
+				<div class="col-md-8">
+					<input class="form-control" type="text" ng-model="search">
+				</div>
+			</div>
+
+			<div ng-init="currentPage=1" ng-show="verteiler.current.v_id">
+				<hr>
+				<table class="table table-hover table-condensed">
+					<thead>
+						<th></th>
+						<th>Name</th>
+						<!-- <th>Quelle</th> -->
+						<th>Status</th>
+					</thead>
+					<tbody>
+						<tr ng-repeat="row in (filtered = (verteiler.zuordnung | filter:search | filter:{hk:hk.id} | filter:{uk:uk.id}))| limitTo:10:(currentPage-1)*10" ng-click="click(row)" ng-style="row.aktiv!='1' && {'opacity': 0.5} || {'cursor':'pointer'}">
+							<td class="text-center"><i class="fa fa-2x" ng-class="row.typ=='N' ? 'fa-envelope-o' : 'fa-user'"></i></td>
+							<td style="width: 100%"><strong>{{row.aktiv=='1' ? (row.name ? row.name : 'Extern') : 'Inaktiv ('+(row.name ? row.name : 'Extern')+')'}}</strong><br><small>{{row.email}}</small></td>
+							<!-- <td>{{{'A':'Intern', 'N': 'Extern', 'K': 'Shop'}[row.typ]}}</td> -->
+							<td align="right"><button type="button" class="btn btn-sm" ng-class="row.zo ? 'btn-success':'btn-danger'"><span class="fa fa-fw" ng-class="row.zo ? 'fa-check':'fa-times'"></span></button></td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="text-center" ng-show="filtered.length > 10">
+					<div uib-pagination class="pagination-sm my-pagination" total-items="filtered.length" ng-model="currentPage" max-size="5" previous-text="&#xf048;" next-text="&#xf051;" first-text="&#xf049;"  last-text="&#xf050;" boundary-links="true"></div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button ng-show="filtered.length > 0 && verteiler.current.v_id" class="btn btn-primary btn-sm" type="button" ng-click="save()">OK</button>
+			<button class="btn btn-default btn-sm" type="button" ng-click="close()">Abbrechen</button>
+		</div>
+	</form>
+</script>
+
+<script type="text/ng-template" id="template/adminNewsletterModalLayout.html">
+	<div class="modal-header">
+		<h3 class="modal-title">Layout</h3>
+	</div>
+	<form class="form-horizontal" name="form" novalidate>
+		<div class="modal-body">
+			<div class="form-group">
+				<div class="col-md-12">
+					<h4>Kopf</h4>
+					<text-angular ta-unsafe-sanitizer="true" ta-toolbar="[['p','h1','h2','h3'],['bold','italics','underline'],['ul','ol'], ['indent','outdent'], ['insertLink','html']]" ng-model="data.kopf"></text-angular>
+				</div>
+			</div>
+			<hr>
+			<h4>Body</h4>
+			<table class="table" ng-style="{'background-color': data.body.nl_bgcolor, 'border-color': data.body.nl_border_color,'border-style': 'solid'}">
+				<tr>
+					<td style="vertical-align:middle" ng-style="{'font-family': data.body.nl_head_font,'color': data.body.nl_head_color,'font-size': data.body.nl_head_size+'pt', 'font-weight': data.body.nl_head_weight, 'font-style': data.body.nl_head_style, 'text-decoration': data.body.nl_head_decoration}">Titel</td>
+					<td style="vertical-align:middle">
+						<button class="btn btn-default" type="button" colorpicker colorpicker-with-input="true" ng-model="data.body.nl_head_color"><i class="fa fa-tint"></i></button>
+					</td>
+					<td style="vertical-align:middle">
+						<div class="btn-group" uib-dropdown keyboard-nav>
+							<button type="button" class="btn btn-default" uib-dropdown-toggle>{{data.body.nl_head_font}} <span class="caret"></span></button>
+							<ul uib-dropdown-menu>
+								<li ng-repeat="font in fonts" ng-click="data.body.nl_head_font = font"><a ng-style="{'font-family': font}">{{font}}</a></li>
+							</ul>
+						</div>
+					</td>
+					<td style="vertical-align:middle">
+						<div class="input-group">
+							<span class="input-group-btn">
+								<button class="btn btn-default" type="button" style="font-weight:bold" ng-class="{'btn-success': data.body.nl_head_weight == 'bolder'}" ng-click="data.body.nl_head_weight = data.body.nl_head_weight == 'bolder' ? 'normal' : 'bolder'">F</button>
+								<button class="btn btn-default" type="button" style="font-style:italic" ng-class="{'btn-success': data.body.nl_head_style == 'italic'}" ng-click="data.body.nl_head_style  = data.body.nl_head_style == 'italic' ? 'normal' : 'italic'">K</button>
+								<button class="btn btn-default" type="button" style="text-decoration: underline" ng-class="{'btn-success': data.body.nl_head_decoration == 'underline'}" ng-click="data.body.nl_head_decoration = data.body.nl_head_decoration == 'underline' ? 'none': 'underline'">U</button>
+							</span>
+							<input type="number" string-to-number min="8" class="form-control" ng-model="data.body.nl_head_size">
+							<span class="input-group-addon">pt</span>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align:middle" ng-style="{'font-family': data.body.nl_text_font,'color': data.body.nl_text_color,'font-size': data.body.nl_text_size+'pt', 'font-weight': data.body.nl_text_weight, 'font-style': data.body.nl_text_style, 'text-decoration': data.body.nl_text_decoration}">Text</td>
+					<td style="vertical-align:middle">
+						<button class="btn btn-default" type="button" colorpicker colorpicker-with-input="true" ng-model="data.body.nl_text_color"><i class="fa fa-tint"></i></button>
+					</td>
+					<td style="vertical-align:middle">
+						<div class="btn-group" uib-dropdown keyboard-nav>
+							<button type="button" class="btn btn-default" uib-dropdown-toggle>{{data.body.nl_text_font}} <span class="caret"></span></button>
+							<ul uib-dropdown-menu>
+								<li ng-repeat="font in fonts" ng-click="data.body.nl_text_font = font"><a ng-style="{'font-family': font}">{{font}}</a></li>
+							</ul>
+						</div>
+					</td>
+					<td style="vertical-align:middle">
+						<div class="input-group">
+							<span class="input-group-btn">
+								<button class="btn btn-default" type="button" style="font-weight:bold" ng-class="{'btn-success': data.body.nl_text_weight == 'bolder'}" ng-click="data.body.nl_text_weight = data.body.nl_text_weight == 'bolder' ? 'normal' : 'bolder'">F</button>
+								<button class="btn btn-default" type="button" style="font-style:italic" ng-class="{'btn-success': data.body.nl_text_style == 'italic'}" ng-click="data.body.nl_text_style  = data.body.nl_text_style == 'italic' ? 'normal' : 'italic'">K</button>
+								<button class="btn btn-default" type="button" style="text-decoration: underline" ng-class="{'btn-success': data.body.nl_text_decoration == 'underline'}" ng-click="data.body.nl_text_decoration = data.body.nl_text_decoration == 'underline' ? 'none': 'underline'">U</button>
+							</span>
+							<input type="number" string-to-number min="8" class="form-control" ng-model="data.body.nl_text_size">
+							<span class="input-group-addon">pt</span>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align:middle">Hintergrund</td>
+					<td style="vertical-align:middle">
+						<button class="btn btn-default" type="button" colorpicker colorpicker-with-input="true" ng-model="data.body.nl_bgcolor"><i class="fa fa-tint"></i></button>
+					</td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td style="vertical-align:middle">Linien</td>
+					<td style="vertical-align:middle">
+						<button class="btn btn-default" type="button" colorpicker colorpicker-with-input="true" ng-model="data.body.nl_border_color"><i class="fa fa-tint"></i></button>
+					</td>
+					<td></td>
+					<td  style="vertical-align:middle"><div style="border-style: none none solid none;" ng-style="{'color': data.body.nl_border_color}"></div></td>
+				</tr>
+			</table>
+			<hr>
+			<div class="form-group">
+				<div class="col-md-12">
+					<h4>Fuß</h4>
+					<div text-angular ta-unsafe-sanitizer="true" ta-toolbar="[['p','h1','h2','h3'],['bold','italics','underline'],['ul','ol'], ['indent','outdent'], ['insertLink','html']]" ng-model="data.fuss"></div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-primary btn-sm" type="button" ng-click="save()">OK</button>
+			<button class="btn btn-default btn-sm" type="button" ng-click="close()">Abbrechen</button>
+		</div>
+	</form>
+</script>
+
+<script type="text/ng-template" id="template/adminNewsletterModalAdressen.html">
+	<div class="modal-header">
+		<h3 class="modal-title">Adressen</h3>
+	</div>
+	<form class="form-horizontal" name="form" novalidate>
+		<div class="modal-body">
+
+			<div class="form-group">
+				<label class="col-md-4 control-label">Aktiv</label>
+				<div class="col-md-8" ng-init="aktiv=''">
+					<label class="radio-inline"><input type="radio" ng-model="aktiv" value="" >Alle</label>
+					<label class="radio-inline"><input type="radio" ng-model="aktiv" value="1">Ja</label>
+					<label class="radio-inline"><input type="radio" ng-model="aktiv" value="0">Nein</label>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-4 control-label">Verteiler</label>
+				<div class="col-md-8">
+					<select class="form-control" ng-model="verteiler.current" ng-options="v.v_id as v.bezeichnung for v in verteiler.list">
+						<option value="">--- Alle ---</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-4 control-label">Hauptkategorie</label>
+				<div class="col-md-8">
+					<select name="hk" class="form-control" ng-model="hk" ng-options="hk.name for hk in kats[3]" ng-change="n.cat_nr = hk.uks[0].id"
+						required>
+						<option value="">--- Alle ---</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-4 control-label">Unterkategorie</label>
+				<div class="col-md-8">
+					<select ng-disabled="!hk" name="k" class="form-control" ng-model="uk" ng-options="k as k.name for k in hk.uks" required>
+						<option value="">--- Alle ---</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-4 control-label">Stichwort</label>
+				<div class="col-md-8">
+					<input class="form-control" type="text" ng-model="search">
+				</div>
+			</div>
+			<hr>
+			<div class="form-group" ng-class="{'has-error': msg}">
+				<label class="col-md-4 control-label">Neuer Empfänger</label>
+				<div class="col-md-8" ng-ca>
+					<div class="input-group">
+						<input type="text" class="form-control" ng-model="newMail">
+						<div class="input-group-btn"><button class="btn btn-default" ng-click="addMail()"><i class="fa fa-plus"></i></button></div>
+					</div>
+					<div class="help-block">{{msg}}</div>
+				</div>
+			</div>
+
+			<div ng-show="filtered.length > 0" ng-init="currentPage=1">
+				<hr>
+				<table class="table table-hover table-condensed">
+					<thead>
+						<th></th>
+						<th>Name</th>
+						<!-- <th>Quelle</th> -->
+						<th>Aktiv</th>
+					</thead>
+					<tbody>
+						<tr ng-repeat="row in (filtered = (adressen | filter:search | filter:{hk:hk.id} | filter:{uk:uk.id} | filter:filterVerteiler | filter:{aktiv:aktiv} )) | limitTo:10:(currentPage-1)*10"
+							ng-click="row.aktiv=='1' ? row.aktiv='0' : row.aktiv='1';row.changed=true" style="cursor:pointer">
+							<td class="text-center"><i class="fa fa-2x" ng-class="row.typ=='N' ? 'fa-envelope-o' : 'fa-user'"></i></td>
+							<td style="width: 100%"><strong>{{row.name ? row.name : 'Extern'}}</strong><br><small>{{row.email}}</small></td>
+							<!-- <td>{{{'A':'Intern', 'N': 'Extern', 'K': 'Shop'}[row.typ]}}</td> -->
+							<td align="right"><button type="button" class="btn btn-sm" ng-class="row.aktiv == '1' ? 'btn-success':'btn-danger'"><span class="fa fa-fw" ng-class="row.aktiv == '1' ? 'fa-check':'fa-times'"></span></button></td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="text-center" ng-show="filtered.length > 10">
+					<div uib-pagination class="pagination-sm my-pagination" total-items="filtered.length" ng-model="currentPage" max-size="5"
+						previous-text="&#xf048;" next-text="&#xf051;" first-text="&#xf049;" last-text="&#xf050;" boundary-links="true"></div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<div class="row">
+				<div class="col-md-6" align="left">
+					<a ng-show="filtered.length > 0" class="btn btn-link" type="button" ng-href="{{url}}" download="adressen.csv" ng-click="csv()"><i class="fa fa-download"></i>Download CSV</a>
+				</div>
+				<div class="col-md-6">
+					<button ng-show="filtered.length > 0" class="btn btn-primary btn-sm" type="button" ng-click="save()">OK</button>
+					<button class="btn btn-default btn-sm" type="button" ng-click="close()">Abbrechen</button>
+				</div>
+			</div>
+		</div>
+	</form>
+</scipt>

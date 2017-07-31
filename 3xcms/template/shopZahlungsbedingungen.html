@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<h1>Zahlungsbedingungen</h1>
+
+<div class="row">
+    <div class="col-xs-12"><p>Wählen Sie hier bitte aus, ob und wie Zahlungsbedingungen eingesetzt werden sollen!</p></div>
+    <div class="col-xs-12">
+        <form class="form-inline">
+            <div class="btn-group">
+                <label class="btn" ng-class="{'btn-success':settings.anzeige=='1', 'btn-danger':settings.anzeige=='0'}" ng-model="settings.anzeige" uib-btn-radio="'1'" ng-click="updateAnzeige(settings)">Aktiv</label>
+                <label class="btn" ng-class="{'btn-success':settings.anzeige=='0', 'btn-danger':settings.anzeige=='1'}" ng-model="settings.anzeige" uib-btn-radio="'0'" ng-click="updateAnzeige(settings)">Inaktiv</label>
+            </div>
+        </form>
+        <hr>
+    </div>
+
+    <div class="col-xs-12" style="margin-top:10px">
+        <uib-accordion close-others="true">
+            <div uib-accordion-group class="panel-default" ng-repeat="zb in daten" ng-init="zb.open=false" is-open="zb.open">
+                <uib-accordion-heading>
+                    <div class="row" ng-click="!zb.open ? getDaten(zb.Id) : ''">
+                        <div class="col-xs-3"><label>{{zb.Bezeichnung}}</label></div>
+                        <div class="col-xs-7">
+                            <button class="btn btn-sm btn-default" disabled="true" ng-class="{'btn-success':zb.aktiviert_nk}">NK</button>
+                            <button class="btn btn-sm btn-default" disabled="true" ng-class="{'btn-success':zb.aktiviert_bk}">BK</button>
+                            <button class="btn btn-sm btn-default" disabled="true" ng-class="{'btn-success':zb.aktiviert_sf}">SF</button>
+                        </div>
+                        <div class="col-xs-2"><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': zb.open, 'glyphicon-chevron-right': !zb.open}"></i></div>
+                    </div>
+                </uib-accordion-heading>
+                <div class="row">
+                    <div class="col-xs-3">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label for="netto" class="col-xs-5 control-label">Nettokunden:</label>
+                                <div class="col-xs-4"><button class="btn" ng-class="{'btn-success':data.aktiviert_nk,'btn-danger':!data.aktiviert_nk}" ng-click="data.aktiviert_nk = !data.aktiviert_nk; update(data)"><i class="fa" ng-class="{'fa-check':data.aktiviert_nk,'fa-times':!data.aktiviert_nk}" aria-hidden="true"></i></button></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="netto" class="col-xs-5 control-label">Bruttokunden:</label>
+                                <div class="col-xs-4"><button class="btn" ng-class="{'btn-success':data.aktiviert_bk,'btn-danger':!data.aktiviert_bk}" ng-click="data.aktiviert_bk = !data.aktiviert_bk; update(data)"><i class="fa" ng-class="{'fa-check':data.aktiviert_bk,'fa-times':!data.aktiviert_bk}" aria-hidden="true"></i></button></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="netto" class="col-xs-5 control-label">Steuerfrei:</label>
+                                <div class="col-xs-4"><button class="btn" ng-class="{'btn-success':data.aktiviert_sf,'btn-danger':!data.aktiviert_sf}" ng-click="data.aktiviert_sf = !data.aktiviert_sf; update(data)"><i class="fa" ng-class="{'fa-check':data.aktiviert_sf,'fa-times':!data.aktiviert_sf}" aria-hidden="true"></i></button></div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-xs-9">
+                        <form class="form-horizontal label_left">
+                            <div ng-include="'vorkasse.html'" ng-if="zb.Id==1"></div>
+                            <div ng-include="'paypal.html'" ng-if="zb.Id==4"></div>
+                            <div ng-include="'computop.html'" ng-if="zb.Id==6 || zb.Id==7 || zb.Id==8"></div>
+                            <div ng-include="'postfinance.html'" ng-if="zb.Id==9"></div>
+                            <div ng-include="'heidelpay.html'" ng-if="zb.Id==10 || zb.Id==11 || zb.Id==12"></div>
+                            <div ng-include="'paypal_api.html'" ng-if="zb.Id==13"></div>
+                            <div ng-include="'saferpay.html'" ng-if="zb.Id==14 || zb.Id==15 || zb.Id==16"></div>
+                            <div class="form-group">
+                                <label for="zusatz" class="col-xs-2 control-label">Zusatz:</label>
+                                <div class="col-xs-10"><textarea rows="4" ng-model="data.zb_zusatz" ng-blur="update(data)" class="form-control"></textarea></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </uib-accordion>
+    </div>
+</div>
+
+<!--Vorkasse-->
+<script type="text/ng-template" id="vorkasse.html">
+    <div class="form-group">
+        <label for="kreditinstitut" class="col-xs-2 control-label">Kreditinstitut:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.zb_angaben.kreditinstitut" id="kreditinstitut" class="form-control"/></div>
+    </div>
+    <div class="form-group">
+        <label for="iban" class="col-xs-2 control-label">IBAN:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.zb_angaben.iban" id="iban" class="form-control"/></div>
+    </div>
+    <div class="form-group">
+        <label for="bic" class="col-xs-2 control-label">BIC/SWIFT:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.zb_angaben.bic" id="bic" class="form-control"/></div>
+    </div>
+    <hr>    
+</script>
+
+<!--PayPal-->
+<script type="text/ng-template" id="paypal.html">
+    <div class="form-group">
+        <label for="email" class="col-xs-2 control-label">E-Mail:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.zb_angaben.email" id="email" class="form-control"/></div>
+    </div>
+    <hr>
+</script>
+
+<!--CompuTop-->
+<script type="text/ng-template" id="computop.html">
+    <p><b>Tragen Sie bitte Ihre Zugangsdaten und die Angaben zum Nummernkreis für die Transaktions-ID hier ein.</b></p>
+    <h4>Zugangsdaten</h4>
+    <div class="form-group">
+        <label for="id" class="col-xs-2 control-label">Händler-ID:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.MerchantID" id="id" class="form-control"></div>
+    </div>
+    <div class="form-group">
+        <label for="schluessel" class="col-xs-2 control-label">Schlüssel:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.BF_Key" id="schluessel" class="form-control"></div>
+    </div>
+    <h4>Nummernkreisangaben</h4>        
+    <p>Kürzel vor der Nummer (optional)</p>
+    <div class="form-group">
+        <label for="key_kredit" class="col-xs-2 control-label">für Kreditkarte:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.kuerzel_kk" id="key_kredit" class="form-control"></div>
+    </div>
+    <div class="form-group">
+        <label for="key_paypal" class="col-xs-2 control-label">für PayPal:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.kuerzel_pp" id="key_paypal" class="form-control"></div>
+    </div>
+    <div class="form-group">
+        <label for="key_giropay" class="col-xs-2 control-label">für giropay:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.kuerzel_gp" id="key_giropay" class="form-control"></div>
+    </div>
+    <div class="form-group">
+        <label for="startnummer" class="col-xs-2 control-label">Startnummer:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.startnr" id="startnummer" class="form-control"></div>
+    </div>
+    <div class="form-group">
+        <label for="letzte_nummer" class="col-xs-2 control-label">letzte benutzte Nummer:</label>
+        <div class="col-xs-10"><input type="text" ng-model="data.zaehler" id="letzte_nummer" ng-disabled="true" class="form-control"></div>
+    </div> 
+    <hr>       
+</script>
+
+<!--Postfinance-->
+<script type="text/ng-template" id="postfinance.html">
+    <p><b>Tragen Sie bitte Ihre Zugangsdaten und die Angaben zum Nummernkreis für die Transaktions-ID hier ein.</b></p>
+    <h4>Zugangsdaten</h4>
+    <div class="form-group">
+        <label for="pspid" class="col-xs-2 control-label">PSPID:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.PSPID" id="pspid" class="form-control"></div>
+    </div>
+    <div class="form-group">
+        <label for="signatur" class="col-xs-2 control-label">PSPID:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.BF_Key" id="signatur" class="form-control"></div>
+    </div> 
+
+    <h4>Systemart</h4>
+    <div class="radio">
+        <label><input type="radio" ng-click="update(data)" ng-model="data.Systemart" value="Test">Test-System</label>
+    </div>
+    <div class="radio">
+        <label><input type="radio" ng-click="update(data)" ng-model="data.Systemart" value="Live">Live-System</label>
+    </div> 
+
+    <h4>Nummernkreisangaben</h4>
+    <p>Kürzel vor der Nummer (optional)</p>
+    <div class="form-group">
+        <label for="kuerzel" class="col-xs-2 control-label">für Kreditkarte:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.kuerzel_kk" id="kuerzel" class="form-control"></div>
+    </div>
+    <div class="form-group">
+        <label for="startnummer" class="col-xs-2 control-label">Startnummer:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.startnr" id="startnummer" class="form-control"></div>
+    </div>
+    <div class="form-group">
+        <label for="letzte_nummer" class="col-xs-2 control-label">letzte benutzte Nummer:</label>
+        <div class="col-xs-10"><input type="text" ng-model="data.zaehler" id="letzte_nummer" ng-disabled="true" class="form-control"></div>
+    </div>  
+    <hr> 
+</script>
+
+<!--Heidelpay-->
+<script type="text/ng-template" id="heidelpay.html">
+    <p><b>Tragen Sie bitte Ihre Zugangsdaten und die Angaben zum Nummernkreis für die Transaktions-ID hier ein.</b></p>
+    <h4>Zugangsdaten (Live-System)</h4>
+    <div class="form-group">
+        <label for="sender" class="col-xs-2 control-label">Sender:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.SENDER" id="sender" class="form-control"></div>
+    </div>
+    <div class="form-group">
+        <label for="login" class="col-xs-2 control-label">Login:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.PSPID" id="login" class="form-control"></div>
+    </div>
+    <div class="form-group">
+        <label for="password" class="col-xs-2 control-label">Passwort:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.BF_Key" id="password" class="form-control"></div>
+    </div>
+	<div class="form-group">
+		<label for="channel" class="col-xs-2 control-label">Channel:</label>
+		<div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.CHANNEL" id="channel" class="form-control"></div>
+	</div>
+
+    <h4>Systemart</h4>
+    <div class="radio">
+        <label><input type="radio" ng-click="update(data)" ng-model="data.Systemart" value="Test">Test-System (Zugangsdaten zum Test-Account sind fest hinterlegt und werden <b>nicht</b> eingetragen)</label>
+    </div>
+    <div class="radio">
+        <label><input type="radio" ng-click="update(data)" ng-model="data.Systemart" value="Live">Live-System</label>
+    </div> 
+
+    <h4>Nummernkreisangaben</h4>
+    <p>Kürzel vor der Nummer (optional)</p>
+    <div class="form-group">
+        <label for="kuerzel" class="col-xs-2 control-label">für Kreditkarte:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.kuerzel_kk" id="kuerzel" class="form-control"></div>
+    </div>
+    <div class="form-group">
+        <label for="startnummer" class="col-xs-2 control-label">Startnummer:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.startnr" id="startnummer" class="form-control"></div>
+    </div>
+    <div class="form-group">
+        <label for="letzte_nummer" class="col-xs-2 control-label">letzte benutzte Nummer:</label>
+        <div class="col-xs-10"><input type="text" ng-model="data.zaehler" id="letzte_nummer" ng-disabled="true" class="form-control"></div>
+    </div>  
+    <hr> 
+</script>
+
+<!--PayPal API-->
+<script type="text/ng-template" id="paypal_api.html">
+    <p><b>Tragen Sie bitte Ihre Zugangsdaten hier ein.</b></p>
+    <h4>Zugangsdaten (Live- oder Testsystem) - API-Signatur</h4>
+    <div class="form-group">
+        <label for="benutzername" class="col-xs-2 control-label">Benutzername:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.User" id="benutzername" class="form-control"></div>
+    </div>
+    <div class="form-group">
+        <label for="password" class="col-xs-2 control-label">Password:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.BF_Password" id="password" class="form-control"></div>
+    </div>
+    <div class="form-group">
+        <label for="signatur" class="col-xs-2 control-label">Unterschrift:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.BF_Signature" id="signatur" class="form-control"></div>
+    </div>  
+    <h4>Systemart</h4>
+    <div class="radio">
+        <label><input type="radio" ng-click="update(data)" ng-model="data.Systemart" value="Test">Test-System (Sandbox)</label>
+    </div>
+    <div class="radio">
+        <label><input type="radio" ng-click="update(data)" ng-model="data.Systemart" value="Live">Live-System</label>
+    </div> 
+    <h4>Darstellung PayPal-Seiten</h4>
+    <div class="checkbox">
+       <label><input type="checkbox" ng-click="update(data)" ng-model="data.PopUp" ng-init="data.PopUp">PayPal-Seiten im PopUp anzeigen</label>
+    </div>
+    <hr>
+</script>
+
+<!--SaferPay-->
+<script type="text/ng-template" id="saferpay.html">
+    <p><b>Tragen Sie bitte Ihre Zugangsdaten hier ein.</b></p>
+    <h4>Zugangsdaten (Live- oder Testsystem)</h4>
+    <div class="form-group">
+        <label for="user" class="col-xs-2 control-label">User:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.USER" id="user" class="form-control"></div>
+    </div>
+    <div class="form-group">
+        <label for="pwd" class="col-xs-2 control-label">Passwort:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.PWD" id="pwd" class="form-control"></div>
+    </div>
+    <div class="form-group">
+        <label for="kdnr" class="col-xs-2 control-label">Kundennummer:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.KUNDENNUMMER" id="kdnr" class="form-control"></div>
+    </div>
+    <div class="form-group">
+        <label for="tid" class="col-xs-2 control-label">Terminal-ID:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.TERMINALID" id="tid" class="form-control"></div>
+    </div>
+    <h4>Systemart</h4>
+    <div class="radio">
+        <label><input type="radio" ng-click="update(data)" ng-model="data.Systemart" value="Test">Test-System</label>
+    </div>
+    <div class="radio">
+        <label><input type="radio" ng-click="update(data)" ng-model="data.Systemart" value="Live">Live-System</label>
+    </div> 
+    <h4>Nummernkreisangaben</h4>
+    <p>Kürzel vor der Nummer (optional)</p>
+    <div class="form-group" ng-if="data.Id == 14">
+        <label for="kuerzel" class="col-xs-2 control-label">für Alle:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.kuerzel_al" id="kuerzel" class="form-control"></div>
+    </div>
+    <div class="form-group" ng-if="data.Id == 15">
+        <label for="kuerzel" class="col-xs-2 control-label">für Kreditkarte:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.kuerzel_kk" id="kuerzel" class="form-control"></div>
+    </div>
+    <div class="form-group" ng-if="data.Id == 16">
+        <label for="kuerzel" class="col-xs-2 control-label">für PayPal:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.kuerzel_pp" id="kuerzel" class="form-control"></div>
+    </div>
+    
+    <div class="form-group">
+        <label for="startnummer" class="col-xs-2 control-label">Startnummer:</label>
+        <div class="col-xs-10"><input type="text" ng-blur="update(data)" ng-model="data.startnr" id="startnummer" class="form-control"></div>
+    </div>
+    <div class="form-group">
+        <label for="letzte_nummer" class="col-xs-2 control-label">letzte benutzte Nummer:</label>
+        <div class="col-xs-10"><input type="text" ng-model="data.zaehler" id="letzte_nummer" ng-disabled="true" class="form-control"></div>
+    </div>  
+    <hr> 
+</script>

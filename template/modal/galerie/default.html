@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!-- <div class="modal-body"> -->
+<!--<div ng-style="{'max-width':myWidth+'px','max-height':myHeight+'px'}">-->
+<div uib-carousel active="active" interval="3000">
+	<div uib-slide ng-repeat="ig in imgs track by $index" index="$index">
+		<!--<div style="height:100%;width:100%" ng-style="{'background-image':'url({{file}}{{ig.img}})',  'background-size':'contain', 	'background-repeat': 'no-repeat', 'background-position':'center'}"></div> -->
+		<div ng-if="ig.img" class="modal_img_container">
+			<img ng-src="{{file}}{{ig.img}}">
+			<center id="modalimage_gal-description" ng-show="ig.imgnotation"><span>{{ig.imgnotation}}</span></center>
+		</div>
+		<div ng-if="!ig.img" class="modal_img_container">
+			<img ng-src="{{ig}}">
+		</div>
+	</div>
+</div>
+<!-- </div> -->
+<!-- <div class="modal-footer"> -->
+<span ng-click="close()" class="modal_close_button fa fa-times-circle fa-2x" style="cursor: pointer;"></span>
+<!-- </div> -->
+<!-- <div class="modal-body"> -->
+<!-- 	<input type="text" class="form-control" placeholder="Beschreibung" ng-model="images[active].imgnotation">	 -->
+<!-- 	<input type="text" class="form-control" placeholder="Link" ng-model="images[active].weblink">	 -->
+<!-- </div> -->
+<!-- <div class="modal-footer"> -->
+<!-- 	<div class="pull-left"> -->
+<!-- 			<button ng-if="editable" class="btn btn-link btn-sm" type="button" ng-click="delete()"><span class="glyphicon glyphicon-trash"></span> Löschen</button> -->
+<!-- <!-- 		<button ng-if="editable && !images[active].file" class="btn btn-link btn-sm" type="button" ng-click="delete()"><span class="glyphicon glyphicon-trash"></span> Löschen</button> -->
+<!-- 	</div> -->
+<!-- 	<div> -->
+<!-- 		<!-- <button ng-if="editable" class="btn btn-primary btn-sm" type="button" ng-click="change()">Ändern</button> -->
+<!-- 		<button class="btn btn-default btn-sm" type="button" ng-click="close()">OK</button> -->
+<!-- 	</div> -->
+<!-- </div> -->

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<div class="modal-header">
+	<button ng-if="!row.vor_login" type="button" class="close" ng-click="closeModal()">&times;</button>
+	<h3 class="modal-title">{{l.lng_login_modal_titel}}</h3>
+</div>
+
+<div class="modal-body">
+	<form class="login_modal_form form-horizontal" ng-submit="login(user)">
+		<div class="input-group">
+			<div class="input-group-addon"><i class="fa fa-envelope-o" aria-hidden="true"></i></div>
+			<input type="text" class="form-control" placeholder="{{l.lng_login_platzhalter_kundennr}}" ng-model="user.usern">
+		</div>
+		<div class="input-group" style="margin-top:5px;margin-bottom:5px;">
+			<div class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i></div>
+			<input type="password" class="form-control" placeholder="{{l.lng_login_platzhalter_passwort}}" ng-model="user.passwd">
+		</div>
+		<button class="btn btn-primary btn-block" type="submit">{{l.lng_login_loginbtn}}</button>
+	</form>
+</div>
+	
+<div class="modal-footer">
+	<p style="color:red" ng-if="Error">{{l.lng_login_fehlgeschlagen}}</p>
+	<button class="btn btn-default btn-block" ng-click="goToRegistration()">{{l.lng_login_registerbtn}}</button>
+	<button class="btn btn-default btn-block" ng-click="openPasswortModal()">{{l.lng_login_passwort_vergessen}}</button>
+</div>

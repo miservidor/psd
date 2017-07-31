@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<div ng-show="!Artikel" class="text-center" ng-include="'loading.html'"></div>
+<div ng-show="Artikel" class="artikeldetail_option">
+	<!--Detail Blättern-->
+	<div ng-if="row.detail_blaettern && Artikel.Liste.length > 1" ng-include="'blaettern.html'"></div>
+	<!--Zurück Button in Desktop Ansicht-->
+	<div class="row">
+		<div class="hidden-xs col-sm-2" style="float:right;">
+			<button class="btn btn-primary btn-block" ng-click="back()">{{l.lng_artikeldetail_zurueckbtn}}</button>
+		</div>
+	</div>
+
+	<div class="row" ng-controller="GalerieCtrl">
+		<!--Artikelinfo in Smartphone Ansicht-->
+		<div class="col-xs-12 visible-xs">
+			<div ng-include="'artikelinfo.html'"></div>
+		</div>
+		<!--Artikelbild(er)-->
+		<div class="col-xs-12 col-sm-5 col-md-5">
+			<div class="row">
+				<!--Artikelhauptbild in Desktop Ansicht-->
+				<div class="hidden-xs hidden-sm col-md-12">
+					<div class="artikeldetail_hauptbild_container">
+						<img ng-click="openGalerie(0,Artikel.Artikelbild,'','md')" ng-src="./{{Artikel.Artikelbild[0]}}">
+					</div>
+				</div>
+				<!--weitere Artikelbilder in Desktop Ansicht-->
+				<div class="hidden-xs hidden-sm col-md-4" ng-repeat="Bild in Artikel.Artikelbild" ng-if="$index>0" style="margin-top:5px;">
+					<div class="artikeldetail_alternativbilder_container">
+						<img ng-click="openGalerie($index,Artikel.Artikelbild,'','md')" ng-src="./{{Bild}}">
+					</div>
+				</div>
+				<!--Bildslider für Smartphone und Tablet-->
+				<div class="col-xs-12 hidden-md hidden-lg" style="margin-bottom:20px;">
+					<div uib-carousel active="0" interval="5000">
+						<div uib-slide ng-repeat="Bild in Artikel.Artikelbild track by $index" index="$index">
+							<div class="artikeldetail_slider_container">
+								<img ng-src="./{{Bild}}">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--Artikelinfo in Tablet und Desktop Ansicht-->
+		<div class="hidden-xs col-sm-7">
+			<div ng-include="'artikelinfo.html'"></div>
+		</div>
+	</div>
+
+	<div class="row">
+		<!--Variantenauswahl in Smartphone Ansicht-->
+		<div class="col-xs-12 visible-xs artikeldetail_select_xs" ng-if="showVariantenauswahl1 || showVariantenauswahl2" ng-include="'variantenauswahl.html'"></div>
+
+		<!--Mengenstaffel in Smartphone Ansicht-->
+		<div class="col-xs-12 visible-xs" ng-if="Artikel.Mengenstaffel" ng-include="'mengenstaffel.html'"></div>
+
+		<!--Bestandsanzeige in Smartphone Ansicht-->
+		<div class="col-xs-12 visible-xs" ng-if="Artikel.Bestand" ng-include="'bestandsanzeige.html'"></div>
+
+		<!--Mengeneingabe in Smartphone Ansicht-->
+		<div class="col-xs-12 visible-xs" ng-include="'mengeneingabe.html'" style="margin-top:20px;margin-bottom:20px"></div>
+
+		<!--Preisanzeige in Smartphone Ansicht-->
+		<div class="col-xs-12 hidden-sm hidden-md hidden-lg" ng-if="Artikel.Artikelpreis && kunde.Rechte.PreiseAusblenden!='True'">
+			<div class="row" ng-if="Artikel.Artikelpreis.Aktion && row.ardetail_preis_ohne_aktion">
+				<div class="col-xs-6">
+					<p>{{l.lng_artikeldetail_preis_alt}}</p>
+				</div>
+				<div class="col-xs-6" style="text-align:right;text-decoration:line-through">
+					<p ng-if="Artikel.Artikelpreis.Netto && !Artikel.Artikelpreis.Brutto"> {{Artikel.Artikelpreis.Netto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup></p>
+					<p ng-if="Artikel.Artikelpreis.Brutto && Artikel.Artikelpreis.Netto"> {{Artikel.Artikelpreis.Brutto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span> ({{Artikel.Artikelpreis.Brutto
+						| currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup>)</p>
+					<p ng-if="Artikel.Artikelpreis.Brutto && !Artikel.Artikelpreis.Netto"> {{Artikel.Artikelpreis.Brutto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup></p>
+				</div>
+			</div>
+			<div class="row" ng-if="Artikel.Artikelpreis.Aktion">
+				<div class="col-xs-6">
+					<p>{{l.lng_artikeldetail_preis_neu}}</p>
+				</div>
+				<div class="col-xs-6" style="text-align:right;">
+					<p ng-if="Artikel.Artikelpreis.Aktion.Netto && !Artikel.Artikelpreis.Aktion.Brutto">{{Artikel.Artikelpreis.Aktion.Netto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup></p>
+					<p ng-if="Artikel.Artikelpreis.Aktion.Brutto && Artikel.Artikelpreis.Aktion.Netto">{{Artikel.Artikelpreis.Aktion.Netto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span> ({{Artikel.Artikelpreis.Aktion.Brutto
+						| currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup>)</p>
+					<p ng-if="Artikel.Artikelpreis.Aktion.Brutto && !Artikel.Artikelpreis.Aktion.Netto">{{Artikel.Artikelpreis.Aktion.Brutto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup></p>
+				</div>
+			</div>
+			<div class="row" ng-if="!Artikel.Artikelpreis.Aktion">
+				<div class="col-xs-6">
+					<p>{{l.lng_artikeldetail_preis}}</p>
+				</div>
+				<div class="col-xs-6" style="text-align:right;">
+					<p ng-if="Artikel.Artikelpreis.Netto && !Artikel.Artikelpreis.Brutto">{{Artikel.Artikelpreis.Netto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup></p>
+					<p ng-if="Artikel.Artikelpreis.Netto &&  Artikel.Artikelpreis.Brutto">{{Artikel.Artikelpreis.Netto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span> ({{Artikel.Artikelpreis.Brutto
+						| currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup>)</p>
+					<p ng-if="!Artikel.Artikelpreis.Netto && Artikel.Artikelpreis.Brutto">{{Artikel.Artikelpreis.Brutto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup></p>
+					<p ng-if="row.kein_nullpreis_auch_wk" ng-show="!Artikel.Artikelpreis.Netto && !Artikel.Artikelpreis.Brutto">{{l.lng_artikeldetail_preis_auf_anfrage}}</p>
+				</div>
+			</div>
+			<!--Preisbemerkung-->
+			<p ng-if="row.artdetail_anzeigen_preisber"><sup>*</sup> {{l[Artikel.Preisbemerkung]}}</p>
+			<a ng-if="row.versandlink_hinter_steuerinfo" style="text-decoration:underline;cursor:pointer;color:#286090;" ui-sref="lieferbedingungen"
+				target="_blank"> {{l.lng_artikeldetail_zzgl_versandkosten}}</a>
+		</div>
+
+		<!--Zurück Button in Smartphone Ansicht-->
+		<div class="col-xs-12 visible-xs" style="margin-top:20px;">
+			<button class="btn btn-primary btn-block" ng-click="back()">{{l.lng_artikeldetail_zurueckbtn}}</button>
+		</div>
+
+		<!--Aktionsbuttons in Smartphone Ansicht-->
+		<div class="col-xs-12 visible-xs" ng-include="'buttons.html'"></div>
+
+		<!--Artikeldetails (Langtext,Dimensionstext,Bestelltext,Infotext)-->
+		<div class="col-xs-12 visible-xs" style="margin-top:20px;" ng-if="Artikel.Langtext || Artikel.Dimensionstext || Artikel.Bestelltext || Artikel.Infotext" ng-include="'artikeltexte.html'"></div>
+
+		<!--Artikelanhang-->
+		<div class="col-xs-12 visible-xs" style="margin-top:20px;" ng-if="Artikel.Artikelanhang" ng-include="'artikelanhang.html'"></div>
+	</div>
+
+	<div class="row" style="margin-top:10px;">
+		<div class="hidden-xs col-sm-5">
+			<!--Mengenstaffel in Tablet und Desktop Ansicht-->
+			<div ng-include="'mengenstaffel.html'" ng-if="Artikel.Mengenstaffel"></div>
+			
+		</div>
+		<!--Variantenauswahl, Mengeneingabe, Bestand, Preis und Button in Tablet und Desktop Ansicht-->
+		<div class="hidden-xs col-sm-7">
+			<div class="row">
+				<div class="col-xs-12" ng-if="showVariantenauswahl1 || showVariantenauswahl2" style="margin-bottom:10px;">
+					<!--Variantenauswahl-->
+					<div ng-include="'variantenauswahl.html'"></div>
+				</div>
+				<div class="col-xs-6" style="margin-bottom:10px;">
+					<!--Bestand-->
+					<div ng-if="Artikel.Bestand" ng-include="'bestandsanzeige.html'"></div>
+				</div>
+				<div class="col-xs-6" style="margin-bottom:10px;">
+					<!--Mengeneingabe-->
+					<div ng-include="'mengeneingabe.html'"></div>
+				</div>
+			</div>
+			<!--Preis-->
+			<div class="row" ng-if="Artikel.Artikelpreis && kunde.Rechte.PreiseAusblenden!='True'">
+				<div class="col-xs-12 artikeldetail_aktionspreis_altpreis" ng-if="Artikel.Artikelpreis.Aktion && row.ardetail_preis_ohne_aktion" style="text-align:right;">
+					<span ng-if="Artikel.Artikelpreis.Netto != undefined && Artikel.Artikelpreis.Brutto == undefined"> {{Artikel.Artikelpreis.Netto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup></span>
+					<span ng-if="Artikel.Artikelpreis.Brutto && Artikel.Artikelpreis.Netto"> {{Artikel.Artikelpreis.Brutto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span>							({{Artikel.Artikelpreis.Brutto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup>)</span>
+					<span ng-if="Artikel.Artikelpreis.Brutto && !Artikel.Artikelpreis.Netto"> {{Artikel.Artikelpreis.Brutto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup></span>
+				</div>
+				<div class="col-xs-12 artikeldetail_preis" style="text-align:right;">
+					<div ng-include="'preisdarstellung.html'"></div>
+				</div>
+				<!--Preisbemerkung-->
+				<div class="col-xs-12 artikeldetail_preisbemerkung">
+					<p ng-if="row.artdetail_anzeigen_preisber"><sup>*</sup> {{l[Artikel.Preisbemerkung]}}
+					<a ng-if="row.versandlink_hinter_steuerinfo" style="text-decoration:underline;cursor:pointer;color:#286090;" ui-sref="lieferbedingungen"
+						target="_blank"> {{l.lng_artikeldetail_zzgl_versandkosten}}</a></p>
+				</div>
+			</div>
+			<!--Button-->
+			<div ng-include="'buttons.html'"></div>
+		</div>
+	</div>
+
+	<div class="row" style="margin-top:10px;">
+		<!--Artikeltexte && Downloads in Tablet & Desktop-->
+		<div class="hidden-xs col-sm-12"  ng-if="Artikel.Langtext || Artikel.Dimensionstext || Artikel.Bestelltext || Artikel.Infotext || Artikel.Artikelanhang">
+			<uib-tabset class="artikeldetail_tabset" active="active">
+				<uib-tab class="artikeldetail_tab" index="0" ng-if="Artikel.Langtext || Artikel.Dimensionstext || Artikel.Bestelltext || Artikel.Infotext" heading="{{l.lng_artikeldetail_details_header}}">
+					<div ng-include="'artikeltexte.html'"></div>
+				</uib-tab>
+				<uib-tab class="artikeldetail_tab" index="1" ng-if="Artikel.Artikelanhang" heading="{{l.lng_artikeldetail_downloads_header}}">
+					<div ng-include="'artikelanhang.html'"></div>
+				</uib-tab>
+			</uib-tabset>
+		</div>
+
+		<!--Stuecklistenartikel-->
+		<div class="col-xs-12" ng-if="Artikel.Stueckliste" style="margin-top:10px;">
+			<h4>{{l.lng_artikeldetail_stuecklistenartikel_titel}}</h4>
+			<div ng-include="'stueckliste.html'"></div>
+		</div>
+
+		<!--Zubehörartikel-->
+		<div class="col-xs-12 artikeldetail_zubehoer_container" ng-if="Artikel.Zubehoer" style="margin-top:10px;">
+			<h4>{{l.lng_artikeldetail_zubehoerartikel_titel}}</h4>
+			<div ng-init="Zubehoer = Artikel.Zubehoer" ng-include="'zubehoer.html'"></div>
+		</div>
+
+		<!--PflichtzubehörArtikel-->
+		<div class="col-xs-12 artikeldetail_zubehoer_container"  ng-if="Artikel.PflichtZubehoer" style="margin-top:10px;">
+			<h4>{{l.lng_artikeldetail_pflichtzubehoerartikel_titel}}</h4>
+			<div ng-init="Zubehoer = Artikel.PflichtZubehoer; Zubehoer.Pflicht = true;" ng-include="'zubehoer.html'"></div>
+		</div>
+
+		<!--Alternativartikel-->
+		<div class="col-xs-12 artikeldetail_zubehoer_container" ng-if="Artikel.Alternativen" style="margin-top:10px;">
+			<h4>{{l.lng_artikeldetail_alternativartikel_titel}}</h4>
+			<div ng-include="'alternativen.html'"></div>
+		</div>
+	</div>
+</div>
+
+
+<!--########################################################## TEMPLATE INCLUDES ##############################################################################################-->
+
+<!--Template für das Detailblättern (nur sichtbar, wenn Option aktiviert)-->
+<script type="text/ng-template" id="blaettern.html">
+	<div class="row" style="margin-bottom:15px;">
+		<div class="col-xs-2">
+			<i ng-click="switchToArtikel(Artikel.Liste[aktuellerIndex-1])" ng-show="aktuellerIndex > 0" class="fa fa-arrow-left artdetail_blaettern_icon"></i>
+		</div>
+		<div class="col-xs-8" style="text-align:center;margin-top:5px;">{{aktuellerIndex+1}} von {{Artikel.Liste.length}}</div>
+		<div class="col-xs-2" style="text-align:right;">
+			<i ng-click="switchToArtikel(Artikel.Liste[aktuellerIndex+1])" ng-show="aktuellerIndex < Artikel.Liste.length-1" class="fa fa-arrow-right artdetail_blaettern_icon"></i>
+		</div>
+	</div>
+</script>
+
+<!--Template für Artikelinfo-->
+<script type="text/ng-template" id="artikelinfo.html">
+	<div class="artikeldetail_info">
+		<!--Artikelbezeichnung-->
+		<div ng-if="row.artdetail_anzeigen_bez"><h4>{{Artikel.Bezeichnung}}</h4></div>
+		<!--Artikelnummer-->
+		<div ng-if="row.artdetail_anzeigen_artnr">
+			<p><span class="left">{{l.lng_artikeldetail_artikelnummer}}</span ><span class="right">{{Artikel.Artikelnummer}}</span></p>
+		</div>
+		<!--HstArtikelnummer-->
+		<div ng-if="Artikel.HstArtikelnummer">
+			<p><span class="left">{{l.lng_artikeldetail_hstartikelnummer}}</span> <span class="right">{{Artikel.HstArtikelnummer}}</span></p>
+		</div>
+		<!--Matchcode-->
+		<div ng-if="Artikel.Matchcode">
+			<p><span class="left">{{l.lng_artikeldetail_matchcode}}</span> <span class="right">{{Artikel.Matchcode}}</span></p>
+		</div>
+		<!--EANNummer-->
+		<div ng-if="Artikel.EANNummer">
+			<p><span class="left">{{l.lng_artikeldetail_eannummer}}</span> <span class="right">{{Artikel.EANNummer}}</span></p>
+		</div>
+		<!--Artikelzusatz-->
+		<div ng-if="Artikel.Zusatz">
+			<p><span class="left">{{l.lng_artikeldetail_zusatz}}</span> <span class="right">{{Artikel.Zusatz}}</span></p>
+		</div>
+		<!--Preiseinheit-->
+		<div ng-if="Artikel.Preiseinheit">
+			<p><span class="left">{{l.lng_artikeldetail_preiseinheit}}</span> <span class="right">{{Artikel.Preiseinheit}}</span></p>
+		</div>
+		<!--Mengeneinheit-->
+		<!--<div ng-if="Artikel.Mengeneinheit">
+			<p><span class="left">{{l.lng_artikeldetail_mengeneinheit}}</span> <span class="right">{{Artikel.Mengeneinheit}}</span></p>
+		</div>-->
+		<!--Gewicht-->
+		<div ng-if="Artikel.Gewicht && Artikel.Gewicht > 0">
+			<p><span class="left">{{l.lng_artikeldetail_gewicht}}</span> <span class="right">{{Artikel.Gewicht}}</span></p>
+		</div>
+	</div>
+</script>
+
+<!--Template für die Variantenauswahl (nur sichtbar, wenn Varianten vorhanden sind)-->
+<script type="text/ng-template" id="variantenauswahl.html">
+	<div class="row">
+		<div class="col-xs-12" ng-class="{'col-sm-6':showVariantenauswahl1 && showVariantenauswahl2}" ng-if="showVariantenauswahl1">
+			<select class="form-control" ng-model="varModel1" ng-options="Variante as Variante for Variante in Variante1" ng-change="changeArtikel(varModel1,varModel2)"><option value="">{{l.lng_artikeldetail_selectfeld_text}}</option></select>
+		</div>
+		<div class="col-xs-12" ng-class="{'col-sm-6':showVariantenauswahl1 && showVariantenauswahl2}" ng-if="showVariantenauswahl2">
+			<select class="form-control" ng-model="varModel2" ng-options="Variante as Variante for Variante in Variante2" ng-change="changeArtikel(varModel1,varModel2)"><option value="">{{l.lng_artikeldetail_selectfeld_text}}</option></select>
+		</div>
+</script>
+
+<!--Template für Mengeneingabe-->
+<script type="text/ng-template" id="mengeneingabe.html">
+	<div class="input-group">
+		<span class="input-group-addon">{{l.lng_artikeldetail_menge}}:</span>
+		<input class="form-control" title="Menge" style="text-align:center;" ng-model="Artikel.Menge" type="number">
+		<span class="input-group-addon" ng-if="!Artikel.Mengenumrechnung">{{Artikel.Mengeneinheit}}</span>
+
+		<div class="input-group-btn" ng-if="Artikel.Mengenumrechnung" ng-class="{'open':Artikel.MengUm.open}">
+			<button type="button" class="btn btn-default" ng-click="Artikel.MengUm.open = !Artikel.MengUm.open">{{Artikel.MengUm.select.Mengeneinheit}} <span class="caret"></span></button>
+			<div class="dropdown-menu dropdown-menu-right" style="padding:0px 10px;">
+				<table class="table mengumrechnung">
+					<thead>
+						<th>{{l.lng_artikeldetail_mengeneinheit}}</th>
+						<th>{{l.lng_artikeldetail_einzelpreis}} / {{Artikel.Mengeneinheit}}</th>
+						<th class="hidden-xs">{{l.lng_artikeldetail_gesamtpreis}}</th>
+					</thead>
+					<tbody>
+						<tr ng-repeat="MU in Artikel.Mengenumrechnung" ng-click="changeMengeneinheit(MU)">
+							<td>{{MU.Mengeneinheit}} <span ng-if="MU.Mengeneinheit != MU.Basis_Mengeneinheit">({{MU.Basis_Faktor}} {{MU.Basis_Mengeneinheit}})</span></td>
+							<td ng-if="kunde.Rechte.PreiseAusblenden!='True'">
+								<span ng-if="MU.Preis.Netto && !MU.Preis.Brutto">
+									{{MU.Preis.Netto | currency:''}}<span ng-bind-html="trust(MU.Preis.Symbol)"></span><sup>*</sup>
+								</span>
+								<span ng-if="MU.Preis.Netto && MU.Preis.Brutto">
+									{{MU.Preis.Netto | currency:''}}<span ng-bind-html="trust(MU.Preis.Symbol)"></span>
+									({{MU.Preis.Brutto | currency:''}}<span ng-bind-html="trust(MU.Preis.Symbol)"></span><sup>*</sup>)
+								</span>
+								<span ng-if="!MU.Preis.Netto && MU.Preis.Brutto">
+									{{MU.Preis.Brutto | currency:''}}<span ng-bind-html="trust(MU.Preis.Symbol)"></span><sup>*</sup>
+								</span>
+							</td>
+							<td class="hidden-xs" ng-if="kunde.Rechte.PreiseAusblenden!='True'">
+								<span ng-if="MU.Preis.Netto && !MU.Preis.Brutto">
+									{{(MU.Basis_Faktor * MU.Preis.Netto) | currency:''}}<span ng-bind-html="trust(MU.Preis.Symbol)"></span><sup>*</sup>
+								</span>
+								<span ng-if="MU.Preis.Netto && MU.Preis.Brutto">
+									{{(MU.Basis_Faktor * MU.Preis.Netto) | currency:''}}<span ng-bind-html="trust(MU.Preis.Symbol)"></span>
+									({{(MU.Basis_Faktor * MU.Preis.Brutto) | currency:''}}<span ng-bind-html="trust(MU.Preis.Symbol)"></span><sup>*</sup>)
+								</span>
+								<span ng-if="!MU.Preis.Netto && MU.Preis.Brutto">
+									{{(MU.Basis_Faktor * MU.Preis.Brutto) | currency:''}}<span ng-bind-html="trust(MU.Preis.Symbol)"></span><sup>*</sup>
+								</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+        	</div>
+		</div>
+	</div>
+</script>
+
+<!--Template für Bestandsanzeige-->
+<script type="text/ng-template" id="bestandsanzeige.html">
+	<div class="input-group">
+		<span class="input-group-addon" style="text-align:left;">{{l.lng_artikeldetail_verfuegbarkeit}}:</span>
+		<span class="input-group-addon">
+			<i ng-if="!row.bestandsanzeige_als_zahl" class="fa fa-circle" uib-tooltip="{{l[Artikel.Bestand.Sprachvariable]}}" ng-class="{'circle_red':Artikel.Bestand.Ampel=='r','circle_yellow':Artikel.Bestand.Ampel=='y','circle_green':Artikel.Bestand.Ampel=='g'}" aria-hidden="true"></i>
+			<span ng-if="row.bestandsanzeige_als_zahl">{{Artikel.Bestand.Value}}</span>
+		</span>
+	</div>
+</script>
+
+<!--Template für Warenkorb, Angebot und Merkzettel Buttons-->
+<script type="text/ng-template" id="buttons.html">
+	<div class="row artikeldetail_button" style="text-align:right;">
+		<!--Merkzettel-->
+		<div class="col-xs-12 col-sm-4" ng-if="row.merkzettel_im_shop">
+			<!--Button im Smartphone-->
+			<button class="visible-xs btn btn-primary btn-block" ng-click="openMerkzettel()">{{l.lng_artikeldetail_merkzettelbtn}}</button>
+			<!--Icon ab Tablet-->
+			<i class="hidden-xs fa fa-star" ng-click="openMerkzettel()" uib-tooltip="{{l.lng_artikeldetail_merkzettelbtn}}"></i>
+		</div>
+		<!--Anfrage-->
+		<div class="col-xs-12 col-sm-4" ng-if="Artikel.Artikeltyp!=21 && Artikel.Menge>0 && (Artikel.Artikelpreis.Netto || Artikel.Artikelpreis.Brutto || row.kein_nullpreis_auch_wk) && kunde.Rechte.RechtAng=='True'">
+			<!--Button im Smartphone-->
+			<button class="visible-xs btn btn-primary btn-block" ng-show="Artikel.Menge>0" ng-click="pushToWarenkorb(Artikel,'a')">{{l.lng_artikeldetail_anfragebtn}}</button>
+			<!--Icon ab Tablet-->
+			<i class="hidden-xs fa fa-comments"  ng-show="Artikel.Menge>0"  ng-click="pushToWarenkorb(Artikel,'a')" uib-tooltip="{{l.lng_artikeldetail_anfragebtn}}"></i>
+		</div>
+		<!--Warenkorb-->
+		<div class="col-xs-12 col-sm-4" ng-if="Artikel.Artikeltyp != 21 && Artikel.Menge>0 && (Artikel.Artikelpreis.Netto || Artikel.Artikelpreis.Brutto || row.kein_nullpreis_auch_wk) && kunde.Rechte.RechtWK=='True'">
+			<!--Button im Smartphone-->
+			<button class="visible-xs btn btn-primary btn-block" ng-show="Artikel.Menge>0" ng-click="pushToWarenkorb(Artikel,'b')">{{l.lng_artikeldetail_warenkorbbtn}}</button>
+			<!--Icon ab Tablet-->
+			<i class="hidden-xs fa fa-shopping-cart" ng-show="Artikel.Menge>0" ng-click="pushToWarenkorb(Artikel,'b')" uib-tooltip="{{l.lng_artikeldetail_warenkorbbtn}}"></i>
+		</div>
+	</div>
+</script>
+
+<!--Template für Artikeltexte (Langtext, Dimensionstext, Infotext, Bestelltext)-->
+<script type="text/ng-template" id="artikeltexte.html">
+	<h4 class="visible-xs">{{l.lng_artikeldetail_details_header}}</h4>
+	<div ng-if="Artikel.Langtext">
+		<p ng-if="Artikel.Langtext.HTMLText" ng-bind-html="trust(Artikel.Langtext.HTMLText, true)"></p>
+		<p ng-if="!Artikel.Langtext.HTMLText" ng-bind-html="trust(Artikel.Langtext.Text, true)"></p>
+	</div>
+	<div ng-if="Artikel.Dimensionstext">
+		<p ng-if="Artikel.Dimensionstext.HTMLText" ng-bind-html="trust(Artikel.Dimensionstext.HTMLText, true)"></p>
+		<p ng-if="!Artikel.Dimensionstext.HTMLText" ng-bind-html="trust(Artikel.Dimensionstext.Text, true)"></p>
+	</div>
+	<div ng-if="Artikel.Bestelltext">
+		<p ng-if="Artikel.Bestelltext.HTMLText" ng-bind-html="trust(Artikel.Bestelltext.HTMLText, true)"></p>
+		<p ng-if="!Artikel.Bestelltext.HTMLText" ng-bind-html="trust(Artikel.Bestelltext.Text, true)"></p>
+	</div>
+	<div ng-if="Artikel.Infotext">
+		<p ng-if="Artikel.Infotext.HTMLText" ng-bind-html="trust(Artikel.Infotext.HTMLText, true)"></p>
+		<p ng-if="!Artikel.Infotext.HTMLText" ng-bind-html="trust(Artikel.Infotext.Text, true)"></p>
+	</div>
+</script>
+
+<!--Template für Artikelanhänge-->
+<script type="text/ng-template" id="artikelanhang.html">
+	<h4 class="visible-xs">{{l.lng_artikeldetail_downloads_header}}</h4>
+	<div class="row">
+		<div class="col-xs-12 col-sm-6 col-md-4" ng-repeat="Datei in Artikel.Artikelanhang" style="margin-top:10px;margin-bottom:10px;">
+			<a target="_blank" ng-href="3xios/daten/{{Datei.Name+'.'+Datei.Typ}}">
+				<img ng-if="Datei.Typ=='pdf'" src="3xios/images/dok_pdf.png">
+				<span>{{Datei.Name}}</span>
+			</a>
+		</div>
+	</div>
+</script>
+
+<!--Template für Alternativartikel-->
+<script type="text/ng-template" id="alternativen.html">
+	<div uib-carousel class="artikeldetail_slider" active="0" interval="5000" template-url="slider.html" ng-init="slides = Artikel.Alternativen">
+		<div uib-slide ng-repeat="slide in slides track by $index" index="$index">
+			<div ng-include="'slide.html'"></div>
+		</div>
+	</div>
+</script>
+
+<!--Template für Zubehörartikel-->
+<script type="text/ng-template" id="zubehoer.html">
+	<div class="row">
+		<div class="hidden-xs hidden-sm col-md-6" ng-repeat="Zub in Zubehoer">
+			<div class="row" style="margin-bottom:10px;">
+				<div class="col-xs-4">
+					<a ui-sref="article({id:Zub.Bezeichnung,artnr:Zub.Artikelnummer})"><div class="artikeldetail_bild_container"><img ng-src="./{{Zub.Artikelbild[0]}}"></div></a>
+				</div>
+				<div class="col-xs-8">
+					<a ui-sref="article({id:Zub.Bezeichnung,artnr:Zub.Artikelnummer})"><h4>{{Zub.Bezeichnung}}
+						<i class="fa fa-circle" ng-if="Zub.Bestand" uib-tooltip="{{l[Zub.Bestand.Sprachvariable]}}" ng-class="{'circle_red':Zub.Bestand.Ampel=='r','circle_yellow':Zub.Bestand.Ampel=='y','circle_green':Zub.Bestand.Ampel=='g'}"
+							aria-hidden="true"></i>
+					</h4></a>
+					<p>{{Zub.Artikelnummer}}</p>
+					<p>{{Zub.Zusatz}}</p>
+					<div class="row">
+						<div class="col-xs-6 preis" ng-if="kunde.Rechte.PreiseAusblenden!='True'">
+							<p ng-show="Zub.Artikelpreis.Netto && !Zub.Artikelpreis.Brutto">{{Zub.Artikelpreis.Netto | currency:''}}<span ng-bind-html="trust(Zub.Artikelpreis.Symbol)"></span><sup>*</sup></p>
+							<p ng-show="Zub.Artikelpreis.Netto &&  Zub.Artikelpreis.Brutto">{{Zub.Artikelpreis.Netto | currency:''}}<span ng-bind-html="trust(Zub.Artikelpreis.Symbol)"></span> ({{Zub.Artikelpreis.Brutto
+								| currency:''}}<span ng-bind-html="trust(Zub.Artikelpreis.Symbol)"></span><sup>*</sup>)</p>
+							<p ng-show="!Zub.Artikelpreis.Netto && Zub.Artikelpreis.Brutto">{{Zub.Artikelpreis.Brutto | currency:''}}<span ng-bind-html="trust(Zub.Artikelpreis.Symbol)"></span><sup>*</sup></p>
+							<p ng-show="!Zub.Artikelpreis.Netto && !Zub.Artikelpreis.Brutto">{{l.lng_artikeldetail_preis_auf_anfrage}}</p>
+						</div>
+						<div class="col-xs-6" ng-hide="Zubehoer.Pflicht">
+							<div class="input-group" ng-init="zubehoer_mitbestellen[Zub.Artikelnummer]">
+								<span class="input-group-addon" id="zubmenge">{{l.lng_artikeldetail_menge}}</span>
+								<input type="number" class="form-control" ng-model="zubehoer_mitbestellen[Zub.Artikelnummer]" aria-describedby="zubmenge">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div uib-carousel class="col-xs-12 col-sm-12 hidden-md hidden-lg artikeldetail_slider" active="0" interval="5000" template-url="slider.html" ng-init="slides = Zubehoer">
+			<div uib-slide ng-repeat="slide in slides track by $index" index="$index">
+				<div ng-include="'slide.html'"></div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<!--Template für Stücklistenartikel-->
+<script type="text/ng-template" id="stueckliste.html">
+	<div class="row" >
+		<div class="col-xs-12 col-md-6" ng-repeat="SetArtikel in Artikel.Stueckliste">
+			<div class="row" style="margin-bottom:10px;">
+				<div class="col-xs-4">
+					<a ui-sref="article({id:SetArtikel.Bezeichnung,artnr:SetArtikel.Artikelnummer})"><div class="artikeldetail_bild_container"><img ng-src="./{{SetArtikel.Artikelbild[0]}}"></div></a>
+				</div>
+				<div class="col-xs-8">
+					<a ui-sref="article({id:SetArtikel.Bezeichnung,artnr:SetArtikel.Artikelnummer})">
+						<h4>{{SetArtikel.Bezeichnung}}
+							<i class="fa fa-circle" ng-if="SetArtikel.Bestand" uib-tooltip="{{l[SetArtikel.Bestand.Sprachvariable]}}" ng-class="{'circle_red':SetArtikel.Bestand.Ampel=='r','circle_yellow':SetArtikel.Bestand.Ampel=='y','circle_green':SetArtikel.Bestand.Ampel=='g'}"
+							aria-hidden="true"></i>
+						</h4>
+					</a>
+					<p>{{SetArtikel.Artikelnummer}}</p>
+					<p>{{SetArtikel.Zusatz}}</p>
+					<div class="preis" ng-if="kunde.Rechte.PreiseAusblenden!='True'">
+						<p ng-show="SetArtikel.Artikelpreis.Netto && !SetArtikel.Artikelpreis.Brutto">{{SetArtikel.Artikelpreis.Netto | currency:''}}<span ng-bind-html="trust(SetArtikel.Artikelpreis.Symbol)"></span></p>
+						<p ng-show="SetArtikel.Artikelpreis.Netto &&  SetArtikel.Artikelpreis.Brutto">{{SetArtikel.Artikelpreis.Netto | currency:''}}<span ng-bind-html="trust(SetArtikel.Artikelpreis.Symbol)"></span>								({{SetArtikel.Artikelpreis.Brutto | currency:''}}<span ng-bind-html="trust(SetArtikel.Artikelpreis.Symbol)"></span>)</p>
+						<p ng-show="!SetArtikel.Artikelpreis.Netto && SetArtikel.Artikelpreis.Brutto">{{SetArtikel.Artikelpreis.Brutto | currency:''}}<span ng-bind-html="trust(SetArtikel.Artikelpreis.Symbol)"></span></p>
+						<p ng-show="!SetArtikel.Artikelpreis.Netto && !SetArtikel.Artikelpreis.Brutto">{{l.lng_artikeldetail_preis_auf_anfrage}}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<!--Template für Mengenstaffel-->
+<script type="text/ng-template" id="mengenstaffel.html">
+	<table class="table">
+		<thead>
+			<th width="25%">{{l.lng_artikeldetail_mengenstaffel_kopf_menge}}</th>
+			<th width="25%">{{l.lng_artikeldetail_mengenstaffel_kopf_rabatt}}</th>
+			<!--<th ng-if="kunde.Rechte.PreiseAusblenden!='True'">{{l.lng_artikeldetail_mengenstaffel_kopf_preis}}</th>-->
+		</thead>
+		<tbody>
+			<tr ng-repeat="Staffel in Artikel.Mengenstaffel">
+				<td>ab {{Staffel.AbMenge}}</td>
+				<td>{{Staffel.Rabatt}}%</td>
+				<!--<td ng-if="kunde.Rechte.PreiseAusblenden!='True'">
+					<p ng-if="Artikel.Artikelpreis.Netto && !Artikel.Artikelpreis.Brutto">{{Artikel.Artikelpreis.Netto - ((Artikel.Artikelpreis.Netto * Staffel.Rabatt)/100) | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span></p>
+					<p ng-if="Artikel.Artikelpreis.Netto &&  Artikel.Artikelpreis.Brutto">
+						{{Artikel.Artikelpreis.Netto - ((Artikel.Artikelpreis.Netto * Staffel.Rabatt)/100) | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span>		
+						({{Artikel.Artikelpreis.Brutto - ((Artikel.Artikelpreis.Brutto * Staffel.Rabatt)/100) | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup>)
+					</p>
+					<p ng-if="!Artikel.Artikelpreis.Netto && Artikel.Artikelpreis.Brutto">{{Artikel.Artikelpreis.Brutto - ((Artikel.Artikelpreis.Brutto * Staffel.Rabatt)/100) | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span></p>
+				</td>-->
+			</tr>
+		</tbody>
+	</table>
+</script>
+
+<script type="text/ng-template" id="slider.html">
+	<div class="carousel-inner" ng-transclude></div>
+	<a role="button" class="left carousel-control" style="text-align:left;" ng-click="prev()" ng-if="slides.length > 1">
+		<span  aria-hidden="true" class="fa fa-angle-left"></span>
+	</a>
+	<a role="button" class="right carousel-control" style="text-align:right;" ng-click="next()" ng-if="slides.length > 1">
+		<span aria-hidden="true" class="fa fa-angle-right"></span>
+	</a>
+</script>
+
+<script type="text/ng-template" id="slide.html">
+	<div class="row">
+		<div class="col-xs-offset-1 col-xs-10">
+			<table class="hidden-xs table artikeldetail_alternativartikel_tabelle">
+				<tr>
+					<td class="artikeldetail_alternativartikel_bildspalte"><a ui-sref="article({id:slide.Bezeichnung,artnr:slide.Artikelnummer})"><div class="artikeldetail_bild_container"><img ng-src="./{{slide.Artikelbild[0]}}"/></div></a></td>
+					<td class="artikeldetail_alternativartikel_infospalte">
+						<a ui-sref="article({id:slide.Bezeichnung,artnr:slide.Artikelnummer})">
+							<h4>{{slide.Bezeichnung}}</h4>
+							<p>{{slide.Zusatz}}</p>
+						</a>
+					</td>
+					<td class="artikeldetail_alternativartikel_preisspalte">
+						<div class="artikeldetail_alternativartikel_preis" ng-if="kunde.Rechte.PreiseAusblenden!='True'">
+							<p ng-if="slide.Artikelpreis.Netto && !slide.Artikelpreis.Brutto">{{slide.Artikelpreis.Netto | currency:''}}<span ng-bind-html="trust(slide.Artikelpreis.Symbol)"></span><sup>*</sup></p>
+							<p ng-if="slide.Artikelpreis.Netto &&  slide.Artikelpreis.Brutto">{{slide.Artikelpreis.Netto | currency:''}}<span ng-bind-html="trust(slide.Artikelpreis.Symbol)"></span> <br> ({{slide.Artikelpreis.Brutto | currency:''}}<span ng-bind-html="trust(slide.Artikelpreis.Symbol)"></span><sup>*</sup>)</p>
+							<p ng-if="!slide.Artikelpreis.Netto && slide.Artikelpreis.Brutto">{{slide.Artikelpreis.Brutto | currency:''}}<span ng-bind-html="trust(slide.Artikelpreis.Symbol)"></span><sup>*</sup></p>
+							<p ng-if="!slide.Artikelpreis.Netto && !slide.Artikelpreis.Brutto">{{l.lng_artikeldetail_preis_auf_anfrage}}</p>
+						</div>
+						<div class="hidden-sm artikeldetail_button" ng-init="slide.Menge = 1">
+							<!--Merkzettel-->
+							<div class="col-xs-4" ng-if="row.merkzettel_im_shop">
+								<i uib-tooltip="{{l.lng_artikeldetail_merkzettelbtn}}" ng-click="openMerkzettel()" class="fa fa-star"></i>
+							</div>
+							<!--Anfrage-->
+							<div class="col-xs-4" ng-if="slide.Artikeltyp != 21 && (slide.Artikelpreis.Netto || slide.Artikelpreis.Brutto || row.kein_nullpreis_auch_wk) && kunde.Rechte.RechtAng=='True'">
+								<i uib-tooltip="{{l.lng_artikeldetail_anfragebtn}}" class="fa fa-comments" ng-click="pushToWarenkorb(slide,'a')"></i>
+							</div>
+							<!--Warenkorb-->
+							<div class="col-xs-4" ng-if="slide.Artikeltyp != 21 && (slide.Artikelpreis.Netto || slide.Artikelpreis.Brutto || row.kein_nullpreis_auch_wk) && kunde.Rechte.RechtWK=='True'">
+								<i uib-tooltip="{{l.lng_artikeldetail_warenkorbbtn}}" ng-click="pushToWarenkorb(slide,'b')" class="fa fa-shopping-cart"></i>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<table class="visible-xs table">
+				<tr>
+					<td><a ui-sref="article({id:slide.Bezeichnung,artnr:slide.Artikelnummer})"><div class="artikeldetail_bild_container"><img ng-src="./{{slide.Artikelbild[0]}}"/></div></a></td>
+					<td style="width:60%">
+						<a ui-sref="article({id:slide.Bezeichnung,artnr:slide.Artikelnummer})">
+							<h4>{{slide.Bezeichnung}}</h4>
+							<p>{{slide.Zusatz}}</p>
+							<div ng-if="kunde.Rechte.PreiseAusblenden!='True'">
+								<p ng-if="slide.Artikelpreis.Netto && !slide.Artikelpreis.Brutto">{{slide.Artikelpreis.Netto | currency:''}}<span ng-bind-html="trust(slide.Artikelpreis.Symbol)"></span><sup>*</sup></p>
+								<p ng-if="slide.Artikelpreis.Netto &&  slide.Artikelpreis.Brutto">{{slide.Artikelpreis.Netto | currency:''}}<span ng-bind-html="trust(slide.Artikelpreis.Symbol)"></span> ({{slide.Artikelpreis.Brutto | currency:''}}<span ng-bind-html="trust(slide.Artikelpreis.Symbol)"></span><sup>*</sup>)</p>
+								<p ng-if="!slide.Artikelpreis.Netto && slide.Artikelpreis.Brutto">{{slide.Artikelpreis.Brutto | currency:''}}<span ng-bind-html="trust(slide.Artikelpreis.Symbol)"></span><sup>*</sup></p>
+								<p ng-if="!slide.Artikelpreis.Netto && !slide.Artikelpreis.Brutto">{{l.lng_artikeldetail_preis_auf_anfrage}}</p>
+							</div>
+						</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</script>

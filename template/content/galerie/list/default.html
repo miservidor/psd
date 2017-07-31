@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<!--<pre class="code">{{ data | json }}</pre> -->
+<div ng-show="!data" class="text-center" ng-include="'loading.html'" ng-init="og.images = []"></div>
+<div class="gallist" ng-controller="GalerieCtrl">
+	<h5 class="italic" ng-show="dokdesc && data.items[0]">{{dokdesc}}</h5>
+	<div ng-repeat="hk in data.items">
+		<h3 ng-if="data.items.length > 1">{{hk.name}}</h3>
+		<p class="teasertext" ng-if="hk.notation && !dokdesc" ng-bind-html="trust(hk.notation)"></p>
+		<div ng-repeat="uk in hk.items">
+			<h4 ng-if="hk.items.length > 1">{{uk.name}}</h4>
+			<p class="teasertext" ng-if="uk.notation && !dokdesc" ng-bind-html="trust(uk.notation)"></p>
+			<div style="clear:both;" ng-repeat="g in uk.items" ng-class="{'itemnichtsichtbar':g.sichtbar=='0'}">
+				<!--<pre class="code">{{ g | json }}</pre> -->
+				<h5 ng-if="!hidetitel">{{g.titel}}</h5>
+
+				<div id="paraent" ng-if="modul.darstellung && modul.darstellung=='slide'">
+					<div uib-carousel ng-class="{'carousel':(modul.effect=='slide'), 'xxx-carousel-fade':(modul.effect=='fade')}" active="active"
+					 interval="modul.speed">
+						<div uib-slide ng-repeat="img in data.items[0].items[0].items[0].img track by $index" index="$index">
+							<a ng-if="img.weblink" ng-href="{{img.weblink}}"><img ng-src="{{file+img.img}}" style="width: 100%;	max-width: 100%"></a>
+							<img ng-if="!img.weblink" ng-src="{{file+img.img}}" style="width: 100%;	max-width: 100%" ng-init="og.images.push(file+img.img)">
+						</div>
+					</div>
+				</div>
+
+				<div class=" gal_list " ng-if="!daten.darstellung || daten.darstellung=='grid' ">
+					<div ng-class="{ 'hidden-xs col-sm-12 col-md-12 col-lg-12': daten.anzahlprozeile && daten.anzahlprozeile=='1' ,
+							 'hidden-xs col-sm-6 col-md-6 col-lg-6': daten.anzahlprozeile && daten.anzahlprozeile=='2' , 'hidden-xs col-sm-6 col-md-4 col-lg-4': daten.anzahlprozeile
+							 && daten.anzahlprozeile=='3' , 'hidden-xs col-sm-6 col-md-4 col-lg-3': (!daten.anzahlprozeile || daten.anzahlprozeile=='4'
+							 )} " class="galeriepic " ng-repeat="img in g.img track by $index " ng-if="(data.items.length==1 && data.items[0].items.length==1) || ($index
+							 < bilderprozeile && !daten.anzahlprozeile) ">
+						<div class="row galerie_imgg " ng-show="!img.weblink && ($index < daten.anzahl || !daten.anzahl) ">
+							<div class="galspace ">
+								<a class="img_cursor " ng-click="openGalerie($index,g.img,file, 'lg') " style="cursor: pointer; ">
+									<div class="galbild_vorsch ">
+										<img ng-src="{{file+img.thumb}} " ng-init="og.images.push(file+img.img)">
+									</div>
+								</a>
+							</div>
+						</div>
+						<div class="row galerie_imgg " ng-if="img.weblink && ($index < daten.anzahl || !daten.anzahl) ">
+							<div class="galspace ">
+								<a class="img_cursor " href="{{img.weblink}} " target="{{img.Target}} " style="cursor: pointer; ">
+									<div class="galbild_vorsch ">
+										<img ng-src="{{file+img.thumb}}" ng-init="og.images.push(file+img.img)">
+									</div>
+								</a>
+							</div>
+						</div>
+						<div class="row galerie_caption ">
+							<center>{{img.imgnotation}}</center>
+						</div>
+					</div>
+
+					<div class="hidden-sm hidden-md hidden-lg ">
+						<div uib-carousel class="carousel " active="active " no-transition="false " interval="5000 ">
+							<div uib-slide ng-repeat="img in g.img track by $index " index="$index ">
+								<img ng-if="!img.weblink " ng-src="{{file+img.img}}" style="width: 100%; max-width: 100%;" ng-init="og.images.push(file+img.img)">
+								<a ng-if="img.weblink " ng-href="{{img.weblink}} " target="{{img.Target}} "><img ng-if="img.weblink " ng-src="{{file+img.img}}
+							 " style="width: 100%; max-width: 100%; cursor: pointer; "></a>
+								<center>{{img.imgnotation}}</center>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

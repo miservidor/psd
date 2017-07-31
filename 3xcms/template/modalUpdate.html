@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<div class="modal-header">
+    <h3 class="modal-title">Update</h3>
+</div>
+<div class="modal-body">
+    <form name="form" class="form-horizontal" novalidate>
+        <div class="form-group">
+            <label class="col-md-4 control-label">Aktuelle Version</label>
+            <div class="col-md-8">
+                <div class="form-control-static">{{version.nr}}</div>
+            </div>
+        </div>
+        <div ng-show="newVersion" class="form-group">
+            <label class="col-md-4 control-label">Verfügbare Version</label>
+            <div class="col-md-8">
+                <div class="form-control-static">{{newVersion}} <small ng-show="!changelog">(<a style="cursor: pointer;"  ng-click="getChangelog()">Zeige Änderungen</a>)</small></div>
+
+            </div>
+        </div>
+        <textarea ng-show="changelog" name="changelog" style="width: 100%;" rows="10">{{changelog}}</textarea>
+        <div ng-show="status">
+            <hr>
+            <div class="form-group">
+                <div class="col-md-offset-4 col-md-8">
+                    <div class="form-control-static" ng-class="{'text-warning' : status.backup == 'run', 'text-success' : status.backup == 'ok', 'text-danger' : status.backup == 'error'}">
+                        <i class="fa fa-fw fa-floppy-o"></i> Backup <i class="fa fa-fw" ng-class="{'fa-spin fa-spinner': status.backup == 'run', 'fa-check': status.backup == 'ok'}"></i>
+                    </div>
+                </div>
+                <div class="col-md-offset-4 col-md-8">
+                    <div class="form-control-static" ng-class="{'text-warning' : status.update == 'run', 'text-success' : status.update == 'ok', 'text-danger' : status.update == 'error'}">
+                        <i class="fa fa-fw fa-refresh"></i> Update <i class="fa fa-fw" ng-class="{'fa-spin fa-spinner': status.update == 'run', 'fa-check': status.update == 'ok'}"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer" ng-show="newVersion && (!status || (status.backup != 'run' && status.update != 'run'))">
+    <div ng-show="!newVersion" class="text-danger">Update-Server nicht erreichbar</div>
+    <div ng-show="!checkVersion()" class="text-success">CMS ist aktuell</div>
+    <button ng-show="checkVersion()" class="btn btn-success btn-sm" type="button" ng-click="update()">Aktualisieren</button>
+    <button class="btn btn-default btn-sm" type="button" ng-click="close()">OK</button>
+</div>

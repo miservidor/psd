@@ -1,0 +1,122 @@
+<div ng-controller="TmgCtrl">
+	<div ng-show="!data.Inhalt" class="text-center" ng-include="'loading.html'"></div>
+	<!-- 		<pre class="code">{{ data.Inhalt | json }}</pre> -->
+	<h3>{{state.titel}}</h3>
+	<p ng-bind-html="trust(data.Inhalt)"></p>
+
+	<div class="col-xs-12" ng-if="data.DynAngabe && data.Id == 3">
+		<div class="row">
+			<div class="col-xs-2">
+				<h5>Lieferbedingung</h5>
+			</div>
+			<div class="col-xs-4" style="text-align:center;">
+				<h5>Bestellwert</h5>
+			</div>
+			<div class="col-xs-4" style="text-align:center;">
+				<h5>Gewicht</h5>
+			</div>
+			<div class="col-xs-2" style="text-align:right;">
+				<h5>Versandkosten</h5>
+			</div>
+		</div>
+		<div class="row" ng-repeat="d in data.DynAngabe" style="border-top:1px solid #333;">
+			<div class="col-xs-2">
+				<p>{{d.Bezeichnung}}</p>
+			</div>
+			<div class="col-xs-10" style="border-left:1px solid #333;">
+				<div class="row" ng-repeat="v in d.Versandkosten">
+					<div class="col-xs-5">
+						<div class="row">
+							<div class="col-xs-3">
+								<p ng-if="v.Umsatz.Bis">von</p>
+								<p ng-if="!v.Umsatz.Bis">ab</p>
+							</div>
+							<div class="col-xs-3" style="text-align:right">
+								<p>{{v.Umsatz.Von | currency:''}}€</p>
+							</div>
+							<div class="col-xs-3">
+								<p ng-if="v.Umsatz.Bis">bis</p>
+							</div>
+							<div class="col-xs-3" style="text-align:right">
+								<p ng-if="v.Umsatz.Bis">{{v.Umsatz.Bis | currency:''}}€</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-5">
+						<div class="row" ng-repeat="vg in v.Gewicht">
+							<div class="col-xs-3">
+								<p ng-if="vg.Bis">von</p>
+								<p ng-if="!vg.Bis">ab</p>
+							</div>
+							<div class="col-xs-3" style="text-align:right">
+								<p>{{vg.Von}} Kg</p>
+							</div>
+							<div class="col-xs-3">
+								<p ng-if="vg.Bis">bis</p>
+							</div>
+							<div class="col-xs-3" style="text-align:right">
+								<p ng-if="vg.Bis">{{vg.Bis}} Kg</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-2" style="text-align:right;border-left:1px solid #333;">
+						<div ng-if="!v.Gewicht">
+							<p>{{v.Versandkosten | currency:''}}€</p>
+						</div>
+						<div ng-if="v.Gewicht">
+							<p ng-repeat="vg in v.Gewicht">{{vg.Versandkosten | currency:''}}€</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 	<table class="table" ng-if="data.DynAngabe">
+        <thead>
+            <th style="max-width:150px;"></th>
+            <th style="max-width:340px;">Bestellwert</th>
+            <th style="max-width:340px;">Gewicht</th>
+            <th style="text-align:right">Versandkosten</th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="d in data.DynAngabe">
+                <td>{{d.Bezeichnung}}</td>
+                <td colspan="3" style="padding-top:0px;">
+                    <table class="table" style="border:1px solid red;">
+                        <tr ng-repeat="v in d.Versandkosten" >
+                            <td style="padding-top:0px;">
+                                <table class="table" style="border:1px solid yellow;">
+                                    <tr>
+                                        <td><span ng-if="!v.Umsatz.Bis">ab</span></td>
+                                        <td></td>
+                                        <td><span ng-if="v.Umsatz.Bis">bis</span></td>
+                                        <td><span ng-if="v.Umsatz.Bis">{{v.Umsatz.Bis | currency:''}} €</span></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="padding-top:0px;">
+                                <table class="table" style="border:1px solid lime;">
+                                    <tr ng-repeat="vg in v.Gewicht">
+                                        <td><span ng-if="vg.Bis">von</span><span ng-if="!vg.Bis">ab</span></td>
+                                        <td>{{vg.Von}} kg</td>
+                                        <td><span ng-if="vg.Bis">bis</span></td>
+                                        <td><span ng-if="vg.Bis">{{vg.Bis}} kg</span></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td ng-if="v.Gewicht" style="text-align:right;padding-top:0px;">
+                                <table class="table "><tr ng-repeat="vg in v.Gewicht"><td>{{vg.Versandkosten | currency:''}}€</td></tr></table>
+                            </td>
+                            <td ng-if="!v.Gewicht" style="text-align:right;padding-top:0px;">
+                                <table class="table"><tr><td>{{v.Versandkosten | currency:''}}€</td></tr></table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table> -->
+</div>

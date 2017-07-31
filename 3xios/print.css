@@ -1,0 +1,21 @@
+
+p,blockqoute { orphans:3; }
+
+@page { 
+		size:portrait;
+		size:21.0cm 29.7cm;
+  margin-top:2cm;
+  margin-bottom:2cm;
+  margin-left:2cm;
+  margin-right:1cm 
+}
+table, tr, td {
+	border: 0px;
+}
+
+.button_normal { display: none;}
+.button_fett { display: none;}
+.button_fettdisabled { display: none;}
+.button_normal2 { display: none;}
+.button_fett2 { display: none;}
+.button_fett3 { display: none;}

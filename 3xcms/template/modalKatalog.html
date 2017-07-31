@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<form name="form" class="form-horizontal" novalidate>
+	<div class="modal-header">
+		<h3 class="modal-title">Katalog</h3>
+	</div>
+	<div class="modal-body">
+		<div uib-tabset justified="false" class="no-tab-headder">
+			<div uib-tab>
+				<div uib-tab-heading><i class="fa fa-info"></i> Info</div>
+				<div class="row" style="border-bottom: 1px solid #DDD"></div>
+				<div class="row" style="border-bottom: 1px solid #DDD; margin-bottom: 20px;background-color: rgba(66,139,202,0.05);">
+					<div class="col-md-12">
+						<div class="form-group" style="padding-top: 20px" ng-class="{'has-error': form.sub && !form.hk.$valid}">
+							<label class="col-md-4 control-label">Hauptkategorie</label>
+							<div class="col-md-8">
+								<select name="hk" class="form-control" ng-model="hk" ng-options="hk.name for hk in kats[4]" ng-change="katalog.cat_nr = hk.uks[0].id"
+								 required>
+									<option value="">--- Bitte Wählen ---</option>
+									</select>
+								<span class="help-block" ng-show="form.sub && !form.hk.$valid">Erforderlich!</span>
+							</div>
+						</div>
+						<div class="form-group" ng-class="{'has-error': form.sub && !form.k.$valid}">
+							<label class="col-md-4 control-label">Unterkategorie</label>
+							<div class="col-md-8">
+								<select ng-disabled="!hk" name="k" class="form-control" ng-model="katalog.cat_nr" ng-options="k.id as k.name for k in hk.uks"
+								 required>
+									<option value="">--- Bitte Wählen ---</option>
+									</select>
+								<span class="help-block" ng-show="form.sub && !form.k.$valid">Erforderlich!</span>
+							</div>
+						</div>
+						<div class="form-group" ng-class="{'has-error': form.sub && !form.sort.$valid}">
+							<label class="col-md-4 control-label">Sortierung</label>
+							<div class="col-md-4">
+								<input name="sort" type="number" string-to-number class="form-control" placeholder="Sortnr." ng-model="katalog.sortindex">
+							</div>
+							<div class="col-md-4">
+								<div ng-show="!rechte.hasRedakteur" class="checkbox">
+									<label><input type="checkbox" ng-model="katalog.sichtbar" ng-init="katalog.sichtbar= katalog.sichtbar ? katalog.sichtbar : '1'" ng-true-value="'1'" ng-false-value="'0'">Sichtbar</label>
+								</div>
+								<div ng-show="rechte.hasRedakteur == true" class="checkbox">
+									<label><input type="checkbox" ng-model="katalog.freigabeanforderung" ng-init="katalog.freigabeanforderung='0'" ng-true-value="'1'" ng-false-value="'0'">Freigabeanforderung</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<small>
+					<div class="form-group" ng-class="{'has-error': form.sub && !form.name.$valid}">
+						<label class="col-md-4 control-label">Bezeichnung</label>
+						<div class="col-md-8">
+							<input type="text" class="form-control" name="name" placeholder="Überschrift" ng-model="katalog.titel" required>
+							<span class="help-block" ng-show="form.sub && !form.name.$valid">Erforderlich!</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">Datum</label>
+						<div class="col-md-4" ng-class="{'has-error': form.sub && !form.dstart.$valid}">
+							<div class="input-group">
+								<input type="text" name="dstart" class="form-control" placeholder="von" ng-model="katalog.date1" is-open="openStart" show-button-bar="false" datepicker-options="{showWeeks: false,	minDate: minDate}"  uib-datepicker-popup="dd.MM.yyyy"/>
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-default" ng-click="openStart=true"><i class="fa fa-calendar"></i></button>
+								</span>
+							</div>
+							<div class="help-block" ng-show="form.sub && !form.dstart.$valid">tt.mm.jjjj</div>
+						</div>
+						<div ng-show="katalog.date1" class="col-md-4" ng-class="{'has-error': form.sub && !form.dend.$valid}">
+							<div class="input-group">
+								<input type="text" name="dend" class="form-control" placeholder="bis" ng-model="katalog.date2" is-open="openEnd" show-button-bar="false"  datepicker-options="{showWeeks: false,	minDate: katalog.date1}" uib-datepicker-popup="dd.MM.yyyy"/>
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-default" ng-click="openEnd=true"><i class="fa fa-calendar"></i></button>
+								</span>
+							</div>
+							<div class="help-block" ng-show="form.sub && !form.dend.$valid">tt.mm.jjjj</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label">Dokument</label>
+						<div class="col-md-8">
+							<div class="input-group" style="width: 100%;">
+								<div ngf-drop="setFile($file)" ngf-select="setFile($file)" ng-model="file" ngf-multiple="false" ngf-allow-dir="false">
+									<input type="text" class="form-control" value="{{filename}}" placeholder="Durchsuchen..." readonly>
+								</div>
+								<span ng-if="katalog.doclink" class="input-group-btn">
+									<a  target="_blank" ng-href="../api/katalog/katalog/file/{{katalog.id}}" type="button" class="btn btn-default"><i class="fa fa-download"></i></a>
+									<button class="btn btn-default" ng-click="deleteFile()"><i class="fa fa-trash-o"></i></button>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="form-group" ng-if="katalog.doclink || file" ng-class="{'has-error': form.sub && !form.docnotation.$valid}">
+						<div class="col-md-offset-4 col-md-8">
+							<input  type="text" class="form-control" name="docnotation" placeholder="Dokument-Text" ng-model="katalog.docnotation" required>
+							<span class="help-block" ng-show="form.sub && !form.docnotation.$valid">Erforderlich!</span>
+						</div>
+					</div>
+					<div class="form-group" ng-class="{'has-error': form.sub && !form.link1.$valid}">
+						<label class="col-md-4 control-label">Externer Link</label>
+						<div class="col-md-8">
+							<input type="url" name="link1" class="form-control" placeholder="http://..." ng-model="katalog.link" ng-change="katalog.linktext = (katalog.link == '' || !katalog.link  ? null : katalog.linktext)">
+							<span class="help-block" ng-show="form.sub && !form.link1.$valid">Falsches Format!</span>
+						</div>
+					</div>
+					<div class="form-group" ng-if="katalog.link">
+						<div class="col-md-offset-4 col-md-8">
+							<input type="text" class="form-control" placeholder="Link-Text" ng-model="katalog.linktext">
+						</div>
+					</div>
+				</small>
+			</div>
+			<div uib-tab>
+				<div uib-tab-heading><i class="fa fa-pencil"></i> Inhalt</div>
+				<div class="row" style="border-bottom: 1px solid #DDD"></div>
+				<div style="padding-top: 20px"></div>
+				<my-inhalt form="form" image="data.image" link="katalog.imglink" imgtext="katalog.imgnotation" text="katalog.inhalt" delete="deleteImage()"></my-inhalt>
+			</div>
+			<div uib-tab>
+				<div uib-tab-heading><i class="fa fa-paperclip"></i> Zuordnung</div>
+				<div class="row" style="border-bottom: 1px solid #DDD"></div>
+				<div uib-accordion>
+					<my-acc-group label="'Katalog'" bereich="'katalog'" values="katalog.katalog.items" kats="kats[4]"></my-acc-group>
+					<my-acc-group label="'News'" bereich="'news'" values="katalog.news.items" kats="kats[1]"></my-acc-group>
+					<my-acc-group label="'Termine'" bereich="'termin'" values="katalog.termin.items" kats="kats[2]"></my-acc-group>
+					<my-acc-group label="'Dokumente'" bereich="'dokument'" values="katalog.dokument" kats="kats[6]"></my-acc-group>
+					<my-acc-group label="'Galerie'" bereich="'galerie'" values="katalog.galerie" kats="kats[5]"></my-acc-group>
+					<my-acc-group label="'Adresse'" bereich="'nutzer'" values="katalog.nutzer" kats="kats[3]"></my-acc-group>
+					<my-acc-group label="'Formulare'" values="katalog.formular"></my-acc-group>
+					<my-acc-group label="'Artikel'" values="katalog.artikel"></my-acc-group>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer has-error">
+		<span class="help-block" ng-show="form.sub && !form.$valid">Eingaben überprüfen!</span>
+		<div class="row">
+			<div class="col-md-6" align="left">
+				<button class="btn btn-link btn-sm" type="button" ng-click="close('delete')" ng-show="katalog.id && (editable || katalog.cat_nr==0)"><i class="fa fa-trash-o"></i> Löschen</button>
+				<button class="btn btn-link btn-sm" type="button" ng-click="katalog.id=null; katalog.titel=null;" ng-show="katalog.id && (editable || katalog.cat_nr==0)"><i class="fa fa-clone"></i> Kopieren</button>
+			</div>
+			<div class="col-md-6">
+				<button class="btn btn-primary btn-sm" type="button" ng-click="form.$valid ? close('put') : form.sub=true" ng-show="katalog.id && (editable || katalog.cat_nr==0)">Ändern</button>
+				<button class="btn btn-primary btn-sm" type="button" ng-click="form.$valid ? close('post') : form.sub=true" ng-show="!katalog.id">Erstellen</button>
+				<button class="btn btn-default btn-sm" type="button" ng-click="close()">Abbrechen</button>
+			</div>
+		</div>
+	</div>
+</form>

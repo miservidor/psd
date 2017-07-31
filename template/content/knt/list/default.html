@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<!--<pre class="code">{{ data | json }}</pre>-->
+<div ng-show="!data" class="text-center" ng-include="'loading.html'"></div>
+<h5 class="italic" ng-show="dokdesc">{{dokdesc}}</h5>
+<div class="row col-xs-12" ng-if="data.titel || data.inhalt">
+    <h3 ng-if="data.data-titel && !dokdesc">{{data.titel}}</h3>
+    <img class="hk-uk-img" src="{{file}}{{ data.img}}">
+    <p class="teasertext" ng-if="data.inhalt" ng-bind-html="trust(data.inhalt) "></p>
+</div>
+<div ng-if="!dokdesc " ng-repeat="item in data.items" ng-class="{'itemnichtsichtbar':item.sichtbar=='0'}">
+    <!-- Titel-->
+    <h4 ng-if="item.titel "><a ui-sref="{{dokdesc ? bereich+ '({id:item.id})': '.detail({id:item.id})'}}" ui-sref-opts="{inherit: false} ">{{item.titel}}</a></h4>
+    <div class="row ">
+        <div ng-if="item.imglink " class="hidden-xs col-sm-3 col-md-3 col-lg-3 ">
+            <!-- Bild -->
+            <div ng-if="item.imglink " class="galbild_vorsch">
+                <a ui-sref="{{dokdesc ? bereich+ '({id:item.id})': '.detail({id:item.id})'}} " ui-sref-opts="{inherit: false} ">
+                    <img ng-src="{{file+item.imgthumb}}">
+                </a>
+            </div>
+            <div class="galerie_caption ">
+                <span class="symbolspace">{{item.imgnotation}}</span>
+            </div>
+        </div>
+        <div ng-if="item.imglink " class="col-xs-12 hidden-sm hidden-md hidden-lg ">
+            <div ng-if="item.imglink " class="galbild_vorsch">
+                <a ui-sref="{{dokdesc ? bereich+ '({id:item.id})': '.detail({id:item.id})'}} " ui-sref-opts="{inherit: false} ">
+                    <img ng-src="{{file+item.imglink}}">
+                </a>
+            </div>
+            <div class="galerie_caption ">
+                <span class="symbolspace">{{item.imgnotation}}</span>
+            </div>
+        </div>
+
+        <div ui-sref="{{dokdesc ? bereich+ '({id:item.id})': '.detail({id:item.id})'}} " ng-class="{'col-xs-12 col-sm-12 col-md-12 col-lg-12':!item.imglink, 'col-xs-12 col-sm-9 col-md-9 col-lg-9':item.imglink} ">
+            <!-- Inhalt -->
+            <div ng-if="bereich=='termin' ">
+                <span ng-if="item.date1 ">{{item.date1 |	date:'dd.MM.yyyy'}}</span>
+                <span ng-if="item.date2 "> - {{item.date2 |	date:'dd.MM.yyyy'}}</span>
+            </div>
+            <div ng-if="bereich=='termin' ">
+                <span ng-if="item.time1 ">{{item.time1 |	date:'HH:mm'}}</span>
+                <span ng-if="item.time2 "> - {{item.time2 |	date:'HH:mm'}}</span>
+                <span ng-if="item.time1||item.time2 && bereich=='termin' "> Uhr</span>
+            </div>
+            <div ng-if="item.ort && bereich=='termin'">{{item.ort}}</div>
+            <p class="teasertext " ng-if="item.inhalt" ng-bind-html="trust(item.inhalt)" style="cursor: pointer;"></p>
+            <p class="teaser_button" ng-if="item.inhalt.indexOf('hellip;')>0"><span class="btn btn-primary btn-xs" role="button">{{l.lng_teaser_link_description}}</span></p>
+        </div>
+
+    </div>
+</div>
+<div ng-if="dokdesc ">
+    <div class="hidden-xs col-sm-3 col-md-3 col-lg-3 ">
+    </div>
+    <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9 row ">
+        <div ng-repeat="item in data.items" ng-class="{'itemnichtsichtbar':item.sichtbar=='0'}">
+            <a ui-sref="{{dokdesc ? bereich+ '({id:item.id})': '.detail({id:item.id})'}} " ui-sref-opts="{inherit: false}" class="symbolspace"><span class="fa fa-file-text-o fa-2x "></span> {{item.titel}}</a>
+        </div>
+    </div>
+</div>
+<div class="text-center " ng-show="data.count> limit">
+    <div uib-pagination class="pagination-sm xxx-pagination" total-items="data.count" ng-model="currentPage" items-per-page="5" max-size="5" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-links="true">
+    </div>
+</div>

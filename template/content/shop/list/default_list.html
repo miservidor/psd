@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<div ng-show="!data" class="text-center" ng-include="'loading.html'"></div>
+<div class="row" ng-if="data && data.Anzahl > 0">
+    <!--Listendarstellung-->
+    <div class="col-xs-12 table-responsive">
+        <div ng-include="'template/includes/list_include.html'"></div>
+    </div>
+
+    <!--Preisbemerkung-->
+    <div class="col-xs-12">
+        <span><sup>*</sup> {{l[data.Preisbemerkung]}}</span><a ui-sref="lieferbedingungen" ng-if="row.versandlink_hinter_steuerinfo" style="text-decoration:underline;"> {{l.lng_artikelliste_zzgl_versand}}</a>
+    </div>
+    <!--Ende Preisbemerkung-->
+    <!--Pagination-->
+    <div class="col-xs-12" style="text-align:center" ng-if="data.Anzahl > list.limitTo">
+        <div uib-pagination class="pagination-sm xxx-pagination" total-items="data.Anzahl" ng-model="list.page" max-size="10" items-per-page="list.limitTo" previous-text="<" next-text=">" first-text="<<" last-text=">>" boundary-links="true"></div>
+    </div>
+    <!--Ende Pagination-->
+</div>
+<div class="row artikelliste_keinergebniss" ng-if="data && data.Anzahl==0">
+    <p>{{l.lng_artikelliste_keine_ergebnisse}}</p>
+</div>

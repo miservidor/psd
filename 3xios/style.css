@@ -1,0 +1,1493 @@
+.textfeld1{/*Textfelder von Formularen*/
+    height: 18px;
+    font-size : 8pt;
+    font-family: 'Open Sans', sans-serif;
+}
+.textarea1{
+    font-size : 8pt;
+    font-family: 'Open Sans', sans-serif;
+}
+.font8{/*Schrift mit Groe�e 8*/
+    font-family: 'Open Sans', sans-serif;
+    font-size : 8pt;
+    font-weight : normal;
+}
+
+/*Einstellungen die fuer alle Links als Grundlage gelten*/
+a:link{font-family: 'Open Sans', sans-serif; color:#000000; font-size:12px; text-decoration:none;}
+a:visited{font-family: 'Open Sans', sans-serif; color:#000000; font-size:12px; text-decoration:none;}
+a:hover{font-family: 'Open Sans', sans-serif; color:#000000; font-size:12px; text-decoration:none;}
+a:active{font-family: 'Open Sans', sans-serif; color:#000000; font-size:12px; text-decoration:none;}
+a:focus{font-family: 'Open Sans', sans-serif; color:#000000; font-size:12px; text-decoration:none;}
+
+
+.copyright{/*definition des Copyright Textes (ganz unten)*/
+    font-weight: 300;
+    font-size:12px;
+}
+/*definition des Copyrightlinks*/
+a:link.copyright_link{color:#000000; font-family: 'Open Sans', sans-serif; font-size:12px; text-decoration:underline;}
+a:visited.copyright_link{color:#000000; font-family: 'Open Sans', sans-serif; font-size:12px; text-decoration:underline;}
+a:hover.copyright_link{color:#000000; font-family: 'Open Sans', sans-serif; font-size:12px; text-decoration:none;}
+a:active.copyright_link{color:#000000; font-family: 'Open Sans', sans-serif; font-size:12px; text-decoration:none;}
+a:focus.copyright_link{color:#000000; font-family: 'Open Sans', sans-serif; font-size:12px; text-decoration:none;}
+
+/*************************************************************************************************/
+.table_mitte_inhalt{
+	font-family: 'Open Sans', sans-serif;
+	font-size:12px;	
+}
+/*Style Definitionen des Seitenkopfes*/
+.td_banner{
+    border-collapse: collapse;
+    background-color:#CDDAF6;
+}
+.td_zugangs_error{
+    background-color:#FFFFFF;
+    color:#CC0066;
+    font-size:10pt;
+    font-weight: 300;
+    height: 40px;
+}
+.td_unter_banner {/*Definieren der Zeile unter dem Banner*/
+    background-color:#FFFFFF;
+}
+/*************************************************************************************************/
+/*Seitliche Navigation - die Link-Punkte "Impressum", "AGB" und "Kontakt"*/
+a:link.seitliche_navi_anhang    { color:#000000; font-size:9pt; text-decoration:none; }
+a:visited.seitliche_navi_anhang { color:#000000; font-size:9pt; text-decoration:none; }
+a:hover.seitliche_navi_anhang   { color:#e2001a; font-size:9pt; text-decoration:none; }
+a:active.seitliche_navi_anhang  { color:#736565; font-size:9pt; text-decoration:none; }
+a:focus.seitliche_navi_anhang   { color:#736565; font-size:9pt; text-decoration:none; }
+/*************************************************************************************************/
+.suche_nav { /*definiert Kopf und Fuss der Suchleiste*/
+    background-color:#f6f2e6;
+    border: 1px solid #000000;
+    font-size:10pt;
+}
+/*definiert "1 2 3 4 5 6 7 8 9 >>"*/
+a:link.naviliste_der_suche    { color:#000000; font-size:10pt; text-decoration:none; }
+a:visited.naviliste_der_suche { color:#000000; font-size:10pt; text-decoration:none; }
+a:hover.naviliste_der_suche   { color:#736565; font-size:10pt; text-decoration:none; font-weight: 300; }
+a:active.naviliste_der_suche  { color:#736565; font-size:10pt; text-decoration:none; font-weight: 300; }
+a:focus.naviliste_der_suche   { color:#736565; font-size:10pt; text-decoration:none; font-weight: 300; }
+/*definiert die gerade aktive Seitenzahl*/
+.naviliste_der_suche_aktiv {
+    font-size:8pt;
+    font-weight: 300;
+}
+.td_mitte_inhalt_tabkopf {/*Tabellenkopf der Ergebnisse der Suche*/
+    border-bottom: 1px solid #000000;
+    font-size : 12px;
+	font-family:'Open Sans', sans-serif;
+    font-weight : bold;
+    color : Black;
+}
+a:link.artikelnr_suche    { color:#000000; font-size:8pt; text-decoration:underline; font-weight: 300;}
+a:visited.artikelnr_suche { color:#000000; font-size:8pt; text-decoration:underline; font-weight: 300;}
+a:hover.artikelnr_suche   { color:#736565; font-size:8pt; text-decoration:none; font-weight: 300; }
+a:active.artikelnr_suche  { color:#736565; font-size:8pt; text-decoration:none; font-weight: 300; }
+a:focus.artikelnr_suche   { color:#736565; font-size:8pt; text-decoration:none; font-weight: 300; }
+.td_mitte_inhalt {/*Tabellenzellen der Ergebnisse der Suche*/
+    font-size:12px;
+	font-family:'Open Sans', sans-serif;
+}
+/*************************************************************************************************/
+.td_login {
+    padding-left:5px;
+    font-size:9pt;
+    font-weight: 300;
+}
+/*auf der Seite Katalog - rechts unter dem Logininfeld im Warenkorb*/
+a:link.warenkorb    { color:#000000; font-size:8pt; text-decoration:none; }
+a:visited.warenkorb { color:#000000; font-size:8pt; text-decoration:none; }
+a:hover.warenkorb   { color:#736565; font-size:8pt; text-decoration:none; }
+a:active.warenkorb  { color:#736565; font-size:8pt; text-decoration:none; }
+a:focus.warenkorb   { color:#736565; font-size:8pt; text-decoration:none; }
+
+/*************************************************************************************************/
+/*************************************************************************************************/
+/*************************************************************************************************/
+/***Warenkorb - Angebot - Lagerbuchung***/
+.warenk_table_bestellbereich {
+    padding:3px;
+}
+.warenk_table_bestellflaeche {
+    padding: 2px 2px 2px 0px;
+	margin-bottom: 20px;
+}
+.warenk_td_bestell_font {/**/
+    font-size:10pt;
+    font-weight: 300;
+    color:black;
+}
+.warenk_table_bestellung_kopf {/*Enthaelt die Zeile mit .warenk_tr_kundendaten und .warenk_tr_bestellung_kopf*/
+    border-bottom: 1px solid black;
+    padding: 3px;
+    margin-bottom:3px;
+    margin-top:10px;
+}
+.warenk_tr_kundendaten {/*formatiert den Bereich in dem die Kundendaten angezeigt werden*/
+    font-size:9pt;
+    font-weight: 300;
+    color:black;
+	width:100%;
+}
+.warenk_tr_bestellung_kopf {/*formatiert den Bereich in dem "Ihre Bestellung..." steht*/
+    font-size:9pt;
+    font-weight: 300;
+    color:black;
+    border-bottom:1px solid black;
+}
+.warenk_tr_bestellung_ohneInhalt {
+    font-size:9pt;
+    font-weight: 300;
+    color:black;
+	border-spacing: 3px;
+    border-collapse: separate;
+}
+.warenk_table_bestellung_fuss {
+    margin-top:3px;
+    margin-bottom:3px;
+}
+.warenk_td_bestell_buttons {/*formatiert den Bereich unter der Summe (z.B. den Hintergrund der Buttons)*/
+    font-size:9pt;
+    font-weight:normal;
+    margin-top:5px;
+}
+.seiten_ueberschrift {/*Ueberschriften auf der 2.Seite von Warenkorb/Angebot/Lagerbuchung z.B.:"Bestellung abschlie�en"*/
+    font-weight: 300;
+    font-size:12pt;
+	width:100%;
+}
+.table_formularbox {
+    margin:2px;
+    padding:2px;
+}
+.td_formular_kopf {
+    font-size:10pt;
+    color:black;
+    font-weight: 300;
+}
+.td_formular_beschriftung {
+    font-size:12px;
+	font-family:'Open Sans', sans-serif;
+}
+.td_formular_text {
+    font-size:9pt;
+    font-weight: 300;
+}
+.form_meldung_td {/*hier wird die Meldung formatiert die bei unzulaessigen Eintraegen in das Adress/Kundenformular entsteht*/
+    color:red;
+    font-size:10pt;
+    font-weight: 300;
+}
+
+a:link.agb    { color:#736565; font-size:9pt; text-decoration:underline; }
+a:visited.agb { color:#736565; font-size:9pt; text-decoration:underline; }
+a:hover.agb   { color:#000000; font-size:9pt; text-decoration:underline; }
+a:active.agb  { color:#000000; font-size:9pt; text-decoration:underline; }
+a:focus.agb   { color:#000000; font-size:9pt; text-decoration:underline; }
+
+/***Artikeldetailansich***/
+.detail_body {/*Body-Element der Artikeldetailansicht*/
+    font-size:9pt;
+    background-color: #FFFFFF;
+    background-image: url(images/whitepixel.png);
+}
+.detail_table_box {/*Die Tabellen in dennen die Inhalte stehen*/
+    font-size:14px;
+}
+.detail_font_ueberschrift {/*das erste Wort innerhalb von detail_table_box*/
+    font-size:14px;
+    font-weight: 300;
+}
+.detail_table_box_hinhalt {/*Die Boxen in dennen die Details dargestellt werden*/
+    font-size:14px;
+    margin-top:7px;
+    margin-right:10px;
+    width: 100%;
+}
+.table_beleg {
+    padding:3px 3px 3px 0px;
+    font-size:9pt;
+    font-weight: 300;
+    margin-top:7px;
+    margin-left:7px;
+    margin-bottom:7px;
+}
+.td_beleg_tabkopf {/*Tabellenkopf der Ergebnisse der Suche*/
+    font-size : 8pt;
+    font-weight : bold;
+    color : Black;
+}
+a:link.beleg    { color:#000000; font-size:9pt; text-decoration:none; font-weight:normal;}
+a:visited.beleg { color:#000000; font-size:9pt; text-decoration:none; font-weight:normal;}
+a:hover.beleg   { color:#736565; font-size:9pt; text-decoration:none; font-weight:normal;}
+a:active.beleg  { color:#736565; font-size:9pt; text-decoration:none; font-weight:normal;}
+a:focus.beleg   { color:#736565; font-size:9pt; text-decoration:none; font-weight:normal;}
+
+.td_beleg_inhalt {/*Tabellenzellen der Ergebnisse der Suche*/
+    background-color:#f6f2e6;
+    border-right: 1px solid #FFD166;
+    border-bottom: 1px solid #FFD166;
+    font-size:8pt;
+    font-weight:normal;
+}
+.beleg_mitte {/*Der gesammte untere Mittelteil (bis ganz unten)*/
+    padding:5px;
+    margin-top:7px;
+    background-color:#FFFFFF;
+}
+.fontbelegarchiv {/*Schrift mit Groe�e 8*/
+	font-size:9pt;
+	font-weight: 300;
+	color:#000000;
+}
+.font8{
+	font-size : 8pt;
+	color : Black;
+	font-weight : normal;
+}
+.font9{
+	font-size : 9pt;
+	color : Black;
+	font-weight : normal;
+}
+.font10{
+	font-size : 10pt;
+	color : Black;
+	font-weight : normal;
+}
+.font8b{
+	font-size : 8pt;
+	font-weight : bold;
+	color : Black;
+}
+.font9b{
+	font-size : 9pt;
+	font-weight : bold;
+	color : Black;
+}
+.font10b{
+	font-size : 10pt;
+	font-weight : bold;
+	color : Black;
+}
+.font8blue{
+	font-size : 8pt;
+	font-weight : bold;
+	color : Blue;
+}
+.font9blue{
+	font-size : 9pt;
+	font-weight : bold;
+	color : #000;
+}
+.font10blue{
+	font-size : 10pt;
+	font-weight : bold;
+	color : Blue;
+}
+.font8red{
+	font-size : 8pt;
+	color : #CC0000;
+}
+.font9red{
+	font-size : 9pt;
+	color : #CC0000;
+}
+.font10red{
+	font-size : 10pt;
+	color : #CC0000;
+}
+.font8green{
+	font-size : 8pt;
+	color : #006400;
+}
+.font9green{
+	font-size : 9pt;
+	color : #006400;
+}
+.font10green{
+	font-size : 10pt;
+	color : #006400;
+}
+.font8greenb{
+	font-size : 8pt;
+	font-weight : bold;
+	color : #006400;
+}
+.font9greenb{
+	font-size : 9pt;
+	font-weight : bold;
+	color : #006400;
+}
+.font10greenb{
+	font-size : 10pt;
+	font-weight : bold;
+	color : #006400;
+}
+.font12bSilver{
+	font-size : 12pt;
+	font-weight : bold;
+	color : Silver;
+}
+.font8bred{
+	font-size : 8pt;
+	font-weight : bold;
+	color : #CC0000;
+}
+.font9bred{
+	font-size : 9pt;
+	font-weight : bold;
+	color : #CC0000;
+}
+.font10bred{
+	font-size : 10pt;
+	font-weight : bold;
+	color : #CC0000;
+}
+.font12bred{
+	font-size : 12pt;
+	font-weight : bold;
+	color : #CC0000;
+}
+.font9grey{
+	font-size : 9pt;
+	color : A0A0A0;
+	font-weight : normal;
+}
+.table_imprahmentab{
+    /*Tabelle die die gesammte Seite umschlie�t*/
+    background: none;
+}
+.table_kontaktrahmentab{/*Tabelle die die gesammte Seite umschlie�t*/
+    background-color:#ECF8FF;
+}
+.warenk_lieferbedingung {/*formatiert den Bereich in dem "Ihre Bestellung..." steht*/
+    font-size:9pt;
+    font-weight: 300;
+    color:black;
+}
+.konf_tab{    /* Tabelle im Konfigurator */
+   border:          1px dotted #000000;
+   border-collapse: collapse;
+}
+.konf_tab_kopf{    /* Tabellenkopf im Konfigurator */
+   border: 1px dotted #000000;
+   font : bold 8pt 'Open Sans', sans-serif;
+}
+.konf_tab_inhalt{
+   border: 1px dotted #000000;
+   font : 8pt 'Open Sans', sans-serif;
+}
+
+/* new 21.10.2005 */
+.fontservice10b{
+	font-family : 'Open Sans', sans-serif;
+	font-size : 10pt;
+	font-weight : bold;
+	color : Red;
+}
+.textfeld2 {/*Textfelder von Formularen*/
+    height: 18px;
+    font-size : 8pt;
+    font-family : 'Open Sans', sans-serif;
+    border: 0.5pt solid #0000CD;
+}
+.textarea2 {
+    font-size : 8pt;
+    font-family : 'Open Sans', sans-serif;
+    border: 0.5pt solid #0000CD;
+}
+
+a:link.service    { color:#00898b; font-size:9pt; text-decoration:none; font-weight:normal;}
+a:visited.service { color:#00898b; font-size:9pt; text-decoration:none; font-weight:normal;}
+a:hover.service   { color:#663300; font-size:9pt; text-decoration:none; font-weight:normal;}
+a:active.service  { color:#00898b; font-size:9pt; text-decoration:none; font-weight:normal;}
+a:focus.service   { color:#00898b; font-size:9pt; text-decoration:none; font-weight:normal;}
+
+.copyright1 {/*definition des Copyright Textes (ganz unten)*/
+    background-color:#ECF8FF;
+    font-weight: 300;
+    font-size:8pt;
+    padding:5px;
+    border:0px solid #000000;
+    border-collapse: collapse;
+}
+.table_nocookie{
+	/*Tabelle die die gesammte nocookie-Seite umschlie�t*/
+	background-color: #ECF8FF;
+}
+.table_nocookie1{
+	/* mittlere Tabelle  der nocookie-Seite */
+	background-color: #ECF8FF;
+}
+.fontcookie{
+	/*font f�r nocookie-Seite*/
+	font-family : 'Open Sans', sans-serif;
+	font-size : 10pt;
+	color : Black;
+	font-weight : normal;
+}
+
+/*definiert den Link "nocookie"*/
+a:link.linkcookie    { color:#00898b; font-weight: 300; font-size:10pt; text-decoration:none; }
+a:visited.linkcookie  { color:#00898b; font-weight: 300; font-size:10pt; text-decoration:none; }
+a:hover.linkcookie   { color:#990000; font-weight: 300; font-size:10pt; text-decoration:none; }
+a:active.linkcookie  { color:#990000; font-weight: 300; font-size:10pt; text-decoration:none; }
+a:focus.linkcookie    { color:#990000; font-weight: 300; font-size:10pt; text-decoration:none; }
+
+/*Kontakt-Seite*/
+.table_kontaktrahmentab{/*Tabelle die die gesammte Seite umschlie�t*/
+    background-color: #ECF8FF;
+}
+.font9bkontakt{
+	font-family : 'Open Sans', sans-serif;
+	font-size : 9pt;
+	font-weight : bold;
+	color : Black;
+}
+.font9kontakt{
+	font-family : 'Open Sans', sans-serif;
+	font-size : 9pt;
+	color : Black;
+}
+
+a:link.linkkontakt    { color:#00898b; font-weight: 300; font-size:10pt; text-decoration:none; }
+a:visited.linkkontakt   { color:#00898b; font-weight: 300; font-size:10pt; text-decoration:none; }
+a:hover.linkkontakt    { color:#990000; font-weight: 300; font-size:10pt; text-decoration:none; }
+a:active.linkkontakt  { color:#990000; font-weight: 300; font-size:10pt; text-decoration:none; }
+a:focus.linkkontakt     { color:#990000; font-weight: 300; font-size:10pt; text-decoration:none; }
+
+.detail_table_box_hinhaltI {/*Die Boxen in dennen die Details dargestellt werden*/
+    font-size:8pt;
+    margin-top:2px;
+    margin-right:2px;
+}
+.detail_table_box_hinhaltII {/*Die Boxen in dennen die Details dargestellt werden*/
+    font-size:8pt;
+    margin-top:2px;
+    margin-right:2px;
+}
+/* V6.0.07 */
+.detailansicht_mme_abstand_oben {/*Abstand Textblock bei Darstellung mehrerer Mengeneinheiten oben*/
+    height: 10px;
+}
+.detailansicht_mme_hg {/*Hintergrundfarbe Textblock bei Darstellung mehrerer Mengeneinheiten, komplette Tabelle*/
+    background: #F5F5F5;
+    border:solid #CDCDCD 1px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.detailansicht_mme_checkbox {/*Checkbox Textblock bei Darstellung mehrerer Mengeneinheiten*/
+    border:0px;
+    background-color:#F5F5F5;
+}
+.detailansicht_mme_textcheckbox {/*Text Textblock neben Checkbox bei Darstellung mehrerer Mengeneinheiten*/
+    font-weight:normal;
+    font-size: 12px;
+    color: #000000;
+    margin: 0px;
+    font-family: 'Open Sans', sans-serif;
+}
+/* V6.2.04 */
+.table_regstartbereich { /*Aussentabelle Auswahlbereich Anmelden oder Registrieren*/
+    margin-top:7px;
+	font-family:'Open Sans', sans-serif;
+	font-size:12px;
+}
+.table_registrierbereich { /*Aussentabelle Registrierbereich*/
+    margin-top:9px;
+}
+.table_warenkorb_teil2 { /*Aussentabelle Warenkorb vor und nach Absenden*/
+    margin-top:9px;
+}
+.select_versandarten { /*PullDown-Feld fuer Versandarten*/
+    /*width:100px;*/
+    font-family: 'Open Sans', sans-serif;
+    font-size:8pt;
+    color: #13335C;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #C0C0C0;
+}
+.select_zahlungsarten { /*PullDown-Feld fuer Zahlungsarten*/
+    /*width:100px;*/
+    font-family: 'Open Sans', sans-serif;
+    font-size:8pt;
+    color: #13335C;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #C0C0C0;
+    width:170px;
+}
+.td_regbereich_abstand_links {
+    width:175px;
+    height:20px;
+}
+.td_regbereich_abstand_rechts {
+    width:325px;
+}
+.tr_regbereich_beschriftung {
+    font-family : 'Open Sans', sans-serif;
+    font-size:8pt;
+    color:#13335C;
+    height: 24px;
+}
+/* V7.0.04 */
+.portalmenue_abstandstable { /* Tabelle fuer den Abstand zwischen Artikelgruppen- und Portalmenue */
+    width: 100%;
+    height: 20px;
+}
+.portalmenue_table { /* Tabelle des Portalmenues */
+    width: 100%;
+}
+.portalmenue_td { /* Tabellenzelle des Portalmenues */
+    padding-left: 8px;
+}
+
+/* Die Links vom Portalmenue passiv*/
+a:link.portalmenue_passiv {    color:#000000; font-size:9pt; font-weight:normal; text-decoration:none; }
+a:visited.portalmenue_passiv { color:#000000; font-size:9pt; font-weight:normal; text-decoration:none; }
+a:hover.portalmenue_passiv {   color:#000000; font-size:9pt; font-weight: 300; text-decoration:none; }
+a:active.portalmenue_passiv {  color:#000000; font-size:9pt; font-weight:normal; text-decoration:none; }
+a:focus.portalmenue_passiv {   color:#000000; font-size:9pt; font-weight: 300; text-decoration:none; }
+
+/* Die Links vom Portalmenue aktiv*/
+a:link.portalmenue_aktiv {    color:#000000; font-size:9pt; font-weight: 300; text-decoration:none; }
+a:visited.portalmenue_aktiv { color:#000000; font-size:9pt; font-weight: 300; text-decoration:none; }
+a:hover.portalmenue_aktiv {   color:#000000; font-size:9pt; font-weight: 300; text-decoration:none; }
+a:active.portalmenue_aktiv {  color:#000000; font-size:9pt; font-weight: 300; text-decoration:none; }
+a:focus.portalmenue_aktiv {   color:#000000; font-size:9pt; font-weight: 300; text-decoration:none; }
+
+/* Der Body Bestelltabelle Bestellung abgeschlossen, wenn Bestelltabelle im eigenen Fenster ist */
+.bestemp_body{
+	text-align: left;
+	margin-top: 50px;
+	margin-left: 50px;
+}
+/* Tabelle bei Bestelltabelle Bestellung abgeschlossen */
+.bestemp_table{
+	margin-top: 10px;
+}
+/* Ueberschriften bei Bestelltabelle Bestellung abgeschlossen */
+.bestemp_td_kopf{
+	font-family:'Open Sans', sans-serif;
+	font-size:12pt;
+	font-weight: 300;
+}
+/* Tabellenzelle Zuruecklink bei Bestelltabelle Bestellung abgeschlossen */
+.bestemp_td_backlink{
+	padding-top:20px;
+}
+/* Zuruecklink bei Bestelltabelle Bestellung abgeschlossen */
+a:link.bestemp_backlink {    color:#0000FF; font-size:10pt; text-decoration:underline; }
+a:visited.bestemp_backlink { color:#0000FF; font-size:10pt; text-decoration:underline; }
+a:hover.bestemp_backlink {   color:#0000FF; font-size:10pt; text-decoration:underline; }
+a:active.bestemp_backlink {  color:#0000FF; font-size:10pt; text-decoration:underline; }
+a:focus.bestemp_backlink {   color:#0000FF; font-size:10pt; text-decoration:underline; }
+
+/* Tabellenzelle Artikel bei Bestelltabelle Bestellung abgeschlossen */
+.bestemp_td_artikel{
+	font-family:'Open Sans', sans-serif;
+	font-size:12pt;
+	font-weight:normal;
+	padding-right:10px;
+}
+
+/* Tabellenzelle Schliessenlink bei Bestelltabelle Bestellung abgeschlossen */
+.bestemp_td_closelink{
+	padding-top:20px;
+	text-align:center;
+}
+
+/* Schliessenlink bei Bestelltabelle Bestellung abgeschlossen */
+a:link.bestemp_closelink {    color:#0000FF; font-size:10pt; text-decoration:underline; }
+a:visited.bestemp_closelink { color:#0000FF; font-size:10pt; text-decoration:underline; }
+a:hover.bestemp_closelink {   color:#0000FF; font-size:10pt; text-decoration:underline; }
+a:active.bestemp_closelink {  color:#0000FF; font-size:10pt; text-decoration:underline; }
+a:focus.bestemp_closelink {   color:#0000FF; font-size:10pt; text-decoration:underline; }
+
+.payment_zahlen_td1 { /*letzte Seite vor Paymentzahlung - Tabellenzelle der Beschreibung*/
+	color:#000000;
+	font-size:9pt;
+	font-weight:normal;
+}
+.payment_zahlen_td2 { /*letzte Seite vor Paymentzahlung - Tabellenzelle der Preisausgabe*/
+	color:#000000;
+	font-size:9pt;
+	font-weight: 300;
+	padding-left:5px;
+}
+.payment_zahlen_td3 { /*letzte Seite vor Paymentzahlung - Tabellenzelle des Bezahlen-Buttons*/
+	padding-left:10px;
+}
+.payment_zurueckwk_td { /*letzte Seite vor Paymentzahlung - Tabellenzelle des Zurueck-zum-Warenkorb-Buttons*/
+	padding-top:30px;
+}
+.beleg_lfb_texte_table { /*Tabelle um die Lieferbedingungstexte (Bezeichnung, Zusatz), die bei Auswahl unter dem PullDown-Men� eingeblendet werden*/
+	width:100%;
+}
+.beleg_lfb_texte_td1 { /*Tabellenzelle der Lieferbedingungsbezeichnung, die bei Auswahl unter dem PullDown-Men� eingeblendet werden*/
+	font-family:'Open Sans', sans-serif;
+	font-size:9pt;
+	font-weight: 300;
+}
+.beleg_lfb_texte_td2 { /*Tabellenzelle des Lieferbedingungszusatz, die bei Auswahl unter dem PullDown-Men� eingeblendet werden*/
+	font-family:'Open Sans', sans-serif;
+	font-size:9pt;
+	font-weight:normal;
+}
+.beleg_zb_texte_table { /*Tabelle um die Zahlungbedingungstexte (Auswahl, Zusatz), die bei Auswahl unter dem PullDown-Men� eingeblendet werden*/
+	width:100%;
+	margin-left:3px;
+}
+.beleg_zb_texte_td1 { /*Tabellenzelle der Zahlungbedingungstexte, die bei Auswahl unter dem PullDown-Men� eingeblendet werden*/
+	font-family:'Open Sans', sans-serif;
+	font-size:9pt;
+	font-weight: 300;
+}
+.beleg_zb_texte_td2 { /*Tabellenzelle des Zahlungbedingungstexte, die bei Auswahl unter dem PullDown-Men� eingeblendet werden*/
+	font-family:'Open Sans', sans-serif;
+	font-size:9pt;
+	font-weight:normal;
+}
+.artikelgruppennavigationspfad_mitte_td { /*Tabellenzelle fuer Artikelgruppennavigationsleiste vor Listen- oder Datailansicht im Hauptfenster*/
+	font-size:9pt;
+	padding-top: 5px;
+}
+/* Die Links fuer Artikelgruppennavigationsleiste vor Listen- oder Datailansicht im Hauptfenster*/
+a:link.artikelgruppennavigationspfad_mitte_link {    color:#000000; font-size:9pt; font-weight:normal; text-decoration:none; }
+a:visited.artikelgruppennavigationspfad_mitte_link { color:#000000; font-size:9pt; font-weight:normal; text-decoration:none; }
+a:hover.artikelgruppennavigationspfad_mitte_link {   color:#C0C0C0; font-size:9pt; font-weight:normal; text-decoration:none; }
+a:active.artikelgruppennavigationspfad_mitte_link {  color:#000000; font-size:9pt; font-weight:normal; text-decoration:none; }
+a:focus.artikelgruppennavigationspfad_mitte_link {   color:#000000; font-size:9pt; font-weight:normal; text-decoration:none; }
+/* Der aktive Link der Artikelgruppennavigationsleiste vor Listen- oder Datailansicht im Hauptfenster*/
+a:link.artikelgruppennavigationspfad_mitte_link_aktiv {    color:#000000; font-size:9pt; font-weight: 300; text-decoration:none; }
+a:visited.artikelgruppennavigationspfad_mitte_link_aktiv { color:#000000; font-size:9pt; font-weight: 300; text-decoration:none; }
+a:hover.artikelgruppennavigationspfad_mitte_link_aktiv {   color:#C0C0C0; font-size:9pt; font-weight: 300; text-decoration:none; }
+a:active.artikelgruppennavigationspfad_mitte_link_aktiv {  color:#000000; font-size:9pt; font-weight: 300; text-decoration:none; }
+a:focus.artikelgruppennavigationspfad_mitte_link_aktiv {   color:#000000; font-size:9pt; font-weight: 300; text-decoration:none; }
+
+/* V8.0.01 */
+.body_popup { /*Body-Style fuer einige PopUp-Fenster die keine andere Body-Style-Klasse haben*/
+    background: #fff;
+}
+
+/* V8.1.01 */
+
+.td_wk_regstartbereich_abstandzelle { /*Zwischenzellen ueber Backlooklinks bei Mein Konto*/
+	height: 0px;
+}
+.regbereich_bl_ueberschrift { /*Uberschrift mit Belegart ueber Backlooklinks bei Mein Konto*/
+	color:#000000;
+	font-size:10pt;
+	font-weight: 300;
+}
+
+/*Die Backlooklinks bei Mein Konto*/
+a:link.regbereich_backlook {    color:#000000; font-size:9pt; font-weight:normal; text-decoration:none; }
+a:visited.regbereich_backlook { color:#000000; font-size:9pt; font-weight:normal; text-decoration:none; }
+a:hover.regbereich_backlook {   color:#000000; font-size:9pt; font-weight:normal; text-decoration:underline; }
+a:active.regbereich_backlook {  color:#000000; font-size:9pt; font-weight:normal; text-decoration:none; }
+a:focus.regbereich_backlook {   color:#000000; font-size:9pt; font-weight:normal; text-decoration:none; }
+
+/* V8.2.00 */
+
+/* Textfeld Menge fuer Artikeldirekteingabe im Warenkorb Teil 1 */
+.wk1_a_textfeld1{
+    height: 18px;
+    font-size : 8pt;
+    border: 1px solid #6F6F6F;
+    width: 50px;
+}
+
+/* TMG-Links im linken Bereich Tabelle */
+.tmg_link_table{
+	width:100%;
+	margin-left:10px;
+}
+/* TMG-Links im linken Bereich Tabellenzellen */
+.tmg_link_td{
+	padding: 2px 0px 2px 0px;
+}
+/* TMG-Links im linken Bereich */
+a:link.tmg_link_a {    color:#000000; font-size:8pt; font-weight:normal; text-decoration:none; }
+a:visited.tmg_link_a { color:#000000; font-size:8pt; font-weight:normal; text-decoration:none; }
+a:hover.tmg_link_a {   color:#e2001a; font-size:8pt; font-weight:normal; text-decoration:none; }
+a:active.tmg_link_a {  color:#000000; font-size:8pt; font-weight:normal; text-decoration:none; }
+a:focus.tmg_link_a {   color:#000000; font-size:8pt; font-weight:normal; text-decoration:none; }
+
+/* TMG-Aussentabelle im PopUp */
+.tmg_output_pu_table{
+	width:60%;
+}
+/* TMG-Aussentabelle im PopUp */
+.tmg_output_pu_td1{
+	padding: 10px 10px 10px 10px;
+}
+
+/* TMG-Ausgabe im Mittelbereich Hauptseite und PopUp */
+.tmg_output_table{
+	width:100%;
+}
+/* TMG-Textausgabe im Mittelbereich Hauptseite und PopUp */
+.tmg_output_td1{
+	padding: 10px 0px 10px 0px;
+	color:#000000;
+	font-size:9pt;
+	font-weight:normal;
+}
+/* TMG-Ausgabe Tabellen fuer dynamische Ausgaben (Lieferbedingungen) */
+.tmg_lfb_output_dynausg_table{
+	width: 100%;
+	margin: 5px 0px 5px 0px;
+}
+/* TMG-Ausgabe Tabellenzellen Bezeichnung fuer dynamische Ausgaben (Lieferbedingungen) */
+.tmg_lfb_output_dynausg_td1{
+	width:25%;
+	color:#000000;
+	font-size:9pt;
+	font-weight: 300;
+}
+/* TMG-Ausgabe Tabellenzellen Zusatz fuer dynamische Ausgaben (Lieferbedingungen) */
+.tmg_lfb_output_dynausg_td2{
+	color:#000000;
+	font-size:8pt;
+	font-weight:normal;
+}
+/* TMG-Ausgabe Tabellenzellen Kostenart fuer dynamische Ausgaben (Lieferbedingungen) */
+.tmg_lfb_output_dynausg_td3{
+	color:#000000;
+	font-size:8pt;
+	font-weight:normal;
+}
+/* TMG-Ausgabe Tabellenzellen Staffeln fuer dynamische Ausgaben (Lieferbedingungen) */
+.tmg_lfb_output_dynausg_td4{
+	color:#000000;
+	font-size:8pt;
+	font-weight:normal;
+}
+/* TMG-Ausgabe Tabellenzellen Preise fuer dynamische Ausgaben (Lieferbedingungen) */
+.tmg_lfb_output_dynausg_td5{
+	color:#000000;
+	font-size:8pt;
+	font-weight: 300;
+}
+/* TMG-Ausgabe Tabellen fuer dynamische Ausgaben (Zahlungsbedingungen) */
+.tmg_zb_output_dynausg_table{
+	width: 100%;
+	margin: 5px 0px 5px 0px;
+}
+/* TMG-Ausgabe Tabellenzellen Bezeichnung fuer dynamische Ausgaben (Zahlungsbedingungen) */
+.tmg_zb_output_dynausg_td1{
+	width:90%;
+	color:#000000;
+	font-size:9pt;
+	font-weight: 300;
+}
+/* TMG-Ausgabe Tabellenzellen Text Beschreibung/Zusatz fuer dynamische Ausgaben (Zahlungsbedingungen) */
+.tmg_zb_output_dynausg_td2{
+	color:#000000;
+	font-size:9pt;
+}
+/* Abstand zwischen oberer horizontaler Navigation und Inhalt Tabellenzelle */
+.bg_inhalt_abstand_oben_td{
+	height: 18px;
+}
+/*Aussentabelle fuer Artikelgruppennavigationsleiste vor Listen- oder Datailansicht im Hauptfenster*/
+.artikelgruppennavigationspfad_mitte_table{
+	width: 100%;
+	margin: 10px 0 10px 0;
+}
+/* CMS Untermenuesteuerung Beginn */
+#cmsmenu {
+	text-align: left;
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 600;
+	border-left: 0px #B3B3B3 solid;
+	border-top: 0px #B3B3B3 solid;
+	border-right: 0px #B3B3B3 solid;
+	border-bottom: 0px #B3B3B3 solid;
+	background-image: url(images/modul-left.png);
+	background-repeat: repeat-y;
+}
+
+ul#cmsmenu,ul#cmsmenu ul {
+	list-style-type: none;
+	margin: 0px 0px 15px 0px;
+	padding: 0px 0px 0px 0px;
+	width: 170px;
+}
+
+ul#cmsmenu a {
+	display: block;
+	text-decoration: none;
+}
+
+ul#cmsmenu li {
+	margin-bottom: 0px;
+}
+
+/* Erste Ebene */
+ul#cmsmenu li a {
+	line-height: 20px;
+	font-size: 10pt;
+	color: #000;
+	padding: 0px 0px 0px 8px;
+	background: url('images/navi-left-li-0.png');
+	background-repeat: no-repeat;
+}
+
+ul#cmsmenu li a:hover,ul#cmsmenu li a.left_marked { /*min-height:23px;*/
+	line-height: 20px;
+	padding-left: 8px;
+	font-size: 10pt;
+	background: #F0F0F0;
+	color: #FFf;
+	background: url('images/navi-left-li-0-h.png');
+	background-repeat: no-repeat;
+}
+
+/* Zweite Ebene */
+ul#cmsmenu ul li a {
+	color: #393939;
+	line-height: 21px;
+	font-size: 12px;
+	font-weight: 400;
+	padding: 0px 0px 0px 16px;
+	min-height: 21px;
+	background: transparent;
+}
+
+ul#cmsmenu ul li a:hover,ul#cmsmenu ul li a.left_marked {
+	color: #0068ae;
+	line-height: 21px;
+	font-size: 12px;
+	padding-left: 16px;
+	min-height: 21px;
+	background: url('images/navi-left-li-bullet-h.png');
+	background-repeat: no-repeat;
+	background-position: left;
+}
+
+/* Dritte Ebene */
+ul#cmsmenu ul ul li a {
+	color: #393939;
+	line-height: 20px;
+	font-size: 8pt;
+	font-weight: 400;
+	padding: 5px 10px 5px 24px;
+	min-height: 20px;
+}
+
+ul#cmsmenu ul ul li a:hover,ul#cmsmenu ul ul li a.left_marked {
+	background: #F0F0F0;
+	color: #000000;
+	line-height: 20px;
+	font-size: 8pt;
+	padding-left: 24px;
+	min-height: 20px;
+}
+
+/* Vierte Ebene */
+ul#cmsmenu ul ul ul li a {
+	color: #393939;
+	line-height: 12px;
+	font-size: 8pt;
+	font-weight: 400;
+	padding: 5px 10px 5px 32px;
+	min-height: 20px;
+}
+
+ul#cmsmenu ul ul ul li a:hover,ul#cmsmenu ul ul ul li a.left_marked {
+	background: #F0F0F0;
+	color: #000000;
+	line-height: 12px;
+	font-size: 8pt;
+	padding-left: 32px;
+	min-height: 20px;
+}
+
+ul#cmsmenu li a.left_marked {
+	border: 0px #FF0000 dotted;
+	background: #F0F0F0;
+	color: #fff;
+	background: url('images/navi-left-li-0-h.png');
+	background-repeat: no-repeat;
+}
+
+ul#cmsmenu a.last_marked {
+	border: 0px #FF0000 dotted;
+	background: #F0F0F0;
+	color: #FFF;
+	background: url('images/navi-left-li-0-h.png');
+	background-repeat: no-repeat;
+}
+
+a.lytebox:visited {
+	color: #000000;
+	font-size: 8pt;
+	text-decoration: underline;
+}
+
+a.lytebox:link {
+	color: #000000;
+	font-size: 8pt;
+	text-decoration: underline;
+	border: none;
+}
+a.lytebox:hover {
+	color: #000000;
+	font-size: 8pt;
+	text-decoration: underline;
+}
+.lytebox img {
+    border: 0;
+}
+a.lytebox:active {
+	color: #000000;
+	font-size: 8pt;
+	text-decoration: underline;
+}
+
+a.lytebox:vocus {
+	color: #000000;
+	font-size: 8pt;
+	text-decoration: underline;
+}
+
+.td_warenkorb_buttonleiste1_aktiv {
+	background-image: url(images/button_wk1_a.png);
+	background-repeat: no-repeat;
+	height: 40px;
+	width: 125px;
+}
+
+.td_warenkorb_buttonleiste1_passiv {
+	background-image: url(images/button_wk1_p.png);
+	background-repeat: no-repeat;
+	height: 40px;
+	width: 125px;
+}
+
+.td_warenkorb_buttonleiste2_aktiv {
+	background-image: url(images/button_wk2_a.png);
+	background-repeat: no-repeat;
+	width: 125px;
+}
+
+.td_warenkorb_buttonleiste2_passiv {
+	background-image: url(images/button_wk2_p.png);
+	background-repeat: no-repeat;
+	width: 125px;
+}
+
+.td_warenkorb_buttonleiste3_aktiv {
+	background-image: url(images/button_wk3_a.png);
+	background-repeat: no-repeat;
+	width: 125px;
+}
+
+.td_warenkorb_buttonleiste3_passiv {
+	background-image: url(images/button_wk3_p.png);
+	background-repeat: no-repeat;
+	width: 125px;
+}
+
+.td_warenkorb_buttonleiste4_aktiv {
+	background-image: url(images/button_wk4_a.png);
+	background-repeat: no-repeat;
+	width: 125px;
+}
+
+.td_warenkorb_buttonleiste4_passiv {
+	background-image: url(images/button_wk4_p.png);
+	background-repeat: no-repeat;
+	width: 125px;
+}
+
+.td_warenkorb_buttonleiste1_zelle_unten {
+	height: 10px;
+}
+
+select#select_variation { /*PullDown-Feld fuer Variantenarten*/
+	background-image: url(images/schatten.gif);
+	background-repeat: no-repeat;
+	background-position: -1px -1px;
+	font-family: 'Open Sans', sans-serif;
+	color: #13335C;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #C0C0C0;
+	height: 20px;
+	width: 170px;
+}
+
+select#sel_lfb.select_versandarten {
+	height: 20px;
+	width: 170px;
+}
+
+#admin {
+	width: 100%;
+	height: 30px;
+}
+#admin td {
+	text-align: right;
+	padding-right: 10px;
+}
+#trenner {
+	padding: 0px 2px 0px 2px;
+	color: #fff;
+	float: right;
+}
+#admin_button {
+	width: 45px;
+	height: 15px;
+	background-image: url('images/button-admin.png');
+	float: right;
+	font-size: 10px;
+	text-align: center;
+	box-shadow: 0px 0px 6px #888;
+}
+#admin_button:hover {
+	width: 45px;
+	height: 15px;
+	background-image: url('images/button-admin-h.png');
+	float: right;
+	font-size: 10px;
+	text-align: center;
+	box-shadow: 0px 0px 6px #888;
+}
+
+input#altzub_mitbestellen.textfeld1 {
+	text-align: center;
+}
+input#agb_check {
+	margin: 3px 5px 3px 0px;
+}
+.abstand_summenfeld1 {
+	padding-right:50px;
+}
+.abstand_summenfeld2 {
+	padding-right:50px;
+}
+.td_warenkorb1_untere_zeile{
+	width:400px;
+	font-family:'Open Sans', sans-serif;
+	font-size:12px;
+}
+.meldungstext{
+	color:#FF0000;
+}
+
+/* Standardstyles Responsive Webdesign - Webshop Version 15 TR (DP)*/
+.tr_mitte_inhalt_0 {
+	padding: 10px 0 10px 0;
+}
+.table_warenkorb1_untere_zeile { 
+	margin-top: 15px;
+}
+.warenk_td_summen {
+	padding-left: 50px;
+}
+.button_fett_konto{
+	margin-top: 5px;
+	width: 207px;
+	height: 30px;
+	border: 1px solid red;
+	text-align: center;
+	font-size: 12px;
+	margin-right: 12px;
+	line-height: 30px;
+	background: #e2001a;
+	color: #fff;
+	font-weight: 300;
+}
+#sm_regneu,#Zurueck,#Bestellen,#Verwerfen,#Aendern ,#ZurueckFensterZu,#sm_los_pw{
+ 	margin-top: 5px;
+	width: 150px;
+	height: 30px;
+	border: 1px solid #209bd7;
+	text-align: center;
+	font-size: 12px;
+	margin-right: 12px;
+	line-height: 30px;
+	background: #209bd7;
+	color: #fff;
+	font-weight: 300;
+	cursor:pointer;
+	border-radius: 4px;
+	-webkit-appearance: none;
+}
+#WeiterWK, #NeukundeRegistrieren, #Anmelden, #Abmelden{
+	margin-top: 5px;
+	margin-right: 5px;
+	padding: 0px 5px 8px 5px;
+	width: 148px;
+	height: 33px;
+	border: 1px solid #209bd7;
+	text-align: center;
+	font-size: 12px;
+	line-height: 30px;
+	background: #209bd7;
+	color: #fff;
+	cursor:pointer;
+	font-weight: 300;
+	border-radius: 4px;
+	float: right;
+	-webkit-appearance: none;
+}
+#WeiterWK2, #WeiterWK3_ak, #Drucken {
+	width: 150px;
+	height: 30px;
+	float: right;
+	border: 1px solid #209bd7;
+	text-align: center;
+	font-size: 12px;
+	font-weight: 300;
+	margin-right: 12px;
+	line-height: 30px;
+	background: #209bd7;
+	color: #fff;	
+	cursor:pointer;
+	border-radius: 4px;
+	-webkit-appearance: none;
+}
+#WeiterWK3_nk {
+ 	margin-top: 5px;
+	width: 150px;
+	height: 30px;
+	border: 1px solid #209bd7;
+	text-align: center;
+	font-size: 12px;
+	margin-right: 12px;
+	line-height: 30px;
+	background: #209bd7;
+	color: #fff;
+	font-weight: 300;
+	cursor:pointer;
+	font-family:'Open Sans', sans-serif;
+	border-radius: 4px;
+}
+.textfeld_registrieren, .regi_textfeld_al {
+	width: 200px;
+	margin: auto 5px 3px 0px; 
+	padding-top: 3px;
+	border: 1px solid #aaa;
+	text-align: left;
+	background-color: #fff;
+	box-shadow: inset 0px 0px 8px #ccc;
+	padding-left: 5px;
+}
+.textfeld_registrieren:focus, .regi_textfeld_al:focus {
+	box-shadow: inset 0px 0px 8px #888;
+}
+.select_registrieren, .regi_select_al {
+	width: 207px;
+	margin: auto 5px 3px 0px; 
+	padding-top: 3px;
+	border: 1px solid #aaa;
+	text-align: left;
+	background-color: #fff;
+	box-shadow: inset 0px 0px 8px #ccc;
+	padding-left: 5px;
+}
+.buttontabelelle_kopf {
+	width: 32.29%;
+	height: 30px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #555;
+	background: url('images/hg-title.png');
+	text-align: center;
+}
+.formular_kopf {
+	width: 32.29%;
+	height: 30px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #555;
+	background: url('images/hg-title.png');
+	text-align: center;
+}
+#formulartabelle {
+	margin-top: 10px;
+}
+.zeilenkopf {
+	padding-left: 5px;
+	width: 25%;
+}
+.zeileninhalt {
+	padding-left: 5px;
+}
+.liste_button {
+	height: 16px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 12px;
+	color: #fff;
+	background-color: grey;
+	text-align: center;
+	padding-top: 5px;
+	margin: 10px 0px 8px 0px;
+	width: 100%;
+	box-shadow: 0px 3px 5px #888;
+}
+.liste_button:hover {
+	background-color: #888;
+}
+.trenner_td {
+	width: 1.56%;
+}
+.warnung {
+	color: red;
+}
+.td_anrede {
+	width: 30px;
+}
+.td_name {
+	width: 100px;
+}
+.td_vorname {
+	width: 100px;
+}
+.td_land {
+	width: 15px;
+}
+.td_plz {
+	width: 35px;
+}
+.td_ort {
+	width: 100px;
+}
+.td_strasse {
+	width: 100px;
+}
+.td_bearbeiten {
+	width: 80px;
+}
+.td_loeschen {
+	width: 80px;
+}
+.textfeld_mk {
+	width: 200px;
+	margin: auto 5px 3px 0px; 
+	padding-top: 3px;
+	border: 1px solid #aaa;
+	text-align: left;
+	background-color: #fff;
+	box-shadow: inset 0px 0px 8px #ccc;
+	padding-left: 5px;
+}
+.select_mk {
+	width: 207px;
+	margin: auto 5px 3px 0px; 
+	padding-top: 3px;
+	border: 1px solid #aaa;
+	text-align: left;
+	background-color: #fff;
+	box-shadow: inset 0px 0px 8px #ccc;
+	padding-left: 5px;
+}
+.textfeld_mk:focus {
+	box-shadow: inset 0px 0px 8px #888;
+}
+input#name_firma,input#vorname,input#strasse,input#ort,input#telefon,input#telefax,input#email, input.textfeld1, .textfeld_beleg2 {
+	width: 100%;
+	max-width: 240px;
+	margin: auto 5px 3px 0px; 
+	padding-top: 3px;
+	border: 1px solid #aaa;
+	text-align: left;
+	background-color: #fff;
+	box-shadow: inset 0px 0px 8px #ccc;
+	padding-left: 5px;
+}
+.select_beleg2 {
+	width: 100%;
+	max-width: 247px;
+	margin: auto 5px 3px 0px; 
+	padding-top: 3px;
+	border: 1px solid #aaa;
+	text-align: left;
+	background-color: #fff;
+	box-shadow: inset 0px 0px 8px #ccc;
+	padding-left: 5px;
+}
+input#sicherheitscode.login_search, input#plz, input.wk1_a_textfeld1 {
+	width: 60px;
+	margin: auto 5px 3px 0px; 
+	padding-top: 3px;
+	border: 1px solid #aaa;
+	text-align: left;
+	background-color: #fff;
+	box-shadow: inset 0px 0px 8px #ccc;
+	padding-left: 5px;
+}
+textarea#textmitteilung, textarea#txBemerkung_AL.textarea1 {
+    display: block;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+textarea#textmitteilung, textarea#txBemerkung_AL.textarea1 {
+	width: 100%;	
+	max-width: 317px;
+	height:80px;
+	margin: 10px 5px 3px 0px; 
+	padding-top: 3px;
+}
+input#txIhrZeichen_AL.textfeld1 {
+	margin: 10px 0px 0px 0px;
+	width: 100%;
+	min-width: 317px;
+}
+input#imgLieferadresseneu_web.button_fett, input#imgLieferadressenholen.button_fett {
+	margin: 10px 0px 0px 0px;
+	width: 100%;
+}
+.td_formular_kopf_beleg2 {
+	font-size: 11pt;
+	padding: 5px 0px 0px 8px;
+	height: 35px;
+	max-height: 40px;
+	line-height: 12px;
+	background: url('images/hg-title.png');
+	text-align: left;
+	vertical-align:top;
+}
+.td_regbereich_abstand_links_kdnr {
+	width: 35%;
+}
+.td_regbereich_abstand_rechts_kdnr {
+	width: 65%;
+}
+.td_wk_regstartbereich_1 {
+	vertical-align: top;
+	height: 50px;
+}
+.td_wk_regstartbereich_abstandzelle_textfelder, .td_wk_regstartbereich_abstandzelle {
+	height: 15px;
+}
+input.textfeld_wk_regstartbereich, 
+input#Artikelnummer_suche, 
+input#wk1_a_textfeld1, 
+input.textfeld_registrieren, 
+input.textfeld1,
+input.textfeld_beleg2,
+input.regi_textfeld_al,
+select.select_registrieren,
+select.regi_select_al,
+select.select_zahlungsarten,
+select.select_beleg2 {
+    display: block;
+    height: 30px;
+    padding: 0px 12px;
+	line-height: 30px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+input.textfeld_wk_regstartbereich {
+    width: 75%;
+}
+
+input#tx_pw1.textfeld1, 
+input#tx_pw2.textfeld1, 
+input#tx_gebdat.textfeld1, 
+input#txBisherigeKdNr.textfeld1, 
+input.textfeld_beleg2, {
+	width: 200px;
+}
+select.select_registrieren,
+select.regi_select_al, 
+select.select_beleg2 {
+	width: 225px;
+}
+
+.btn-info{
+	background:#0A71B4;
+	border:1px solid #0A71B4;
+}
+.btn-info:hover{
+	background:#0A71B4;
+	border:1px solid #0A71B4;
+}
+.btn-info:focus{
+	background:#0A71B4;
+	border:1px solid #0A71B4;
+}
+input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type=number] {
+    -moz-appearance:textfield;
+}
+
+.carousel-indicators{
+	display:none;
+}
+
+input.button_normal, input#uebernehmen {
+    margin-top: 5px;
+    width: 148px;
+    height: 30px;
+    border: 1px solid #209bd7;
+    text-align: center;
+    font-size: 12px;
+	font-weight: 300;
+    line-height: 30px;
+    background: #209bd7;
+    color: #fff;
+    cursor: pointer;
+	border-radius: 4px;
+	-webkit-appearance: none;
+}
+
+input.button_normal#SeiteDrucken {
+	float: right;
+	margin:2px;
+}
+input.button_normal#Zu {
+	float: left;
+	margin:2px;
+}
+
+body.body_popup {
+	font-family: 'Open Sans', sans-serif;
+	line-height: 1.1em;
+}
+
+body.body_popup td.warenk_td_summen {
+	text-align: right;
+}
+
+.warenk_lieferbedingung td {
+	padding-top: 5px;
+}

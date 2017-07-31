@@ -1,0 +1,32 @@
+<form name="form" class="form-horizontal" validate>
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="close()">&times;</button>
+        <h3 class="modal-title">Neue Sprachvariable erstellen</h3>
+    </div>
+    <div class="modal-body">
+        <div class="form-group" ng-class="{'has-error': form.sub && !form.sprach_id.$valid}">
+            <label for="sprach_id" class="col-sm-4 control-label">Sprachvariable (ID):<sup>*</sup></label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" name="sprach_id" ng-model="data.lang" id="sprach_id" placeholder="kdsp_lng_bezeichnung" required>
+                <p class="help-block">ID bitte mit kdsp_lng_xxx um kundenspezifische Sprachvariablen zu trennen!</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="beschreibung" class="col-sm-4 control-label">Beschreibung</label>
+            <div class="col-sm-8">
+                <textarea type="text" style="resize: vertical; max-height:130px;" class="form-control" id="beschreibung" ng-model="data.description" placeholder="Hier eine kurze Beschreibung"></textarea>
+            </div>
+        </div>
+        <div class="form-group" ng-repeat="l in lang">
+            <label class="col-sm-4 control-label">{{l.description}}:</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" ng-model="data[l.lang]">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <p ng-show="error" class="text-danger">Variable existiert bereits!</p>
+        <button type="button" class="btn btn-default pull-left" ng-click="close()">Abbrechen</button>
+        <button type="button" class="btn btn-success pull-right" ng-click="form.$valid ? create(data) : form.sub = true">Anlegen</button>
+    </div>
+</form>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<div ng-show="!data" class="text-center" ng-include="'loading.html'"></div>
+<div ng-if="data && data.Anzahl > 0">
+	<div class="row">
+		<div class="col-xs-12 col-sm-offset-9 col-sm-3 col-md-offset-8 col-md-4" style="margin-top:20px; margin-bottom:20px;">
+			<!--Sortierung-->
+			<div style="margin-bottom:20px;">
+				<select class="form-control" style="text-align:center" ng-model="list.sortBy">
+                <option value="Artikelnummer">{{l.lng_artikelliste_sort_artikelnummer}}</option>
+                <option value="Bezeichnung">{{l.lng_artikelliste_sort_bezeichnung}}</option>
+            </select>
+			</div>
+			<!--Ende Sortierung-->
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-sm-6 col-md-4" ng-repeat="Artikel in data.Values">
+			<a ui-sref=".detail({id:Artikel.Bezeichnung,artnr:Artikel.Artikelnummer})">
+				<div ng-include="'template/includes/kachel_include.html'"></div>
+			</a>
+		</div>
+	</div>
+
+	<!--Preisbemerkung-->
+	<div class="col-xs-12">
+		<span><sup>*</sup> {{l[data.Preisbemerkung]}}</span><a ui-sref="lieferbedingungen" ng-if="row.versandlink_hinter_steuerinfo"
+		 style="text-decoration:underline;"> {{l.lng_artikelliste_zzgl_versand}}</a>
+	</div>
+	<!--Ende Preisbemerkung-->
+	<!--Pagination-->
+	<div class="col-xs-12" style="text-align:center" ng-if="data.Anzahl > list.limitTo">
+		<div uib-pagination class="pagination-sm xxx-pagination" total-items="data.Anzahl" ng-model="list.page" max-size="10" items-per-page="list.limitTo"
+		 previous-text="<" next-text=">" first-text="<<" last-text=">>" boundary-links="true"></div>
+	</div>
+	<!--Ende Pagination-->
+
+</div>
+
+<div class="row artikelliste_keinergebniss" ng-if="data && data.Anzahl==0">
+	<p>{{l.lng_artikelliste_keine_ergebnisse}}</p>
+</div>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<div class="modal-header" id="Merkzettel_Bezeichnung">
+	<button type="button" class="close" ng-click="closeModal()">&times;</button>
+	<h3 class="mz_aussentab_td2 modal-title">Merkzettel</h3>
+</div>
+<div class="modal-body">
+	<p ng-if="Merkzettel.Liste" class="mz_innentab_td1">{{l.lng_merkzettel_vorhanden}}</p>
+	<uib-accordion close-others="true">
+		<div uib-accordion-group class="panel-default" is-open="merkzettel.open" ng-repeat="merkzettel in Merkzettel.Liste">
+			<uib-accordion-heading>
+				<div class="row">
+					<div class="col-xs-10">{{merkzettel.Bezeichnung}} ({{merkzettel.Values.length}}) </div>
+					<!--<div class="col-xs-2"><button class="btn btn-sm btn-danger" ng-click="deleteMerkzettel(merkzettel.mz_id)"><i class="fa fa-trash"></i></button></div>-->
+					<div class="col-xs-2"><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': merkzettel.open, 'glyphicon-chevron-right': !merkzettel.open}"></i></div>
+				</div>
+			</uib-accordion-heading>
+			<ul>
+				<li ng-repeat="value in merkzettel.Values">
+					<a style="text-decoration:underline" ng-click="closeModal()" ui-sref="article({id:value.Bezeichnung,artnr:value.Artikelnummer})">{{value.Artikelnummer}} - {{value.Bezeichnung}}</a>
+					<button style="margin-top:-3px" class="btn btn-link" ng-click="removeArtikelFromMerkzettel(value.Artikelnummer,merkzettel.mz_id)"><span class="fa fa-trash"></span></button>
+				</li>
+			</ul>
+			<button class="btn btn-sm btn-success" ng-disabled="ArtikelBereitsInMerkzettel[merkzettel.mz_id]" ng-click="pushArtikelToMerkzettel(merkzettel.mz_id)"><i class="fa fa-plus" aria-hidden="true"></i></button>
+		</div>	
+	</uib-accordion>
+	
+	<div class="input-group">
+		<input class="form-control" type="text" ng-model="Merkzettel.Titel" placeholder="{{l.lng_merkzettel_platzhalter_name}}">
+		<span class="input-group-btn">
+			<button ng-disabled="!Merkzettel.Titel" class="btn btn-info" ng-click="createMerkzettel(Merkzettel.Titel)">{{l.lng_merkzettel_anlegenbtn}}</button>
+		</span>
+	</div>
+</div>
+
+<div class="modal-footer">
+	<button style="float:right" class="btn btn-default" ng-click="closeModal()">{{l.lng_merkzettel_modal_closebtn}}</button>
+</div>

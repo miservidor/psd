@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<h1>{{title}}</h1>
+<hr>
+<form name="form" class="form-horizontal" novalidate>
+	<div class="form-group">
+		<label class="col-md-2 control-label">Sprache:</label>
+		<div class="col-md-10">
+			<div class="input-group">
+				<select class="form-control" ng-model="lang" ng-options="lang as lang.description + ' ('+lang.lang+')' for lang in list"></select>
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button" ng-click="modalLang()" ng-disabled="lang.lang == 'de'"><i class="fa fa-pencil"></i></button>
+					<button class="btn btn-default" type="button" ng-click="modalLang(true)"><i class="fa fa-plus"></i></button>
+				</span>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-md-2 control-label">Suchen:</label>
+		<div class="col-md-10">
+			<input type="text" class="form-control" ng-model="searchfilter">
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-md-12" style="text-align: center;"><button class="btn btn-default" ng-click="newSprachvariable()">Neue Sprachvariable erstellen</button></div>
+	</div>
+	<div class="form-group">
+		<label class="col-md-2 control-label">Einstellung:</label>
+		<div class="col-md-10">
+			<table class="table table-condensed">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Beschreibung</th>
+						<th>Beschriftung</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="l in langs | filter:searchfilter" ng-class="{'warning': l.changed, 'success':l.updated}">
+						<td>{{l.lang}}</td>
+						<!--<td style="width:50%;">{{l.k}}</td>-->
+						<!--<td><textarea style="width:100%;" ng-model="l.v" ng-change="l.changed=true; l.updated=true" class="form-control"></textarea></td>-->
+						<td><textarea ng-model="l.k" ng-change="l.changed=true; l.updated=true" class="form-control" disabled></textarea></td>
+						<td><textarea ng-model="l.nv" ng-init="l.nv = l.v" ng-change="l.changed=true; l.updated=true" class="form-control"></textarea></td>
+						<td><button ng-click="change([{lang:l.lang, v:l.nv}]); l.changed=false" class="btn btn-success btn-sm">Ändern</button></td>
+					</tr>
+				</tbody>
+			</table>
+			<!--<div ng-if="!langs" class="text-center" ><i class="text-primary fa fa-circle-o-notch fa-spin fa-3x fa-fw margin-bottom"></i></div>-->
+			<div ng-show="!langs" class="text-center"><img class="xxx-rotate" src="../template/images/loading.png"></div>
+		</div>
+	</div>
+</form>

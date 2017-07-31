@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<h1>Bildverwaltung</h1>
+<hr>
+<div class="row">
+    <div class="col-xs-3">
+        <button class="btn btn-default btn-block" ng-click="action(1)">Bildverweise löschen</button>
+        <button class="btn btn-default btn-block" ng-click="action(2)">DB-Einträge löschen</button>
+        <button class="btn btn-default btn-block" ng-click="action(3)">Neue Bilder suchen</button>
+        <button class="btn btn-default btn-block" ng-click="action(4)">Bilder indizieren</button>
+    </div>
+
+    <div class="col-xs-6">
+        <p style="padding-top:5px;">(Datenbankeinträge und Thumbnails)</p>
+        <p style="padding-top:10px;">(nur Datenbankeinträge)</p>
+        <p style="padding-top:10px;">(Für nicht indizierte Artikel werden Bilder gesucht und Thumbnails erstellt)</p>
+        <p style="padding-top:10px;">(Bildindex für spätere Zuordnungen erstellen)</p>
+    </div>
+
+    <div class="col-xs-3">
+        <p>Artikel: {{data.Anz_Artikel}}</p>
+        <p>Datenbankeinträge: {{data.Anz_Bildverweis}}</p>
+        <p>Thumbnails: {{data.Anz_Thumb}}</p>
+        <p>Indizierte Bilder: {{data.Anz_Indiziert}}</p>
+        <p>Letzter Suchlauf: {{data.Letzte_Aenderung}}</p>
+    </div>
+</div>

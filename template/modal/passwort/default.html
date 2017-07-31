@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<div class="modal-header">
+	<button type="button" class="close" ng-click="closeModal()">&times;</button>
+	<h3 class="modal-title">{{l.lng_passwort_modal_titel}}</h3>
+</div>
+<div ng-hide="status=='success'" class="modal-body">
+	<p>{{l.lng_passwort_modal_label}}</p>
+	<input class="form-control" style="width:300px" ng-model="Eingabe" placeholder="{{l.lng_passwort_modal_platzhalter}}" type="text">
+</div>
+<div class="modal-footer" style="text-align:left">
+	<div>
+		<p ng-show="status=='success'" class="text-success">{{l.lng_notice_access_data_send_password_request}}</p>
+		<p ng-show="status=='error'" class="text-danger">{{l.lng_notice_unregistered_password_request}}</p>
+	</div>
+	<div ng-show="status=='loading'" ng-include="'loading.html'"></div>
+	<button ng-show="status!='loading' && status!='success'" class="btn btn-primary" ng-click="Passwort_anfordern(Eingabe)">{{l.lng_paswort_modal_anfordernbtn}}</button>
+	<button style="float:right" class="btn btn-default" ng-click="closeModal()">{{l.lng_passwort_modal_closebtn}}</button>
+</div>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<div uib-carousel active="active">
+	<div uib-slide ng-repeat="ig in images track by $index" index="$index">
+		<div ng-if="!ig.file" style="height:300px;width:100%" ng-style="{'background-image':'url(../api/datei/{{ig.img}})',  'background-size':'contain', 	'background-repeat': 'no-repeat', 'background-position':'center'}"></div>
+		<img ng-if="ig.file" style="width: 100%" ngf-src="ig.file" />
+	</div>
+</div>
+
+<div class="modal-body">
+	<input type="text" class="form-control" placeholder="Beschreibung" ng-model="images[active].imgnotation">
+	<input ng-if="!disableWeblink" type="text" class="form-control" placeholder="Link" ng-model="images[active].weblink">
+</div>
+<div class="modal-footer">
+	<div class="pull-left">
+		<button ng-if="editable && !images[0].file" class="btn btn-link btn-sm" type="button" ng-click="delete()"><i class="fa fa-trash-o"></i> Löschen</button>
+	</div>
+	<div>
+		<button class="btn btn-default btn-sm" type="button" ng-click="close()">OK</button>
+	</div>
+</div>

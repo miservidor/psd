@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<div class="row" ng-repeat="merkzettel in Merkzettel.Liste">
+	<div class="col-xs-12">
+		<h4 style="text-decoration:underline">{{merkzettel.Bezeichnung}} <i ng-click="deleteMerkzettel(merkzettel.mz_id)" style="font-size:16x;cursor:pointer;" class="fa fa-times-circle-o"
+				aria-hidden="true"></i></h4>
+	</div>
+	<div class="col-xs-12 col-sm-6" ng-repeat="Artikel in merkzettel.Values" style="margin-bottom:10px;">
+		<div class="row">
+			<div class="col-xs-5 merkzettel_bild">
+				<a ui-sref="article({id:Artikel.Bezeichnung,artnr:Artikel.Artikelnummer})"><img ng-src="./{{Artikel.Artikelbild[0]}}" class="img-thumbnail"></a>
+			</div>
+			<div class="col-xs-7 merkzettel_info">
+				<div class="row">
+					<div class="col-xs-10">
+						<a ui-sref="article({id:Artikel.Bezeichnung,artnr:Artikel.Artikelnummer})">
+							<h4>{{Artikel.Bezeichnung}}</h4>
+						</a>
+					</div>
+					<div class="col-xs-2" style="text-align:rigth;padding-top:5px;">
+						<i ng-click="removeArtikelFromMerkzettel(Artikel.Artikelnummer,merkzettel.mz_id)" style="font-size:16px;cursor:pointer;"
+							class="fa fa-times-circle-o" aria-hidden="true"></i>
+					</div>
+				</div>
+				<p>{{Artikel.Artikelnummer}}</p>
+				<p ng-if="Artikel.Zusatz">{{Artikel.Zusatz}}</p>
+				<div ng-if="!Artikel.Artikelpreis.Aktion && kunde.Rechte.PreiseAusblenden!='True'" style="padding-top:5%">
+					<span ng-if="Artikel.Artikelpreis.Netto && !Artikel.Artikelpreis.Brutto">{{Artikel.Artikelpreis.Netto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup></span>
+					<span ng-if="Artikel.Artikelpreis.Netto &&  Artikel.Artikelpreis.Brutto">{{Artikel.Artikelpreis.Netto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span>					({{Artikel.Artikelpreis.Brutto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup>)</span>
+					<span ng-if="!Artikel.Artikelpreis.Netto && Artikel.Artikelpreis.Brutto">{{Artikel.Artikelpreis.Brutto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup></span>
+					<span ng-if="!Artikel.Artikelpreis.Netto && !Artikel.Artikelpreis.Brutto">{{l.lng_merkzettel_preis_auf_anfrage}}</span>
+					<i style="float:right;" class="fa fa-circle" uib-tooltip="{{l[Artikel.Bestand.Sprachvariable]}}" ng-class="{'circle_red':Artikel.Bestand.Ampel=='r','circle_yellow':Artikel.Bestand.Ampel=='y','circle_green':Artikel.Bestand.Ampel=='g'}"
+						aria-hidden="true"></i>
+				</div>
+				<div ng-if="Artikel.Artikelpreis.Aktion && kunde.Rechte.PreiseAusblenden!='True'" style="padding-top:5%">
+					<span ng-if="Artikel.Artikelpreis.Aktion.Netto">{{Artikel.Artikelpreis.Aktion.Netto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span></span>
+					<span ng-if="Artikel.Artikelpreis.Aktion.Brutto"> ({{Artikel.Artikelpreis.Aktion.Brutto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup>)</span>
+					<i style="float:right;" class="fa fa-circle" uib-tooltip="{{l[Artikel.Bestand.Sprachvariable]}}" ng-class="{'circle_red':Artikel.Bestand.Ampel=='r','circle_yellow':Artikel.Bestand.Ampel=='y','circle_green':Artikel.Bestand.Ampel=='g'}"
+						aria-hidden="true"></i>
+				</div>
+				<div class="input-group" style="padding-top:10px;">
+					<input type="number" class="form-control" ng-model="Artikel.Menge" ng-init="Artikel.Menge=1">
+					<span class="input-group-addon"><i ng-show="Artikel.Menge>0" ng-click="pushToWarenkorb(Artikel)" class="fa fa-shopping-cart"></i></span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-xs-12" style="text-align:center">
+		<span><sup>*</sup> {{l[Merkzettel.Preisbemerkung]}}</span><a ui-sref="lieferbedingungen" ng-if="row.versandlink_hinter_steuerinfo"
+			style="text-decoration:underline;"> {{l.lng_artikelliste_zzgl_versand}}</a>
+	</div>
+</div>

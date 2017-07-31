@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<div class="row">
+    <div class="col-xs-12 visible-xs">
+        <!--Daten-->
+        <a ui-sref=".({bereich:'daten'})" class="btn btn-default btn-block" ng-class="{'btn-primary':bereich=='daten'}"><strong>{{l.lng_konto_meinedatenbtn | uppercase}}</strong></a>
+        <div ng-if="bereich=='daten'" class="konto_xs_accordion" style="margin-top:20px;">
+            <div uib-accordion>
+                <!--Rechnungsadresse ändern-->
+                <div uib-accordion-group is-open="rechnungsadresse.open" class="panel-default" ng-click="ret.success = false">
+                    <uib-accordion-heading>
+                        <div class="row" ng-click="!rechnungsadresse.open ? get('rechnungsadresse') : ''">
+                            <div class="col-xs-10"><span>{{l.lng_konto_rechnungsadressebtn | uppercase}}</span></div>
+                            <div class="col-xs-2"><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': rechnungsadresse.open, 'glyphicon-chevron-right': !rechnungsadresse.open}"></i></div>
+                        </div>
+                    </uib-accordion-heading>
+                    <div ng-include="'rechnungsadresse.html'"></div>
+                </div>
+                <!--Lieferadresse ändern-->
+                <div uib-accordion-group is-open="lieferadresse.open" class="panel-default" ng-click="ret.success = false">
+                    <uib-accordion-heading>
+                        <div class="row" ng-click="!lieferadresse.open ? get('lieferadresse') : ''">
+                            <div class="col-xs-10"><span>{{l.lng_konto_lieferadressebtn | uppercase}}</span></div>
+                            <div class="col-xs-2"><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': lieferadresse.open, 'glyphicon-chevron-right': !lieferadresse.open}"></i></div>
+                        </div>
+                    </uib-accordion-heading>
+                    <div ng-include="'lieferadresse.html'"></div>
+                </div>
+                <!--Email ändern-->
+                <div uib-accordion-group is-open="change_email.open" class="panel-default" ng-click="ret.success = false" ng-if="!kunde.Benutzer">
+                    <uib-accordion-heading>
+                        <div class="row">
+                            <div class="col-xs-10"><span>{{l.lng_konto_emailbtn | uppercase}}</span></div>
+                            <div class="col-xs-2"><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': change_email.open, 'glyphicon-chevron-right': !change_email.open}"></i></div>
+                        </div>
+                    </uib-accordion-heading>
+                    <div ng-include="'email.html'"></div>
+                </div>
+                <!--Passwort ändern-->
+                <div uib-accordion-group is-open="passwort.open" class="panel-default" ng-click="ret.success = false" ng-if="!kunde.Benutzer && !row.passwort_nicht_aendern">
+                    <uib-accordion-heading>
+                        <div class="row">
+                            <div class="col-xs-10"><span>{{l.lng_konto_passwortbtn | uppercase}}</span></div>
+                            <div class="col-xs-2"><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': passwort.open, 'glyphicon-chevron-right': !passwort.open}"></i></div>
+                        </div>
+                    </uib-accordion-heading>
+                    <div ng-include="'passwort.html'"></div>
+                </div>
+                <!--Benutzer verwalten-->
+                <div uib-accordion-group is-open="benutzer.open" class="panel-default" ng-if="kunde.Rechte.RechtBenutzer=='True' && !kunde.Benutzer && kunde.flag!='Neukunde'" ng-click="ret.success = false">
+                    <uib-accordion-heading>
+                        <div class="row" ng-click="!benutzer.open ? get('benutzer') : ''">
+                            <div class="col-xs-10"><span>{{l.lng_konto_benutzerbtn | uppercase}}</span></div>
+                            <div class="col-xs-2"><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': benutzer.open, 'glyphicon-chevron-right': !benutzer.open}"></i></div>
+                        </div>
+                    </uib-accordion-heading>
+                    <div ng-include="'benutzer.html'"></div>
+                </div>
+            </div>
+        </div>
+        <!--Bestellungen-->
+        <a ui-sref=".({bereich:'bestellung'})" class="btn btn-default btn-block" ng-class="{'btn-primary':bereich=='bestellung'}"><strong>{{l.lng_konto_meinebestellungbtn | uppercase}}</strong></a>
+        <div ng-if="bereich=='bestellung'">
+            <div ng-include="'bestellung_kopf.html'" style="margin-top:20px;"></div>
+            <div ng-show="!Belege || loading" class="text-center" ng-include="'loading.html'"></div>
+            <div ng-if="Belege.Anzahl==0"><span>{{l.lng_konto_keine_belege}}</span></div>
+            <div ng-if="Belege.Values && !loading" ng-include="'bestellung_body.html'"></div>
+            <div ng-if="Belege.Anzahl > 10" style="text-align:center" ng-include="'bestellung_fuss.html'"></div>
+        </div>
+        <a ng-if="kunde.Rechte.BestellvorschlagSehen=='True'" ui-sref="bestellvorschlag" class="btn btn-default btn-block" ng-class="{'btn-primary':bereich=='bestellung'}"><strong>{{l.lng_konto_link_bestellvorschlag | uppercase}}</strong></a>
+    </div>
+
+    <div class="hidden-xs col-sm-12">
+        <div class="row">
+            <div class="col-xs-3">
+                <ul class="nav nav-pills nav-stacked">
+                    <li class="sidemenu_row" ng-class="{'active':bereich=='daten'}" style="border-top:none;">
+                        <a ui-sref=".({bereich:'daten'})"><b>{{l.lng_konto_meinedatenbtn}} <span class="pull-right caret"></span></b></a>
+                        <ul ng-if="bereich=='daten'" class="nav">
+                            <li class="sidemenu_ug_row" ng-class="{'active':p1=='rechnungsadresse'}" style="padding-top:0px"><a ui-sref=".({bereich:'daten',p1:'rechnungsadresse'})"><b>{{l.lng_konto_rechnungsadressebtn}}</b></a></li>
+                            <li class="sidemenu_ug_row" ng-class="{'active':p1=='lieferadresse'}" style="padding-top:0px"><a ui-sref=".({bereich:'daten',p1:'lieferadresse'})"><b>{{l.lng_konto_lieferadressebtn}}</b></a></li>
+                            <li ng-if="!kunde.Benutzer" class="sidemenu_ug_row" ng-class="{'active':p1=='email'}" style="padding-top:0px"><a ui-sref=".({bereich:'daten',p1:'email'})"><b>{{l.lng_konto_emailbtn}}</b></a></li>
+                            <li ng-if="!kunde.Benutzer" class="sidemenu_ug_row" ng-class="{'active':p1=='passwort'}" style="padding-top:0px"><a ui-sref=".({bereich:'daten',p1:'passwort'})"><b>{{l.lng_konto_passwortbtn}}</b></a></li>
+                            <li class="sidemenu_ug_row" ng-class="{'active':p1=='benutzer'}" style="padding-top:0px" ng-if="kunde.Rechte.RechtBenutzer=='True' && !kunde.Benutzer && kunde.flag!='Neukunde'"><a ui-sref=".({bereich:'daten',p1:'benutzer'})"><b>{{l.lng_konto_benutzerbtn}}</b></a></li>
+                        </ul>
+                    </li>
+                    <li class="sidemenu_row" ng-class="{'active':bereich=='bestellung'}" style="border-bottom:1px solid #333">
+                        <a ui-sref=".({bereich:'bestellung',p1:''})"><b>{{l.lng_konto_meinebestellungbtn}}</b></a>
+                    </li>
+                    <li class="sidemenu_row" style="border-bottom:1px solid #333;border-top:none;" ng-if="kunde.Rechte.BestellvorschlagSehen=='True'">
+                        <a ui-sref="bestellvorschlag"><b>{{l.lng_konto_link_bestellvorschlag}}</b></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-xs-9">
+                <!--<form ng-submit="suchen(search.suche)" class="hidden-xs searchform" role="search">
+					<div class="form-group input-group">
+						<input id="search" name="search" class="form-control" placeholder="{{l.lng_suche_platzhalter}}" ng-model="search.suche" type="text">
+						<div ng-click="suchen(search.suche)" class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></div>
+					</div>
+				</form>-->
+                <div ng-if="bereich=='daten'">
+                    <div ng-if="p1=='rechnungsadresse'" ng-include="'rechnungsadresse.html'"></div>
+                    <div ng-if="p1=='lieferadresse'" ng-include="'lieferadresse.html'"></div>
+                    <div ng-if="p1=='email'" ng-include="'email.html'"></div>
+                    <div ng-if="p1=='passwort'" ng-include="'passwort.html'"></div>
+                    <div ng-if="p1=='benutzer'" ng-include="'benutzer.html'"></div>
+                </div>
+                <div ng-if="bereich=='bestellung'">
+                    <div ng-include="'bestellung_kopf.html'" style="margin-top:20px;"></div>
+                    <div ng-show="!Belege || loading" class="text-center" ng-include="'loading.html'"></div>
+                    <div ng-if="Belege.Anzahl==0"><span>{{l.lng_konto_keine_belege}}</span></div>
+                    <div ng-if="Belege.Values && !loading" ng-include="'bestellung_body.html'"></div>
+                    <div ng-if="Belege.Anzahl > 10" style="text-align:center" ng-include="'bestellung_fuss.html'"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Template fuer Rechnungsadresse-->
+<script type="text/ng-template" id="rechnungsadresse.html">
+    <h4>{{l.lng_konto_rechnungsadressebtn}}</h4>
+    <form name="form" class="form-horizontal">
+        <div ng-include="'kundenfelder_formular.html'"></div>
+    </form>
+    <p ng-show="ret.success" style="color:green">{{l.lng_konto_rechnungsadresse_erfolgsmeldung}}</p>
+    <p ng-show="ret.error" style="color:red">{{ret.error}}</p>
+    <button ng-click="form.$valid ? update('rechnungsadresse',data) : form.submit = true" ng-if="!kunde.Benutzer" class="visible-xs btn btn-primary btn-block">{{l.lng_konto_savebtn}}</button>
+    <button ng-click="form.$valid ? update('rechnungsadresse',data) : form.submit = true" ng-if="!kunde.Benutzer" class="hidden-xs btn btn-primary">{{l.lng_konto_savebtn}}</button>
+</script>
+
+<!--Template fuer Lieferadresse-->
+<script type="text/ng-template" id="lieferadresse.html">
+    <h4>{{l.lng_konto_lieferadressebtn}}</h4>
+    <table class="table table-hover table-striped table-responsive" ng-if="daten.length>0">
+        <thead>
+            <th>{{l.lng_konto_lieferadresse_kopf_firma}}</th>
+            <th>{{l.lng_konto_lieferadresse_kopf_name}}</th>
+            <th>{{l.lng_konto_lieferadresse_kopf_land}}</th>
+            <th class="hidden-xs">{{l.lng_konto_lieferadresse_kopf_plz}}</th>
+            <th>{{l.lng_konto_lieferadresse_kopf_ort}}</th>
+            <th class="hidden-xs" ng-if="!kunde.Benutzer"></th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="data in daten" style="cursor:pointer;" ng-click="edit(data)">
+                <td>{{data.Firma}}</td>
+                <td>{{data.Name}}</td>
+                <td>{{data.Land}}</td>
+                <td class="hidden-xs">{{data.Plz}}</td>
+                <td>{{data.Ort}}</td>
+                <td class="hidden-xs" ng-if="!kunde.Benutzer"><button style="margin-top:-10px" ng-click="delete('lieferadresse',data)" class="btn btn-link"><span class="fa fa-trash"></span></button></td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <form name="form" class="form-horizontal">
+        <div ng-include="'kundenfelder_formular.html'"></div>
+    </form>
+    <p ng-show="ret.success" style="color:green">{{l.lng_konto_lieferadresse_erfolgsmeldung}}</p>
+    <!--Button fuer Smartphone-->
+    <button ng-if="!update_data && !kunde.Benutzer" ng-click="form.$valid ? create('lieferadresse',data) : form.submit = true" class="visible-xs btn btn-primary btn-block">{{l.lng_konto_savebtn}}</button>
+    <button ng-if="update_data && !kunde.Benutzer && data.Edit != 0" ng-click="form.$valid ? update('lieferadresse',data) : form.submit = true" class="visible-xs btn btn-primary btn-block">{{l.lng_konto_savebtn}}</button>
+    <button ng-if="update_data" ng-click="clear()" class="visible-xs btn btn-default btn-block">{{l.lng_konto_abortbtn}}</button>
+    <!--Button fuer Tablet und Desktop-->
+    <button ng-if="!update_data && !kunde.Benutzer" ng-click="form.$valid ? create('lieferadresse',data) : form.submit = true" class="hidden-xs btn btn-primary">{{l.lng_konto_savebtn}}</button>
+    <button ng-if="update_data && !kunde.Benutzer && data.Edit != 0" ng-click="form.$valid ? update('lieferadresse',data) : form.submit = true" class="hidden-xs btn btn-primary">{{l.lng_konto_savebtn}}</button>
+    <button ng-if="update_data" ng-click="clear()" class="hidden-xs btn btn-default">{{l.lng_konto_abortbtn}}</button>
+</script>
+
+<!--Template fuer Email-Adresse-->
+<script type="text/ng-template" id="email.html">
+    <h4>{{l.lng_konto_emailbtn}}</h4>
+    <form name="form" class="form-horizontal">
+        <div class="form-group" ng-class="{'has-error' : !form.alt.$valid && form.submit}">
+            <div class="col-xs-12"><input class="form-control" placeholder="{{l.lng_konto_email_alt}}" ng-model="data.alt" name="alt" type="text" required></div>
+        </div>
+        <div class="form-group" ng-class="{'has-error' : !form.neu.$valid && form.submit}">
+            <div class="col-xs-12"><input class="form-control" placeholder="{{l.lng_konto_email_neu}}" ng-model="data.neu" name="neu" type="text" required></div>
+        </div>
+        <div class="form-group" ng-class="{'has-error' : !form.check.$valid && form.submit}">
+            <div class="col-xs-12"><input class="form-control" placeholder="{{l.lng_konto_email_check}}" ng-model="data.check" name="check" type="text" required></div>
+        </div>
+    </form>
+    <p ng-if="ret.error" style="color:red">{{ret.error}}</p>
+    <p ng-show="ret.success" style="color:green">{{l.lng_konto_email_erfolgsmeldung}}</p>
+    <button class="visible-xs btn btn-primary btn-block" ng-click="form.$valid ? update('email',data) : form.submit = true">{{l.lng_konto_savebtn}}</button>
+    <button class="hidden-xs btn btn-primary" ng-click="form.$valid ? update('email',data) : form.submit = true">{{l.lng_konto_savebtn}}</button>
+</script>
+
+<!--Template fuer Passwort-->
+<script type="text/ng-template" id="passwort.html">
+    <h4>{{l.lng_konto_passwortbtn}}</h4>
+    <form name="form" class="form-horizontal">
+        <div class="form-group" ng-class="{'has-error' : !form.alt.$valid && form.submit}">
+            <div class="col-xs-12"><input class="form-control" placeholder="{{l.lng_konto_paswort_alt}}" ng-model="data.alt" name="alt" type="password" required></div>
+        </div>
+        <div class="form-group" ng-class="{'has-error' : !form.neu.$valid && form.submit}">
+            <div class="col-xs-12"><input class="form-control" placeholder="{{l.lng_konto_paswort_neu}}" ng-model="data.neu" name="neu" type="password" required></div>
+        </div>
+        <div class="form-group" ng-class="{'has-error' : !form.check.$valid && form.submit}">
+            <div class="col-xs-12"><input class="form-control" placeholder="{{l.lng_konto_paswort_check}}" ng-model="data.check" name="check" type="password" required></div>
+        </div>
+    </form>
+    <p ng-if="ret.error" style="color:red">{{ret.error}}</p>
+    <p ng-show="ret.success" style="color:green">{{l.lng_konto_passwort_erfolgsmeldung}}</p>
+    <button class="visible-xs btn btn-primary btn-block" ng-click="form.$valid ? update('passwort',data) : form.submit = true">{{l.lng_konto_savebtn}}</button>
+    <button class="hidden-xs btn btn-primary" ng-click="form.$valid ? update('passwort',data) : form.submit = true">{{l.lng_konto_savebtn}}</button>
+</script>
+
+<!--Template fuer Benutzer-->
+<script type="text/ng-template" id="benutzer.html">
+    <h4>{{l.lng_konto_benutzerbtn}}</h4>
+    <table class="table table-hover table-striped">
+        <tr ng-repeat="data in daten" ng-click="edit(data, $index)" style="cursor:pointer;">
+            <td>{{data.Nummer}}</td>
+            <td>{{data.EMail}}</td>
+            <td class="hidden-xs">{{data.Vorname}}</td>
+            <td class="hidden-xs">{{data.Name}}</td>
+            <td>{{data.Firma}}</td>
+            <td class="hidden-xs"><button style="margin-top:-10px" ng-click="delete('benutzer',data)" class="btn btn-link"><span class="fa fa-trash"></span></button></td>
+        </tr>
+    </table>
+    <hr>
+    <form name="form" class="form-horizontal">
+        <div ng-include="'kundenfelder_formular.html'"></div>
+        <hr>
+        <div class="col-xs-12">
+            <!--Benutzername-->
+            <div class="form-group" ng-class="{'has-error' : !form.benutzername.$valid && form.submit && !ret.success}">
+                <input class="form-control" placeholder="{{l.lng_konto_benutzer_benutzername}}" ng-model="data.Nummer" name="benutzername" type="text" required>
+            </div>
+            <!--Passwort-->
+            <div class="form-group" ng-class="{'has-error' : !form.passwort.$valid && form.submit && !ret.success}">
+                <input class="form-control" placeholder="{{l.lng_konto_benutzer_passwort}}" ng-model="data.Passwort" name="passwort" type="password" required>
+            </div>
+        </div>
+    </form>
+    <p ng-if="ret.error" style="color:red">{{ret.error}}</p>
+    <p ng-show="ret.success && !update_data" style="color:green">{{l.lng_konto_benutzer_erfolgsmeldung}}</p>
+    <p ng-show="ret.success && update_data" style="color:green">{{l.lng_konto_benutzer_erfolgsmeldung2}}</p>
+    <!--Button fuer Smartphone-->
+    <button ng-if="!update_data" ng-click="form.$valid ? create('benutzer',data) : form.submit = true" class="visible-xs btn btn-primary btn-block">{{l.lng_konto_savebtn}}</button>
+    <button ng-if="update_data" ng-click="form.$valid ? update('benutzer',data) : form.submit = true" class="visible-xs btn btn-primary btn-block">{{l.lng_konto_savebtn}}</button>
+    <button ng-if="update_data" ng-click="clear()" class="visible-xs btn btn-default btn-block">{{l.lng_konto_abortbtn}}</button>
+    <!--Button fuer Tablet und Desktop-->
+    <button ng-if="!update_data" ng-click="form.$valid ? create('benutzer',data) : form.submit = true" class="hidden-xs btn btn-primary">{{l.lng_konto_savebtn}}</button>
+    <button ng-if="update_data" ng-click="form.$valid ? update('benutzer',data) : form.submit = true" class="hidden-xs btn btn-primary">{{l.lng_konto_savebtn}}</button>
+    <button ng-if="update_data" ng-click="clear()" class="hidden-xs btn btn-default">{{l.lng_konto_abortbtn}}</button>
+</script>
+
+
+<script type="text/ng-template" id="kundenfelder_formular.html">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6">
+            <div ng-repeat="feld in Kundenfelder">
+                <!--Anrede-->
+                <div class="col-xs-12" ng-if="feld.feldname=='Anrede'">
+                    <div class="form-group" ng-class="{'has-error' : !form.{{feld.feldname}}.$valid && form.submit && !ret.success}">
+                        <input placeholder="{{l[feld.sprachvariable]}}" ng-disabled="kunde.Benutzer || data.Edit == 0" ng-if="!feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="(feld.pflichtfeld==1 && p1!='lieferadresse') ? true : false"></input>
+                    </div>
+                </div>
+                <!--Vorname-->
+                <div class="col-xs-12 col-sm-6" ng-if="feld.feldname=='Vorname'">
+                    <div class="form-group" ng-class="{'has-error' : !form.{{feld.feldname}}.$valid && form.submit && !ret.success}">
+                        <input placeholder="{{l[feld.sprachvariable]}}" ng-disabled="kunde.Benutzer || data.Edit == 0" ng-if="!feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="(feld.pflichtfeld==1 && p1!='lieferadresse') ? true : false"></input>
+                    </div>
+                </div>
+                <!--Name-->
+                <div class="col-xs-12 col-sm-6" ng-if="feld.feldname=='Name'">
+                    <div class="form-group" ng-class="{'has-error' : !form.{{feld.feldname}}.$valid && form.submit && !ret.success}">
+                        <input placeholder="{{l[feld.sprachvariable]}}" ng-disabled="kunde.Benutzer || data.Edit == 0" ng-if="!feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="(feld.pflichtfeld==1 && p1!='lieferadresse') ? true : false"></input>
+                    </div>
+                </div>
+                <!--Firma-->
+                <div class="col-xs-12" ng-if="feld.feldname=='Firma'">
+                    <div class="form-group" ng-class="{'has-error' : !form.{{feld.feldname}}.$valid && form.submit && !ret.success}">
+                        <input placeholder="{{l[feld.sprachvariable]}}" ng-disabled="kunde.Benutzer || data.Edit == 0" ng-if="!feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="(feld.pflichtfeld==1 && p1!='lieferadresse') ? true : false"></input>
+                    </div>
+                </div>
+                <!--Zusatz-->
+                <div class="col-xs-12" ng-if="feld.feldname=='Zusatz'">
+                    <div class="form-group" ng-class="{'has-error' : !form.{{feld.feldname}}.$valid && form.submit && !ret.success}">
+                        <input placeholder="{{l[feld.sprachvariable]}}" ng-disabled="kunde.Benutzer || data.Edit == 0" ng-if="!feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="(feld.pflichtfeld==1 && p1!='lieferadresse') ? true : false"></input>
+                    </div>
+                </div>
+                <!--Zusatz2-->
+                <div class="col-xs-12 col-sm-6" ng-if="feld.feldname=='Zusatz2'">
+                    <div class="form-group" ng-class="{'has-error' : !form.{{feld.feldname}}.$valid && form.submit && !ret.success}">
+                        <input placeholder="{{l[feld.sprachvariable]}}" ng-disabled="kunde.Benutzer || data.Edit == 0" ng-if="!feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="(feld.pflichtfeld==1 && p1!='lieferadresse') ? true : false"></input>
+                    </div>
+                </div>
+                <!--Zusatz3-->
+                <div class="col-xs-12 col-sm-6" ng-if="feld.feldname=='Zusatz3'">
+                    <div class="form-group" ng-class="{'has-error' : !form.{{feld.feldname}}.$valid && form.submit && !ret.success}">
+                        <input placeholder="{{l[feld.sprachvariable]}}" ng-disabled="kunde.Benutzer || data.Edit == 0" ng-if="!feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="(feld.pflichtfeld==1 && p1!='lieferadresse') ? true : false"></input>
+                    </div>
+                </div>
+                <!--Strasse-->
+                <div class="col-xs-12" ng-if="feld.feldname=='Strasse'">
+                    <div class="form-group" ng-class="{'has-error' : !form.{{feld.feldname}}.$valid && form.submit && !ret.success}">
+                        <input placeholder="{{l[feld.sprachvariable]}}" ng-disabled="kunde.Benutzer || data.Edit == 0" ng-if="!feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="(feld.pflichtfeld==1 && p1!='lieferadresse') ? true : false"></input>
+                    </div>
+                </div>
+                <!--PLZ-->
+                <div class="col-xs-12 col-sm-6" ng-if="feld.feldname=='Plz'">
+                    <div class="form-group" ng-class="{'has-error' : !form.{{feld.feldname}}.$valid && form.submit && !ret.success}">
+                        <input placeholder="{{l[feld.sprachvariable]}}" ng-disabled="kunde.Benutzer || data.Edit == 0" ng-if="!feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="(feld.pflichtfeld==1 && p1!='lieferadresse') ? true : false"></input>
+                    </div>
+                </div>
+                <!--Ort-->
+                <div class="col-xs-12 col-sm-6" ng-if="feld.feldname=='Ort'">
+                    <div class="form-group" ng-class="{'has-error' : !form.{{feld.feldname}}.$valid && form.submit && !ret.success}">
+                        <input placeholder="{{l[feld.sprachvariable]}}" ng-disabled="kunde.Benutzer || data.Edit == 0" ng-if="!feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="(feld.pflichtfeld==1 && p1!='lieferadresse') ? true : false"></input>
+                    </div>
+                </div>
+                <!--Land-->
+                <div class="col-xs-12" ng-if="feld.feldname=='Land'">
+                    <div class="form-group" ng-class="{'has-error' : !form.{{feld.feldname}}.$valid && form.submit && !ret.success}">
+                        <select ng-disabled="kunde.Benutzer || data.Edit == 0" ng-if="feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" name="{{feld.feldname}}" ng-options="land.sl_kuerzel as land.land for land in Laenderauswahl" ng-required="(feld.pflichtfeld==1 && p1!='lieferadresse') ? true : false"></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-offset-1 col-sm-5">
+            <div ng-repeat="feld in Kundenfelder">
+                <!--Telefon1-->
+                <div class="col-xs-12" ng-if="feld.feldname=='Telefon1'">
+                    <div class="form-group" ng-class="{'has-error' : !form.{{feld.feldname}}.$valid && form.submit && !ret.success}">
+                        <input placeholder="{{l[feld.sprachvariable]}}" ng-disabled="kunde.Benutzer || data.Edit == 0" ng-if="!feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="(feld.pflichtfeld==1 && p1!='lieferadresse') ? true : false"></input>
+                    </div>
+                </div>
+                <!--Telefon2-->
+                <div class="col-xs-12 col-sm-6" ng-if="feld.feldname=='Telefon2'">
+                    <div class="form-group" ng-class="{'has-error' : !form.{{feld.feldname}}.$valid && form.submit && !ret.success}">
+                        <input placeholder="{{l[feld.sprachvariable]}}" ng-disabled="kunde.Benutzer || data.Edit == 0" ng-if="!feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="(feld.pflichtfeld==1 && p1!='lieferadresse') ? true : false"></input>
+                    </div>
+                </div>
+                <!--Telefon3-->
+                <div class="col-xs-12 col-sm-6" ng-if="feld.feldname=='Telefon3'">
+                    <div class="form-group" ng-class="{'has-error' : !form.{{feld.feldname}}.$valid && form.submit && !ret.success}">
+                        <input placeholder="{{l[feld.sprachvariable]}}" ng-disabled="kunde.Benutzer || data.Edit == 0" ng-if="!feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="(feld.pflichtfeld==1 && p1!='lieferadresse') ? true : false"></input>
+                    </div>
+                </div>
+                <!--Fax-->
+                <div class="col-xs-12" ng-if="feld.feldname=='Fax'">
+                    <div class="form-group" ng-class="{'has-error' : !form.{{feld.feldname}}.$valid && form.submit && !ret.success}">
+                        <input placeholder="{{l[feld.sprachvariable]}}" ng-disabled="kunde.Benutzer || data.Edit == 0" ng-if="!feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="(feld.pflichtfeld==1 && p1!='lieferadresse') ? true : false"></input>
+                    </div>
+                </div>
+                <!--EMail-->
+                <div class="col-xs-12" ng-if="feld.feldname=='EMail'">
+                    <div class="form-group" ng-class="{'has-error' : !form.{{feld.feldname}}.$valid && form.submit && !ret.success}">
+                        <input placeholder="{{l[feld.sprachvariable]}}" ng-disabled="kunde.Benutzer || data.Edit == 0" ng-if="!feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="(feld.pflichtfeld==1 && p1!='lieferadresse') ? true : false"></input>
+                    </div>
+                </div>
+                <!--Homepage-->
+                <div class="col-xs-12" ng-if="feld.feldname=='Homepage'">
+                    <div class="form-group" ng-class="{'has-error' : !form.{{feld.feldname}}.$valid && form.submit && !ret.success}">
+                        <input placeholder="{{l[feld.sprachvariable]}}" ng-disabled="kunde.Benutzer || data.Edit == 0" ng-if="!feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="(feld.pflichtfeld==1 && p1!='lieferadresse') ? true : false"></input>
+                    </div>
+                </div>
+                <!--Postfach-->
+                <div class="col-xs-12" ng-if="feld.feldname=='Postfach'">
+                    <div class="form-group" ng-class="{'has-error' : !form.{{feld.feldname}}.$valid && form.submit && !ret.success}">
+                        <input placeholder="{{l[feld.sprachvariable]}}" ng-disabled="kunde.Benutzer || data.Edit == 0" ng-if="!feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="(feld.pflichtfeld==1 && p1!='lieferadresse') ? true : false"></input>
+                    </div>
+                </div>
+                <!--PostfachPLZ-->
+                <div class="col-xs-12 col-sm-6" ng-if="feld.feldname=='PostfachPLZ'">
+                    <div class="form-group" ng-class="{'has-error' : !form.{{feld.feldname}}.$valid && form.submit && !ret.success}">
+                        <input placeholder="{{l[feld.sprachvariable]}}" ng-disabled="kunde.Benutzer || data.Edit == 0" ng-if="!feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="(feld.pflichtfeld==1 && p1!='lieferadresse') ? true : false"></input>
+                    </div>
+                </div>
+                <!--PostfachOrt-->
+                <div class="col-xs-12 col-sm-6" ng-if="feld.feldname=='PostfachOrt'">
+                    <div class="form-group" ng-class="{'has-error' : !form.{{feld.feldname}}.$valid && form.submit && !ret.success}">
+                        <input placeholder="{{l[feld.sprachvariable]}}" ng-disabled="kunde.Benutzer || data.Edit == 0" ng-if="!feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="(feld.pflichtfeld==1 && p1!='lieferadresse') ? true : false"></input>
+                    </div>
+                </div>
+                <!--PostfachLand-->
+                <div class="col-xs-12" ng-if="feld.feldname=='PostfachLand'">
+                    <div class="form-group" ng-class="{'has-error' : !form.{{feld.feldname}}.$valid && form.submit && !ret.success}">
+                        <select ng-disabled="kunde.Benutzer || data.Edit == 0" ng-if="feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" name="{{feld.feldname}}" ng-options="land.sl_kuerzel as land.land for land in Laenderauswahl" ng-required="(feld.pflichtfeld==1 && p1!='lieferadresse') ? true : false"></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--<div class="form-group" ng-class="{'has-error' : !form.{{feld.feldname}}.$valid && form.submit && !ret.success}" ng-repeat="feld in Kundenfelder">
+		<div class="col-xs-12">
+			<select ng-disabled="kunde.Benutzer || data.Edit == 0" ng-if="feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" name="{{feld.feldname}}" ng-options="land.sl_kuerzel as land.land for land in Laenderauswahl" ng-required="feld.pflichtfeld == 1 ? true : false"></select>
+			<input placeholder="{{l[feld.sprachvariable]}}" ng-disabled="kunde.Benutzer || data.Edit == 0" ng-if="!feld.pulldowntabelle" class="form-control" ng-model="data[feld.feldname]" name="{{feld.feldname}}" type="text" ng-required="feld.pflichtfeld == 1 ? true : false"></input>
+		</div>
+	</div>-->
+</script>
+
+<script type="text/ng-template" id="bestellung_kopf.html">
+    <h4>{{l.lng_konto_meinebestellungbtn}}</h4>
+    <div class="row">
+        <div class="col-xs-12 kontosuche" style="margin-bottom:10px;">
+            <div class="input-group">
+                <input type="text" class="suchfeld form-control" placeholder="{{l.lng_konto_belege_suche}}" ng-model="belege.suche">
+                <div class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></div>
+            </div>
+        </div>
+        <div class="col-xs-4" style="margin-bottom:10px;">
+            <select class="form-control" ng-model="belege.status">
+				<option value="">{{l.lng_belegstatus_select}}</option>
+				<option value="0">{{l.lng_belegstatus_offen}}</option>
+				<option value="1">{{l.lng_belegstatus_bearbeitung}}</option>
+				<option value="2">{{l.lng_belegstatus_erledigt}}</option>
+				<option value="3">{{l.lng_belegstatus_geloescht}}</option>
+			</select>
+        </div>
+        <div class="col-xs-4" style="margin-bottom:10px;">
+            <select class="form-control" ng-model="belege.belegtyp">
+				<option value="">{{l.lng_belegtyp_select}}</option>
+				<option value="A">{{l.lng_belegtyp_angebot}}</option>
+				<option value="F">{{l.lng_belegtyp_bestellung}}</option>
+				<option value="L">{{l.lng_belegtyp_lagerbuchung}}</option>
+			</select>
+        </div>
+        <div class="col-xs-4" style="margin-bottom:10px;">
+            <select class="form-control" ng-model="belege.sortby">
+				<option value="">{{l.lng_belegsortierung_select}}</option>
+				<option value="Belegnummer">{{l.lng_belegsortierung_belegnummer}}</option>
+				<option value="AngelegtAm">{{l.lng_belegsortierung_angelegtam}}</option>
+			</select>
+        </div>
+        <div class="col-xs-12">
+            <div class="radio">
+                <label><input type="radio" ng-model="belege.sorton" name="sorton" id="sorton" value="ASC" ng-checked="belege.sorton == 'ASC'">{{l.lng_belegsortierung_aufsteigend}}</label>
+                <label style="padding-left:50px;"><input type="radio" ng-model="belege.sorton" name="sorton" id="sorton" value="DESC" ng-checked="belege.sorton == 'DESC'">{{l.lng_belegsortierung_absteigend}}</label>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="bestellung_body.html">
+    <div uib-accordion>
+        <div uib-accordion-group class="panel-default" is-open="bestellung[data.Belegnummer].open" ng-repeat="data in Belege.Values">
+            <uib-accordion-heading>
+                <div ng-include="'belegliste_kopf.html'"></div>
+            </uib-accordion-heading>
+            <div ng-include="'belegliste_artikel.html'"></div>
+            <div class="col-xs-12" style="text-align:center">
+                <span><sup>*</sup> {{l[Belege.Preisbemerkung]}}</span><a ui-sref="lieferbedingungen" ng-if="row.versandlink_hinter_steuerinfo" style="text-decoration:underline;"> {{l.lng_artikelliste_zzgl_versand}}</a>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="bestellung_fuss.html">
+    <div uib-pagination class="pagination-sm xxx-pagination" total-items="Belege.Anzahl" ng-model="belege.seite" items-per-page="10" max-size="10" previous-text="<" next-text=">" first-text="<<" last-text=">>" boundary-links="true"></div>
+</script>
+
+<script type="text/ng-template" id="belegliste_kopf.html">
+    <div class="row" ng-click="!bestellung[data.Belegnummer].open ? getBelegartikel(data.Belegnummer) : ''">
+        <div class="col-xs-3 col-sm-2">
+            <p><i class="fa fa-file-text-o" aria-hidden="true"></i> {{data.Belegnummer}}</p>
+        </div>
+        <div class="col-xs-4 col-sm-3">
+            <p>{{l.lng_konto_belege_angelegt}}</p>
+            <p>{{data.AngelegtAm}}</p>
+        </div>
+        <div class="hidden-xs col-sm-3">
+            <p>{{l.lng_konto_belege_bearbeitet}}</p>
+            <p>{{data.BearbeitetAm}}</p>
+        </div>
+        <div class="col-xs-3 col-sm-2">
+            <p>Status:</p>
+            <p>{{l[data.Status]}}</p>
+        </div>
+        <div class="col-xs-2"><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': bestellung.open, 'glyphicon-chevron-right': !bestellung.open}"></i></div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="belegliste_artikel.html">
+    <div class="row" ng-repeat="Artikel in Belegartikel" style="margin-bottom:10px;">
+        <div class="col-xs-3">
+            <div class="artikelliste_liste_bildcontainer"><img ng-src="./{{Artikel.Artikelbild[0]}}"></div>
+        </div>
+        <div class="col-xs-6">
+            <h5>{{Artikel.Bezeichnung}}</h5>
+            <p ng-if="Artikel.Zusatz">{{Artikel.Zusatz}}</p>
+            <p>{{l.lng_konto_artikelnummer}} {{Artikel.Artikelnummer}}</p>
+            <div ng-if="!Artikel.Artikelpreis.Aktion">
+                <p ng-if="Artikel.Artikelpreis.Netto && !Artikel.Artikelpreis.Brutto">{{Artikel.Artikelpreis.Netto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup></p>
+                <p ng-if="Artikel.Artikelpreis.Netto &&  Artikel.Artikelpreis.Brutto">{{Artikel.Artikelpreis.Netto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span> ({{Artikel.Artikelpreis.Brutto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup>)</p>
+                <p ng-if="!Artikel.Artikelpreis.Netto && Artikel.Artikelpreis.Brutto">{{Artikel.Artikelpreis.Brutto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup></p>
+                <p ng-if="!Artikel.Artikelpreis.Netto && !Artikel.Artikelpreis.Brutto">{{l.lng_konto_preis_auf_anfrage}}</p>
+            </div>
+            <div class="preis" ng-if="Artikel.Artikelpreis.Aktion">
+                <p ng-if="Artikel.Artikelpreis.Aktion.Netto">{{Artikel.Artikelpreis.Aktion.Netto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span></p>
+                <p ng-if="Artikel.Artikelpreis.Aktion.Brutto"> ({{Artikel.Artikelpreis.Aktion.Brutto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup>)</p>
+            </div>
+        </div>
+        <div class="col-xs-3" style="padding-top:5%;">
+            <div class="input-group" ng-if="kunde.Rechte.RechtWK=='True'">
+                <input ng-init="Artikel.Menge=1" class="form-control" style="text-align:center;" type="text" ng-model="Artikel.Menge"></input>
+                <span class="input-group-btn"><button ng-show="Artikel.Menge>0" ng-click="pushToWarenkorb(Artikel)" class="btn btn-default"><span class="fa fa-shopping-cart"></span></button>
+                </span>
+            </div>
+        </div>
+    </div>
+</script>

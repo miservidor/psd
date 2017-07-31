@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<h1>Zulagen</h1>
+
+<div class="row" style="margin-top:20px;">
+    <div class="col-xs-12">
+        <h4>Neue Zulage anlegen: <button class="btn btn-success" ng-click="openModal()"><i class="fa fa-plus"></i></button></h4>
+        <hr>
+        <uib-accordion close-others="true">
+            <div uib-accordion-group class="panel-default" ng-class="{'panel-success':z.Aktiv}" is-open="z.open" ng-repeat="z in values">
+                <uib-accordion-heading>
+                    <div class="row" ng-click="!z.open ? getDaten(z.NZNr) : ''">
+                        <div class="col-xs-10"><label>{{z.Artikelnummer}}</label></div>
+                        <div class="col-xs-2"><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': z.open, 'glyphicon-chevron-right': !z.open}"></i></div>
+                    </div>
+                </uib-accordion-heading>
+                <form name="form" class="form-horizontal" novalidate>
+                    <div class="form-group" ng-class="{'has-error': form.submit && !form.artikel.$valid}">
+                        <label for="artikelnummer" class="col-xs-1 control-label">Artikel:*</label>
+                        <div class="col-xs-3">
+                            <input type="text" class="form-control" name="artikel" id="artikelnummer" ng-model="data.Artikelnummer" required>
+                        </div>
+                        <span class="col-xs-8 help-block">Artikelnummer des Artikels, welcher als Zulage verwendet werden soll</span>
+                    </div>
+                    <div class="form-group" ng-class="{'has-error': form.submit && !form.menge.$valid}">
+                        <label for="menge" class="col-xs-1 control-label">Menge:*</label>
+                        <div class="col-xs-3">
+                            <input type="number" class="form-control" name="menge" id="menge" ng-model="data.Menge" required>
+                        </div>
+                    </div>
+                    <hr>
+                    <h4>Datum (TT.MM.JJJJ)</h4>
+                    <div class="form-group">
+                        <label for="datum_ab" class="col-xs-1 control-label">Ab:</label>
+                        <div class="col-xs-3" ng-class="{'has-error': form.submit && !form.date1.$valid}">
+                            <p class="input-group">
+                                <input type="text" name="date1" id="datum_ab" class="form-control" uib-datepicker-popup="{{format}}" ng-model="data.VonDatum" is-open="cal.openAb"
+                                    datepicker-options="dateOptions" close-text="Schließen" current-text="Heute" clear-text="Leeren"
+                                    alt-input-formats="altInputFormats" datetimepicker-neutral-timezone/>
+                                <span class="input-group-btn"><button class="btn btn-default" ng-click="cal.openAb = !cal.openAb"><i class="glyphicon glyphicon-calendar"></i></button></span>
+                            </p>
+                        </div>
+                        <label for="datum_bis" class="col-xs-1 control-label">Bis:</label>
+                        <div class="col-xs-3" ng-class="{'has-error': form.submit && !form.date2.$valid}">
+                            <p class="input-group">
+                                <input type="text" name="date2" id="datum_bis" class="form-control" uib-datepicker-popup="{{format}}" ng-model="data.BisDatum" is-open="cal.openBis"
+                                    datepicker-options="dateOptions" close-text="Schließen" current-text="Heute" clear-text="Leeren"
+                                    alt-input-formats="altInputFormats" datetimepicker-neutral-timezone/>
+                                <span class="input-group-btn"><button class="btn btn-default" ng-click="cal.openBis = !cal.openBis"><i class="glyphicon glyphicon-calendar"></i></button></span>
+                            </p>
+                        </div>
+                    </div>
+                    <hr>
+                    <h4>Gültigkeitsbereich</h4>
+                    <div class="form-group">
+                        <div ng-class="{'has-error': form.submit && !form.netto.$valid}">
+                            <label for="netto_ab" class="col-xs-1 control-label">Ab:*</label>
+                            <div class="col-xs-3">
+                                <input type="text" name="netto" id="netto_ab" class="form-control" ng-model="data.UmsatzNettoAb" required>
+                            </div>
+                        </div>
+                        <label for="netto_bis" class="col-xs-1 control-label">Bis:</label>
+                        <div class="col-xs-3">
+                            <input type="text" id="netto_bis" class="form-control" ng-model="data.UmsatzNettoBis">
+                        </div>
+                        <span class="col-xs-4 help-block">Für Nettokunden</span>
+                    </div>
+                    <div class="form-group">
+                        <div ng-class="{'has-error': form.submit && !form.brutto.$valid}">
+                            <label for="brutto_ab" class="col-xs-1 control-label">Ab:*</label>
+                            <div class="col-xs-3">
+                                <input type="text" name="brutto" id="brutto_ab" class="form-control" ng-model="data.UmsatzBruttoAb" required>
+                            </div>
+                        </div>
+                        <label for="brutto_bis" class="col-xs-1 control-label">Bis:</label>
+                        <div class="col-xs-3">
+                            <input type="text" id="brutto_bis" class="form-control" ng-model="data.UmsatzBruttoBis">
+                        </div>
+                        <span class="col-xs-4 help-block">Für Bruttokunden</span>
+                    </div>
+                    <hr>
+                    <h4>Länderzuweisung</h4>
+                    <div class="form-group">
+                        <label for="laenderliste" class="col-xs-1 control-label">Land:</label>
+                        <div class="col-xs-3">
+                            <select class="form-control" id="laenderliste" ng-model="data.Land" ng-options="land.Id as land.Bezeichnung for land in laender.Liste"><option value="">-- Bitte wählen --</option></select>
+                        </div>
+                        <span class="col-xs-6 help-block">Zulage einem einzelnen Land zuweisen</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="laendergruppe" class="col-xs-1 control-label">Gruppe:</label>
+                        <div class="col-xs-3">
+                            <select class="form-control" id="laendergruppe" ng-model="data.Land" ng-options="land.Id as land.Bezeichnung for land in laender.Gruppe"><option value="">-- Bitte wählen --</option></select>
+                        </div>
+                        <span class="col-xs-6 help-block">Zulage einer Ländergruppe zuweisen</span>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label for="belegart" class="col-xs-1 control-label">Belegart:</label>
+                        <div class="col-xs-11">
+                            <div class="checkbox">
+                                <label style="margin-right:20px;"><input ng-model="data.Angebot" type="checkbox">Angebot</label>
+                                <label style="margin-right:20px;"><input ng-model="data.Bestellung" type="checkbox">Bestellung</label>
+                                <label><input ng-model="data.Lagerbuchung" type="checkbox">Lagerbuchung</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <div class="checkbox">
+                                <label><input type="checkbox" ng-model="data.ListeSichtbar">Artikel im Artikelkatalog des Shops anzeigen</label>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                </form>
+                <div class="col-xs-12">
+                    <span class="help-block">Die mit * gekennzeichneten Felder sind Pflichtfelder!</span>
+                    <div class="pull-left"><button ng-click="delete(data.NZNr,$index)" class="btn btn-danger">Löschen</button></div>
+                    <div class="pull-right"><button ng-click="form.$valid ? save(data,$index) : form.submit = true" class="btn btn-success">Speichern</button></div>
+                </div>
+            </div>
+        </uib-accordion>
+    </div>
+</div>
+
+
+<script type="text/ng-template" id="template/modalShopZulagen.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Zulage erstellen</h3>
+    </div>
+    <div class="modal-body">
+        <form name="form" class="form-horizontal" novalidate>
+            <div class="form-group" ng-class="{'has-error': form.submit && !form.artikel.$valid}">
+                <label for="artikel" class="col-xs-1 control-label">Artikel:*</label>
+                <div class="col-xs-3">
+                    <input type="text" name="artikel" class="form-control" id="artikel" ng-model="x.Artikelnummer" placeholder="Artikelnummer" required>
+                </div>
+                <span class="col-xs-8 help-block">Artikelnummer des Artikels, welcher als Zulage verwendet werden soll</span>
+            </div>
+            <div class="form-group" ng-class="{'has-error': form.submit && !form.menge.$valid}">
+                <label for="menge" class="col-xs-1 control-label">Menge:*</label>
+                <div class="col-xs-3" ng-init="x.Menge = 1">
+                    <input type="number" name="menge" class="form-control" ng-model="x.Menge" id="menge" placeholder="1" required>
+                </div>
+            </div>
+            <hr>
+            <h4>Datum (TT.MM.JJJJ)</h4>
+            <div class="form-group">
+                <label for="datum_ab" class="col-xs-1 control-label">Ab:</label>
+                <div class="col-xs-3">
+                    <p class="input-group">
+                        <input type="text" id="datum_ab" class="form-control" uib-datepicker-popup="{{format}}" ng-model="x.VonDatum" is-open="cal.openAb" datepicker-options="dateOptions" close-text="Schließen" current-text="Heute" clear-text="Leeren" alt-input-formats="altInputFormats" datetimepicker-neutral-timezone/>
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" ng-click="cal.openAb = !cal.openAb"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
+                <label for="datum_bis" class="col-xs-1 control-label">Bis:</label>
+                <div class="col-xs-3">
+                    <p class="input-group">
+                        <input type="text" id="datum_bis" class="form-control" uib-datepicker-popup="{{format}}" ng-model="x.BisDatum" is-open="cal.openBis" datepicker-options="dateOptions" close-text="Schließen" current-text="Heute" clear-text="Leeren" alt-input-formats="altInputFormats" datetimepicker-neutral-timezone/>
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" ng-click="cal.openBis = !cal.openBis"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <hr>
+            <h4>Gültigkeitsbereich</h4>
+            <div class="form-group">
+                <div ng-class="{'has-error': form.submit && !form.netto.$valid}">
+                    <label for="netto_ab" class="col-xs-1 control-label">Ab:*</label>
+                    <div class="col-xs-3">
+                        <input type="text" name="netto" id="netto_ab" class="form-control" ng-model="x.UmsatzNettoAb" required>
+                    </div>
+                </div>
+                <label for="netto_bis" class="col-xs-1 control-label">Bis:</label>
+                <div class="col-xs-3">
+                    <input type="text" id="netto_bis" class="form-control" ng-model="x.UmsatzNettoBis">
+                </div>
+                <span class="col-xs-4 help-block">Für Nettokunden</span>
+            </div>
+            <div class="form-group">
+                <div ng-class="{'has-error': form.submit && !form.brutto.$valid}">
+                    <label for="brutto_ab" class="col-xs-1 control-label">Ab:*</label>
+                    <div class="col-xs-3">
+                        <input type="text" name="brutto" id="brutto_ab" class="form-control" ng-model="x.UmsatzBruttoAb" required>
+                    </div>
+                </div>
+
+                <label for="netto_bis" class="col-xs-1 control-label">Bis:</label>
+                <div class="col-xs-3">
+                    <input type="text" id="brutto_bis" class="form-control" ng-model="x.UmsatzBruttoBis">
+                </div>
+                <span class="col-xs-4 help-block">Für Bruttokunden</span>
+            </div>
+            <hr>
+            <h4>Länderzuweisung</h4>
+            <div class="form-group">
+                <label for="land" class="col-xs-1 control-label">Land:</label>
+                <div class="col-xs-3">
+                    <select class="form-control" ng-model="x.Land" ng-options="land.Id as land.Bezeichnung for land in laender.Liste"><option value="">-- Bitte wählen --</option></select>
+                </div>
+                <span class="col-xs-6 help-block">Zulage einem einzelnen Land zuweisen</span>
+            </div>
+            <div class="form-group">
+                <label for="gruppe" class="col-xs-1 control-label">Gruppe:</label>
+                <div class="col-xs-3">
+                    <select class="form-control" ng-model="x.Land" ng-options="land.Id as land.Bezeichnung for land in laender.Gruppe"><option value="">-- Bitte wählen --</option></select>
+                </div>
+                <span class="col-xs-6 help-block">Zulage einer ganzen Ländergruppe zuweisen</span>
+            </div>
+            <hr>
+            <div class="form-group">
+                <label for="belegart" class="col-xs-1 control-label">Belegart:</label>
+                <div class="col-xs-11">
+                    <div class="checkbox">
+                        <label style="margin-right:20px;"><input ng-model="x.Angebot" type="checkbox">Angebot</label>
+                        <label style="margin-right:20px;"><input ng-model="x.Bestellung" type="checkbox">Bestellung</label>
+                        <label><input ng-model="x.Lagerbuchung" type="checkbox">Lagerbuchung</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-6">
+                    <div class="checkbox">
+                        <label><input type="checkbox" ng-model="x.ListeSichtbar">Artikel im Artikelkatalog des Shops anzeigen</label>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <span class="help-block">Die mit * gekennzeichneten Felder sind Pflichtfelder!</span>
+        <div class="pull-left"><button class="btn btn-default " type="button" ng-click="cancel()">Schließen</button></div>
+        <div class="pull-right"><button class="btn btn-success " type="button" ng-click="form.$valid ? create(x) : form.submit = true">Erstellen</button></div>
+    </div>
+</script>

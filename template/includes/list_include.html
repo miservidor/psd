@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<table class="table table-hover artikelliste_table">
+	<thead class="artikelliste_table_head">
+		<th class="artikelliste_table_head_bildspalte"></th>
+		<th class="artikelliste_table_head_artikelnrspalte" ng-if="row.liste_visible_artnr" ng-click="list.sortBy = 'Artikelnummer'"
+		 ng-class="{'aktiv':list.sortBy == 'Artikelnummer'}" style="cursor:pointer">
+			{{l.lng_artikelliste_kopf_artikelnummer}} <span ng-if="list.sortBy == 'Artikelnummer'" class="caret"></span>
+		</th>
+		<th class="artikelliste_table_head_infospalte" ng-if="row.liste_visible_bez" ng-click="list.sortBy = 'Bezeichnung'" ng-class="{'aktiv':list.sortBy == 'Bezeichnung'}"
+		 style="cursor:pointer">
+			{{l.lng_artikelliste_kopf_bezeichnung}} <span ng-if="list.sortBy == 'Bezeichnung'" class="caret"></span>
+		</th>
+		<!--<th class="artikelliste_table_head_pe_me_spalte" ng-if="row.liste_visible_pe_me">{{l.lng_artikelliste_kopf_preis_menge}}</th>-->
+		<th class="artikelliste_table_head_bestandspalte" ng-if="row.liste_visible_bestand" ng-click="list.sortBy = 'Bestand'" ng-class="{'aktiv':list.sortBy == 'Bestand'}"
+		 style="cursor:pointer">
+			{{l.lng_artikelliste_kopf_bestand}} <span ng-if="list.sortBy == 'Bestand'" class="caret"></span>
+		</th>
+		<th class="artikelliste_table_head_preisspalte" ng-if="row.liste_visible_preis && kunde.Rechte.PreiseAusblenden!='True'">{{l.lng_artikelliste_kopf_preis}}</th>
+		<th class="artikelliste_table_head_wkspalte" ng-if="row.liste_visible_wk && kunde.Rechte.RechtWK=='True'">{{l.lng_artikelliste_kopf_warenkorb}}</th>
+	</thead>
+	<tbody class="artikelliste_table_body">
+		<tr ng-repeat="Artikel in data.Values">
+			<td class="artikelliste_table_body_bildspalte">
+				<a ng-if="state.name!='search'" ui-sref=".detail({id:Artikel.Bezeichnung,artnr:Artikel.Artikelnummer})">
+					<div class="artikelliste_liste_bildcontainer"><img ng-src="./{{Artikel.Artikelbild[0]}}" /></div>
+				</a>
+				<a ng-if="state.name=='search'" ui-sref="article({id:Artikel.Bezeichnung,artnr:Artikel.Artikelnummer})">
+					<div class="artikelliste_liste_bildcontainer"><img ng-src="./{{Artikel.Artikelbild[0]}}" /></div>
+				</a>
+			</td>
+			<td ng-if="row.liste_visible_artnr" class="artikelliste_table_body_artikelnummerspalte">
+				<a ng-if="state.name!='search'" ui-sref=".detail({id:Artikel.Bezeichnung,artnr:Artikel.Artikelnummer})">
+					<p>{{Artikel.Artikelnummer}}</p>
+				</a>
+				<a ng-if="state.name=='search'" ui-sref="article({id:Artikel.Bezeichnung,artnr:Artikel.Artikelnummer})">
+					<p>{{Artikel.Artikelnummer}}</p>
+				</a>
+			</td>
+			<td ng-if="row.liste_visible_bez" class="artikelliste_table_body_infospalte">
+				<a ng-if="row.liste_anzeigen_bez && state.name!='search'" ui-sref=".detail({id:Artikel.Bezeichnung,artnr:Artikel.Artikelnummer})">
+					<h4>{{Artikel.Bezeichnung}}</h4>
+				</a>
+				<a ng-if="row.liste_anzeigen_bez && state.name=='search'" ui-sref="article({id:Artikel.Bezeichnung,artnr:Artikel.Artikelnummer})">
+					<h4>{{Artikel.Bezeichnung}}</h4>
+				</a>
+				<div>
+					<p ng-if="!row.hide_artnr_in_list">{{l.lng_artikelliste_artikelnummer}} {{Artikel.Artikelnummer}}</p>
+					<p ng-if="Artikel.Zusatz">{{Artikel.Zusatz}}</p>
+					<p ng-if="Artikel.EANNummer">{{l.lng_artikelliste_eannummer}} {{Artikel.EANNummer}}</p>
+					<p ng-if="Artikel.HstArtikelnummer">{{l.lng_artikelliste_hstartikelnummer}} {{Artikel.HstArtikelnummer}}</p>
+					<p ng-if="Artikel.Gewicht && Artikel.Gewicht>0">{{l.lng_artikelliste_gewicht}} {{Artikel.Gewicht}}</p>
+					<p ng-if="Artikel.Langtext" ng-bind-html="trust(Artikel.Langtext.Text, true)"></p>
+					<p ng-if="Artikel.Matchcode">{{l.lng_artikelliste_matchcode}} {{Artikel.Matchcode}}</p>
+				</div>
+			</td>
+			<!--<td ng-if="row.liste_visible_pe_me" class="artikellisten_details">
+				<p>{{Artikel.Preiseinheit}} / {{Artikel.Mengeneinheit}}</p>
+			</td>-->
+			<td ng-if="row.liste_visible_bestand">
+				<div ng-if="Artikel.Bestand">
+					<p ng-if="row.bestandsanzeige_als_zahl">{{Artikel.Bestand.Value}}</p>
+					<div ng-if="!row.bestandsanzeige_als_zahl">
+						<i class="fa fa-circle" ng-if="Artikel.Bestand" uib-tooltip="{{l[Artikel.Bestand.Sprachvariable]}}" ng-class="{'circle_red':Artikel.Bestand.Ampel=='r','circle_yellow':Artikel.Bestand.Ampel=='y','circle_green':Artikel.Bestand.Ampel=='g'}"
+						 aria-hidden="true"></i>
+					</div>
+				</div>
+			</td>
+			<td ng-if="kunde.Rechte.PreiseAusblenden!='True'">
+				<div ng-include="'preisdarstellung.html'"></div>
+			</td>
+			<td ng-if="row.liste_visible_wk && kunde.Rechte.RechtWK=='True'" style="width:15%">
+				<div ng-if="Artikel.Artikeltyp == 21 || Artikel.Artikeltyp == 22">
+					<div ng-if="Artikel.showVariantenauswahl1" style="margin-bottom:5px;">
+						<select class="form-control" ng-model="Artikel.varModel1" ng-options="Variante as Variante for Variante in Artikel.Variante1" ng-change="changeArtikel(Artikel)">
+							<option value="">{{l.lng_artikeldetail_selectfeld_text}}</option>
+						</select>
+					</div>
+					<div ng-if="Artikel.showVariantenauswahl2" style="margin-bottom:5px;">
+						<select class="form-control" ng-model="Artikel.varModel2" ng-options="Variante as Variante for Variante in Artikel.Variante2" ng-change="changeArtikel(Artikel)">
+							<option value="">{{l.lng_artikeldetail_selectfeld_text}}</option>
+						</select>
+					</div>
+				</div>
+				<div class="artikelliste_me_pe input-group" style="margin-bottom:5px;">
+					<span class="input-group-addon">{{Artikel.Preiseinheit}}</span>
+					<span class="input-group-addon" ng-if="!Artikel.Mengenumrechnung">{{Artikel.Mengeneinheit}}</span>
+					<div class="input-group-btn" ng-if="Artikel.Mengenumrechnung" ng-class="{'open':Artikel.MengUm.open}">
+       					<button type="button" class="btn btn-default" ng-click="Artikel.MengUm.open = !Artikel.MengUm.open" style="width:100%;">{{Artikel.MengUm.select.Mengeneinheit}} <span ng-if="Artikel.Mengenumrechnung" class="caret"></span></button>
+						<div class="dropdown-menu dropdown-menu-right" style="padding:0px 10px;">
+							<table class="table mengumrechnung">
+								<thead>
+									<th>{{l.lng_artikeldetail_mengeneinheit}}</th>
+									<th>{{l.lng_artikeldetail_einzelpreis}} / {{Artikel.Mengeneinheit}}</th>
+									<th class="hidden-xs">{{l.lng_artikeldetail_gesamtpreis}}</th>
+								</thead>
+								<tbody>
+									<tr ng-repeat="MU in Artikel.Mengenumrechnung" ng-click="changeMengeneinheit(MU, Artikel)">
+										<td>{{MU.Mengeneinheit}} <span ng-if="MU.Mengeneinheit != MU.Basis_Mengeneinheit">({{MU.Basis_Faktor}} {{MU.Basis_Mengeneinheit}})</span></td>
+										<td ng-if="kunde.Rechte.PreiseAusblenden!='True'">
+											<span ng-if="MU.Preis.Netto && !MU.Preis.Brutto">
+												{{MU.Preis.Netto | currency:''}}<span ng-bind-html="trust(MU.Preis.Symbol)"></span><sup>*</sup>
+											</span>
+											<span ng-if="MU.Preis.Netto && MU.Preis.Brutto">
+												{{MU.Preis.Netto | currency:''}}<span ng-bind-html="trust(MU.Preis.Symbol)"></span>
+												({{MU.Preis.Brutto | currency:''}}<span ng-bind-html="trust(MU.Preis.Symbol)"></span><sup>*</sup>)
+											</span>
+											<span ng-if="!MU.Preis.Netto && MU.Preis.Brutto">
+												{{MU.Preis.Brutto | currency:''}}<span ng-bind-html="trust(MU.Preis.Symbol)"></span><sup>*</sup>
+											</span>
+										</td>
+										<td class="hidden-xs" ng-if="kunde.Rechte.PreiseAusblenden!='True'">
+											<span ng-if="MU.Preis.Netto && !MU.Preis.Brutto">
+												{{(MU.Basis_Faktor * MU.Preis.Netto) | currency:''}}<span ng-bind-html="trust(MU.Preis.Symbol)"></span><sup>*</sup>
+											</span>
+											<span ng-if="MU.Preis.Netto && MU.Preis.Brutto">
+												{{(MU.Basis_Faktor * MU.Preis.Netto) | currency:''}}<span ng-bind-html="trust(MU.Preis.Symbol)"></span>
+												({{(MU.Basis_Faktor * MU.Preis.Brutto) | currency:''}}<span ng-bind-html="trust(MU.Preis.Symbol)"></span><sup>*</sup>)
+											</span>
+											<span ng-if="!MU.Preis.Netto && MU.Preis.Brutto">
+												{{(MU.Basis_Faktor * MU.Preis.Brutto) | currency:''}}<span ng-bind-html="trust(MU.Preis.Symbol)"></span><sup>*</sup>
+											</span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="artikelliste_wk_button input-group" ng-if="(Artikel.Artikelpreis.Netto || Artikel.Artikelpreis.Brutto) && Artikel.Artikeltyp!=21">
+					<input ng-init="Artikel.Menge = 1" class="form-control" style="text-align:center;" type="text" ng-model="Artikel.Menge">
+					<span class="input-group-addon" ng-show="Artikel.Menge>0" ng-click="pushToWarenkorb(Artikel)"><i class="fa fa-shopping-cart"></i></span>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>

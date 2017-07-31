@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<div id="hide" ng-style="'display: none;'">
+	<h1>{{title}}</h1>
+	<hr>
+	<div ng-show="formulare && formulare.length > 0">
+		<div class="row">
+			<div class="col-md-6">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label class="col-md-3 control-label">Formulare</label>
+						<div class="col-md-9">
+							<div class="input-group">
+								<select class="form-control" ng-model="formular" ng-options="f as f.titel for f in formulare"></select>
+								<span class="input-group-btn">
+									<button class="btn btn-default" type="button" ng-click="formular={fields: []}"><i class="fa fa-plus"></i></button>
+									<button ng-if="formular.id" class="btn btn-default" type="button" ng-click="showTabelle(formular.id, 'lala')"><i class="fa fa-list"></i></button>
+								</span>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<hr>
+	</div>
+	<form class="form-horizontal" name="form" novalidate>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group" ng-class="{'has-error': form.sub && !form.titel.$valid}">
+					<label class="col-md-3 control-label">Name</label>
+					<div class="col-md-9">
+						<input type="text" name="titel" class="form-control" ng-model="formular.titel" required>
+						<span class="help-block" ng-show="form.sub && !form.titel.$valid">Erforderlich!</span>
+					</div>
+				</div>
+				<div class="form-group" ng-class="{'has-error': form.sub && (!form.$valid || (!formular.email && !formular.datenbank))}">
+					<label class="col-md-3 control-label">E-Mail</label>
+					<div class="col-md-9">
+						<input type="email" name="email" class="form-control" ng-model="formular.email">
+						<span class="help-block" ng-show="form.sub && form.email.$error.email">Falsches Format!</span>
+						<span class="help-block" ng-show="form.sub && !formular.email && !formular.datenbank">Entweder E-Mail oder Datenbank erforderlich!</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3"></label>
+					<div class="col-md-9">
+						<div class="checkbox col-md-6" ng-class="{'has-error': form.sub && !formular.email && !formular.datenbank}">
+							<label><input type="checkbox" ng-model="formular.datenbank" ng-true-value="1" ng-false-value="0" string-to-number>Speichern in Datenbank</label>
+						</div>
+						<div class="checkbox col-md-6">
+							<label><input type="checkbox" ng-model="formular.spamschutz" ng-true-value="1" ng-false-value="0" string-to-number>Spamschutz</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr>
+		<div fg-edit fg-schema="formular"></div>
+		<div ng-show="formular.fields && formular.fields.length > 0" class="has-error">
+			<hr>
+			<div class="text-right">
+				<span class="help-block" ng-show="form.sub && (!form.$valid || (!formular.email && !formular.datenbank))">Eingaben überprüfen!</span>
+			</div>
+			<div class="pull-left">
+				<button class="btn btn-link btn-sm" ng-show="formular.id && formular.id != 1 && formular.id != 2" ng-click="delete()"><i class="fa fa-trash-o"></i> Löschen</button>
+			</div>
+			<div class="pull-right">
+				<!-- 		<button class="btn btn-default btn-sm" ng-click="vorschau()">Vorschau</button> -->
+				<button class="btn btn-primary btn-sm" ng-show="!formular.id" ng-click="form.$valid && (formular.email ||formular.datenbank) ? create() : form.sub=true">Erstellen</button>
+				<button class="btn btn-primary btn-sm" ng-show="formular.id" ng-click="form.$valid && (formular.email ||formular.datenbank) ? change() : form.sub=true">Ändern</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<script type="text/ng-template" id="template/adminFormBuilderModalTable.html">
+	<div class="modal-header">
+		<h3 class="modal-title">{{titel}}</h3>
+	</div>
+	<div class="modal-body">
+		<div class="table-responsive">
+			<table class="table table-condensed table-bordered table-striped">
+				<thead><th ng-repeat="(key, value) in tableData[0]">{{key}}</th></thead>
+				<tbody><tr ng-repeat="row in tableData"><td ng-repeat="(key,value) in row">{{value}}</td></tr></tbody>
+			</table>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<a class="btn btn-default btn-sm" type="button" ng-href="../api/formular/table/{{id}}" download="{{titel}}.csv">CSV</a>
+		<button class="btn btn-default btn-sm" type="button" ng-click="close()">Abbrechen</button>
+	</div>
+</script>

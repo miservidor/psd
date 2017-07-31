@@ -1,0 +1,248 @@
+
+/* Body des Konfigurators: */
+.konf_body{
+   background-color:#7EA4EC;
+   font-size :14px;
+   font-family: arial;
+   padding-left:15px;
+   padding-top:15px;
+}
+
+
+/***** Div-Bereiche ***********************************************************/
+/* Haupt-DIV */
+.div_haupt{
+   width:980px;
+   padding:0;
+   margin:0;
+}
+
+/* Konfigurations-DIV (links) */
+.div_konfiguration{
+   border:solid 1px;
+   padding:5px;
+   width:600px;
+   float:left;
+}
+
+/* Preislisten-DIV (rechts) */
+.div_preisliste{
+   border:solid 1px;
+   padding:5px;
+   width:330px;
+   float:right;
+   overflow:scroll;
+}
+
+/* DIV-Bereich für Buchungs-Button und Co (unten) */
+.div_buchungsform{
+   padding:15px;
+   padding-top:0;
+   width:40%;
+   clear:both;
+}
+
+/* Div für Vorlagen-Auswahl: */
+.divVorlagen{
+   border:solid 1px;
+   padding:10px;
+   padding-left:25px;
+   width:600px;
+}
+
+
+
+
+/***** Konfigurator-Anzeige ***************************************************/
+
+.baumzeile {
+ list-style:none;
+ clear:both;
+ height:20px;
+}
+.baumzeile li {
+ float:left;
+ display:block;
+}
+
+.baumPreisMenge{
+   font-size:11px;
+   color:#4444BB;
+   font-style:italic;
+   padding-top:3px;
+}
+
+
+.treenode, .treeangle, .treebranching, .treeempty, .treeedit, .treebranch, .treeInfo {
+ height:20px;
+ width:20px;
+}
+
+.treeempty {
+   background:url('images/konfigurator_pic/tree_empty.gif') no-repeat 0 0;
+}
+
+.treenode {
+   background:url('images/konfigurator_pic/tree_node.gif') no-repeat 0 0;
+}
+
+.treeangle {
+   background:url('images/konfigurator_pic/tree_angle.gif') no-repeat 0 0;
+}
+
+.treebranching {
+   background:url('images/konfigurator_pic/tree_branching.gif') no-repeat 0 0;
+}
+
+.treebranch {
+   background:url('images/konfigurator_pic/tree_branch.gif') no-repeat 0 0;
+}
+
+.treeedit {
+   background:url('images/konfigurator_pic/tree_edit.gif') no-repeat 0 0;
+   margin-left:2px;
+ }
+
+.treeInfo {
+   background:url('images/konfigurator_pic/tree_info.gif') no-repeat 0 0;
+   margin-left:2px;
+}
+
+.treeInfo a{
+ display:block;
+ height:20px;
+ width:20px;
+}
+.treeedit a{
+ display:block;
+ height:20px;
+ width:20px;
+ font-weight:bold;
+}
+.treetext {
+ margin-left:0.5em;
+ font-weight:bold;
+ padding-top:3px;
+/* padding-left :5px;*/
+}
+
+
+
+
+
+/* Formular, wo der Konfigurator bei Pointer A stets stoppt: */
+.konf_formular{
+   clear:both;
+   margin-left:20px;
+   margin-top:5px;
+   margin-bottom:5px;
+   border:dotted 1px;
+   padding:10px;
+}
+
+.konf_eingabefeld{
+   font-size:14px;
+   height:18px;
+   border:0;
+}
+
+.div_mengeneingabe{
+   padding-left:25px;
+}
+
+/* Der Preis im Forum unter jeder Artikelnummer */
+/*.div_preisausgabe{
+   padding-left:30px;
+}*/
+
+/* Text in einer Alternativ-Auswahl */
+.konf_form_option{
+   font-weight:bold;
+/*   display:inline;*/
+   padding-left:5px;
+   height:20px;
+}
+
+.konf_form_kombination{
+   font-weight:bold;
+/*   display:inline;*/
+   padding-left:25px;
+   height:20px;
+}
+
+
+/* das Symbol (Hand), dass die Möglichkeit zum Bearbeiten anzeigt */
+/*.konf_edit{
+   border:0;*/
+/*   padding-top:-3px;*/
+/*   margin-left:5px;*/
+/*   height:10px;*/
+/*}*/
+
+
+/* die Schriftgröße wird vom Body-Tag geerbt */
+/*a:link.baumlink {    color:#000000;  text-decoration:none; }
+a:visited.baumlink { color:#000000;  text-decoration:none; }
+a:hover.baumlink {   color:#000000;  text-decoration:none; }
+a:active.baumlink {  color:#000000;  text-decoration:none; }
+a:focus.baumlink {   color:#000000;  text-decoration:none; }*/
+
+
+
+
+/***** Preislistenanzeige *****************************************************/
+.tab_preisliste{
+   font-size:12px;
+}
+
+
+
+/***** Buchungsbuttons und Co. ************************************************/
+.buchen_form_neustart{
+   padding-left:15px;
+}
+
+.buchen_hinweis{
+   font-size:11px;
+   font-style:italic;
+}
+
+.loeschenAbfrage{
+   display:inline;
+}
+
+.schliessenButtonForm{
+   padding-left:15px;
+   padding-top:15px;
+   width: 180px;
+}
+
+.selectBelegtyp{
+margin-bottom:5px;
+/*   padding-bottom:5px;*/
+}
+
+.einheitsbutton{
+   width: 180px;
+}
+
+/***** allgemeine HTML-Elemente ***********************************************/
+* {
+ margin:0;
+ padding:0;
+/* border:0;*/ /* deaktiviert, weil Buttons im IE so trostlos aussahen */
+}
+
+h1{
+   font-size:28px;
+   text-align:center;
+   padding-bottom:20px;
+}
+
+a:link {    color:blue; }
+a:visited { color:blue; }
+a:hover {   color:blue; }
+a:active {  color:blue; }
+a:focus {   color:blue; }
+
+

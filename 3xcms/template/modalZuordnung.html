@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<div class="modal-body">
+	<div ng-repeat="hk in kats | filter:hasKats">
+		<div class="well well-sm" style="cursor:pointer" ng-click="selectHK(hk)">
+			<span class="fa" ng-class="{'fa-caret-down': select.hk==hk.id, 'fa-caret-right': select.hk!=hk.id}"></span> {{hk.name + ' ('+hk.uks.length+')'}}
+		</div>
+		<div uib-collapse="select.hk!=hk.id" style="margin-left: 10px" >
+			<div ng-repeat="k in hk.uks">
+				<div class="well well-sm" style="cursor:pointer" ng-click="selectK(k)"><small><span class="fa" ng-class="{'fa-caret-down': select.k==k.id, 'fa-caret-right': select.k!=k.id}"></span> {{k.name }}</small></div>
+				<!-- <div ng-show="select.k==k.id && values.length==0">(Keine)</div> -->
+				<table class="table table-condensed table-hover" ng-show="select.k==k.id">
+					<tr ng-repeat="row in values" style="cursor:pointer" ng-click="select(row)">
+						<td>
+							<!-- <div ng-if="bereich != 'dokument'" class="thumbnail thumb" style="height:60px; width:60px;" ng-style="{'background-image': row.imgthumb ? 'url({{'../api/datei/'+row.imgthumb}})' :  'url(config/images/blind.gif)'}"></div>
+							<div ng-if="bereich == 'dokument'" style="height:60px; width:60px;">
+								<span class="fa fa-file-o fa-3x" ng-class="{'fa-file-pdf-o': row.typ=='pdf', 'fa-file-excel-o': row.typ=='xls' || row.typ=='xlsx', 'fa-file-text-o': row.typ=='txt', 'fa-file-image-o': row.typ=='jpg' || row.typ=='jpeg' || row.typ=='png' || row.typ=='gif'}"></span>
+							</div> -->
+							<div ng-if="bereich != 'dokument'" class="thumb text-center" style="height:40px; width:40px;" ng-style="row.imgthumb && {'background-image': 'url(../api/datei/'+row.imgthumb+')'}"><i ng-if="!row.imgthumb" class="fa fa-2x" ng-class="{'fa-newspaper-o': bereich=='news', 'fa-book': bereich=='katalog','fa-user': bereich=='nutzer','fa-picture-o': bereich=='galerie','fa-calendar': bereich=='termin'}"></i></div>
+							<div ng-if="bereich == 'dokument'" style="height:60px; width:60px;" class="text-center">
+								<span class="fa fa-file-o fa-2x" ng-class="{'fa-file-pdf-o': row.typ=='pdf', 'fa-file-excel-o': row.typ=='xls' || row.typ=='xlsx', 'fa-file-text-o': row.typ=='txt', 'fa-file-image-o': row.typ=='jpg' || row.typ=='jpeg' || row.typ=='png' || row.typ=='gif'}"></span>
+							</div>
+						</td>
+						<td style="width:100%;">{{row.titel}}</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<form name="form" class="form-horizontal" novalidate>
+	<div class="modal-header">
+		<h3 class="modal-title">Kategorie</h3>
+	</div>
+	<div class="modal-body">
+		<div ng-if="data.type == 'k'" class="form-group">
+			<label class="col-md-4 control-label">Hauptkategorie</label>
+			<div class="col-md-8">
+				<select class="form-control" ng-model="data.kat.id_h" ng-options="hk.id as hk.name for hk in data.kats" required></select>
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error': form.sub && !form.name.$valid}">
+			<label class="col-md-4 control-label">Name</label>
+			<div class="col-md-8">
+				<input name="name" class="form-control" type="text" ng-model="data.kat.name" required>
+				<span class="help-block" ng-show="form.sub && !form.name.$valid">Erforderlich!</span>
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error': form.sub && !form.sort.$valid}">
+			<label class="col-md-4 control-label">Sortierung</label>
+			<div class="col-md-4">
+				<input name="sort" type="number" string-to-number class="form-control" placeholder="Sortnr." ng-model="data.kat.sortindex">
+			</div>
+			<div class="col-md-4" ng-show="data.kat.sicher_h != '1'">
+				<div class="checkbox">
+					<label><input type="checkbox" ng-init="data.kat.sicher = (data.kat.sicher_h=='1' ? '1' : (data.kat.sicher ? data.kat.sicher : '0'))" ng-model="data.kat.sicher" ng-true-value="'1'" ng-false-value="'0'">Kategorie schützen</label>
+				</div>
+			</div>
+		</div>
+		<div ng-if="data.type == 'hk'" class="form-group" ng-class="{'has-error': form.sub && !form.lang.$valid}">
+			<label class="col-md-4 control-label">Sprache</label>
+			<div class="col-md-4">
+				<select class="form-control" name="lang" ng-model="data.kat.lang" ng-options="l.lang as l.description for l in lang" required>
+					<option value="">--- Bitte Wählen ---</option>
+				</select>
+				<span class="help-block" ng-show="form.sub && !form.lang.$valid">Erforderlich!</span>
+			</div>
+		</div>
+		<hr>
+		<my-inhalt form="form" image="data.bild" link="data.kat.imglink" text="data.kat.imgnotation" disable-notation="true"></my-inhalt>
+	</div>
+	<div class="modal-footer has-error">
+		<span class="help-block" ng-show="form.sub && !form.$valid">Eingaben überprüfen!</span>
+		<div class="row">
+			<div class="col-md-4" align="left">
+				<button class="btn btn-link btn-sm" type="button" ng-click="close('delete')" ng-if="!data.create"><i class="fa fa-trash-o"></i> Löschen</button>
+			</div>
+			<div class="col-md-8">
+				<button class="btn btn-primary btn-sm" type="button" ng-click="form.$valid ? close('put') : form.sub=true" ng-if="!data.create">Ändern</button>
+				<button class="btn btn-primary btn-sm" type="button" ng-click="form.$valid ? close('post') : form.sub=true" ng-if="data.create">Erstellen</button>
+				<button class="btn btn-default btn-sm" type="button" ng-click="close('cancel')">Abbrechen</button>
+			</div>
+		</div>
+	</div>
+</form>

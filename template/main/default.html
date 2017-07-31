@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<div class="row container">
+	<!-- ng-init="teaserLen=150" -->
+
+	<!-- head -->
+	<div id="headarea" class="hidden-xs hidden-sm" ui-view="head"></div>
+
+	<!-- menu -->
+	<div ng-controller="MenuCtrl">
+		<nav class="navbar navbar-default">
+			<div class="visible-xs visible-sm" ng-include="'navbar_header_smartphone.html'"></div>
+			<div class="navbar-collapse collapse-menu" uib-collapse="navbar.collapsed" scroll-sticky>
+				<ul class="nav navbar-nav">
+					<li class="navbar_logo">
+						<img src="template/images/head_logo_sm.png">
+					</li>
+					<!--Smartphone-->
+					<li class="visible-xs" ng-repeat="node in menu" ng-if="node.values.mobil" uib-dropdown auto-close="disabled" ng-class="{'active':((state.name==node.state || state.prev[0].state==node.state || state.name==node.values.action.type) && node.values.action.type!='link')}">
+						<div ng-if="!node.nodes" ng-include="'links.html'" style="padding:10px 15px;"></div>
+						<a ng-if="node.nodes" href="#" uib-dropdown-toggle>{{node.values.titel | uppercase}}</a>
+						<ul class="dropdown-menu" uib-dropdown-menu ng-if="node.nodes">
+							<li ng-repeat="node in node.nodes" uib-dropdown auto-close="disabled" is-open="true" ng-include="'field_renderer_smart.html'"></li>
+						</ul>
+					</li>
+					<!--Tablet-->
+					<li class="row visible-sm" ng-repeat="node in menu" ng-if="node.values.mobil" uib-dropdown auto-close="disabled" ng-class="{'active':((state.name==node.state || state.prev[0].state==node.state || state.name==node.values.action.type) && node.values.action.type!='link')}">
+						<div class="col-xs-4" style="padding:10px 15px;">
+							<div ng-if="!node.nodes" ng-include="'links.html'"></div>
+							<a ng-if="node.nodes" href="#" uib-dropdown-toggle>{{node.values.titel | uppercase}}</a>
+						</div>
+						<div class="col-xs-8">
+							<ul class="dropdown-menu" uib-dropdown-menu ng-if="node.nodes">
+								<li ng-repeat="node in node.nodes" uib-dropdown auto-close="disabled" is-open="true" ng-include="'field_renderer_smart.html'"></li>
+							</ul>
+						</div>
+					</li>
+					<!--Desktop-->
+					<li class="visible-md visible-lg" ng-repeat="node in menu" ng-if="node.values.desktop" ng-class="{'active':((state.name==node.state || state.prev[0].state==node.state || state.name==node.values.action.type) && node.values.action.type!='link')}"
+					 ng-include="'links.html'">
+					</li>
+				</ul>
+			</div>
+		</nav>
+
+		<!-- main -->
+		<div id="contentarea" class="row">
+			<div class="hidden-xs hidden-sm" ng-class="{'col-md-2':state.nodes}" style="margin-bottom:10px;">
+				<div ng-if="state.nodes.length>0" ng-include="'sidemenu.html'"></div>
+			</div>
+			<div id="content" class="col-xs-12" ng-class="{'col-md-8':state.nodes, 'col-md-10':!state.nodes}">
+				<div ng-include="'search.html'"></div>
+				<div ng-if="state.prev" ng-include="'breadcrumb.html'"></div>
+				<div ui-view="content"></div>
+			</div>
+			<div class="hidden-xs hidden-sm col-md-2">
+				<div ng-include="'login.html'"></div>
+				<div class="col-xs-12 wk_container" ng-show="WK.data.B.Anzahl>0" ng-include="'warenkorbvoransicht.html'"></div>
+				<div class="col-xs-12 wk_container" ng-show="WK.data.A.Anzahl>0" ng-include="'angebotvoransicht.html'"></div>
+			</div>
+		</div>
+	</div>
+
+	<!--footer-->
+	<div ui-view="foot"></div>
+</div>
+
+
+<!-- #################################################################################################################################################################### -->
+<!-- ########################################################### Scripte für Includes ################################################################################### -->
+<!-- #################################################################################################################################################################### -->
+
+<!-- Sidemenü -->
+<script type="text/ng-template" id="sidemenu.html">
+	<ul class="nav nav-pills nav-stacked">
+		<li class="sidemenu_head"><span>{{SideMenuTitle | uppercase}}</span></li>
+		<li class="sidemenu_row" ng-repeat="node in state.nodes" ng-if="node.values.desktop || node.nodes || node.state || node.values.action.type=='artikel'"
+		 ng-class="{'active':node.state == state.name}" ng-include="'field_renderer.html'"></li>
+	</ul>
+</script>
+
+<script type="text/ng-template" id="field_renderer.html">
+	<a ng-if="node.values.action.type=='link' && node.values.desktop" ng-href="{{node.values.action.value}}" ng-click="navbar.collapsed = true;"
+	 du-smooth-scroll du-scrollspy offset="75" ng-target="{{node.values.action.blank ? '_blank' :'_self'}}">
+		<span><i ng-if="node.values.icon" class="fa" ng-class="node.values.icon"></i> {{node.values.titel}}</span>
+		<span ng-if="node.nodes && !row.nur_oberste_artikelgruppenebene" class="pull-right caret"></span>
+	</a>
+	<a ng-if="node.values.action.type=='formular'" ui-sref="{{node.state}}({id:node.values.action.value})">
+		<span><i ng-if="node.values.icon" class="fa" ng-class="node.values.icon"></i> {{node.values.titel}}</span>
+	</a>
+	<a ng-if="node.values.action.type!='link' && node.values.action.type!='formular'" ui-sref="{{node.state}}" ng-target="{{node.values.action.blank ? '_blank' :'_self'}}">
+		<span><i ng-if="node.values.icon" class="fa" ng-class="node.values.icon"></i> {{node.values.titel}}</span>
+		<span ng-if="node.nodes && !row.nur_oberste_artikelgruppenebene" class="pull-right caret"></span>
+	</a>
+	<ul class="nav" ng-if="node.open && !row.nur_oberste_artikelgruppenebene">
+		<li ng-if="node.values.desktop || node.state || node.values.action.type=='artikel'" class="sidemenu_ug_row" ng-repeat="node in node.nodes"
+		 ng-class="{'active':node.state == state.name}" ng-include="'field_renderer.html'"></li>
+	</ul>
+</script>
+
+<!-- Smartphone Menü-->
+<script type="text/ng-template" id="field_renderer_smart.html">
+	<div ng-if="!node.nodes" ng-include="'links.html'" style="padding:5px 30px;"></div>
+	<a ng-if="node.nodes" style="padding:5px 30px;" href="#" ng-click="node.open = !node.open">{{node.values.titel | uppercase}}</a>
+	<ul style="list-style:none;margin-left:-20px;" ng-if="node.nodes && node.open">
+		<li ng-repeat="node in node.nodes" ng-include="'field_renderer_smart.html'"></li>
+	</ul>
+</script>
+
+<!-- Logincontainer -->
+<script type="text/ng-template" id="login.html">
+	<div ng-controller="LoginCtrl">
+		<form class="form-horizontal" ng-submit="login(user)" ng-if="!kunde.eingeloggt">
+			<input type="text" class="form-control" placeholder="{{l.lng_login_platzhalter_kundennr}}" ng-model="user.usern">
+			<input type="password" class="form-control" style="margin-top:5px;margin-bottom:5px;" placeholder="{{l.lng_login_platzhalter_passwort}}"
+			 ng-model="user.passwd">
+			<p style="color:red" ng-if="Error">{{l.lng_login_fehlgeschlagen}}</p>
+			<button class="btn btn-block btn-primary" type="submit">{{l.lng_login_loginbtn}}</button>
+			<div style="text-align:center;"><a style="text-decoration:underline;color:black;font-size:9pt;cursor:pointer;" ng-click="openPasswortModal()">{{l.lng_login_passwort_vergessen}}</a></div>
+		</form>
+
+		<form class="form-horizontal" ng-if="kunde.eingeloggt">
+			<p>{{welcome.datum}}</p>
+			<p>{{welcome.text}}</p>
+			<p ng-if="!row.emailanzeige_login">{{kunde.kundennummer}}</p>
+			<p ng-if="row.emailanzeige_login">{{kunde.email}}</p>
+			<p>{{kunde.vorname}} {{kunde.username}}</p>
+			<p ng-if="kunde.firma">{{kunde.firma}}</p>
+			<button class="btn btn-primary btn-block" ng-click="logout()">{{l.lng_login_logoutbtn}}</button>
+			<button class="btn btn-primary btn-block" ng-if="kunde.Rechte.RechtPreislisten=='True' && state.preisliste" ng-click="getPreisliste()">Preislistendownload</button>
+		</form>
+	</div>
+</script>
+
+<!-- Warenkorbvoransicht -->
+<script type="text/ng-template" id="warenkorbvoransicht.html">
+	<div class="row" id="warenkorbvoransicht_kopf">
+		<a ui-sref="warenkorb">{{l.lng_menu_warenkorb}}</a>
+	</div>
+	<div class="row warenkorbvoransicht_zeile" ng-repeat="value in WK.data.B.Values">
+		<div class="col-xs-9">
+			<a uib-tooltip="{{value.Bezeichnung}}" ui-sref="article({id:value.Bezeichnung,artnr:value.Artikelnummer})">
+				<div class="text-ellipsis">{{value.Bezeichnung}}</div>
+			</a>
+		</div>
+		<div class="col-xs-2" uib-tooltip="Entfernen" ng-if="value.PosTyp != 'I' && value.PosTyp != 'Z'">
+			<i style="font-size:14px;cursor:pointer;" ng-click="removeArtikelFromWarenkorb(value.LfdNr,'b')" class="fa fa-trash" aria-hidden="true"></i>
+		</div>
+	</div>
+	<hr style="border:1px solid grey;margin-top:0px;margin-bottom:5px;" ng-if="kunde.Rechte.PreiseAusblenden!='True'"></hr>
+	<div class="row" ng-if="kunde.Rechte.PreiseAusblenden!='True'">
+		<div class="col-xs-12" id="warenkorbvoransicht_preis">
+			<a ng-if="WK.data.B.Gesamtpreis.Netto && !WK.data.B.Gesamtpreis.Brutto" ui-sref="warenkorb"><span>{{WK.data.B.Gesamtpreis.Netto | currency:''}}€</span></a>
+			<a ng-if="WK.data.B.Gesamtpreis.Netto && WK.data.B.Gesamtpreis.Brutto" ui-sref="warenkorb"><span>{{WK.data.B.Gesamtpreis.Netto | currency:''}}€ ({{WK.data.B.Gesamtpreis.Brutto | currency:''}}€<sup>*</sup>)</span></a>
+			<a ng-if="WK.data.B.Gesamtpreis.Brutto && !WK.data.B.Gesamtpreis.Netto" ui-sref="warenkorb"><span>{{WK.data.B.Gesamtpreis.Brutto | currency:''}}€</span></a>
+		</div>
+	</div>
+</script>
+
+<!-- Angebotsvoransicht -->
+<script type="text/ng-template" id="angebotvoransicht.html">
+	<div class="row" id="warenkorbvoransicht_kopf">
+		<a ui-sref="angebot">{{l.lng_menu_angebot}}</a>
+	</div>
+	<div class="row warenkorbvoransicht_zeile" ng-repeat="value in WK.data.A.Values">
+		<div class="col-xs-9">
+			<a uib-tooltip="{{value.Bezeichnung}}" ui-sref="article({id:value.Bezeichnung,artnr:value.Artikelnummer})">
+				<div class="text-ellipsis">{{value.Bezeichnung}}</div>
+			</a>
+		</div>
+		<div class="col-xs-2" uib-tooltip="Entfernen" ng-if="value.PosTyp != 'I' && value.PosTyp != 'Z'">
+			<i style="font-size:14px;cursor:pointer;" ng-click="removeArtikelFromWarenkorb(value.LfdNr,'a')" class="fa fa-trash" aria-hidden="true"></i>
+		</div>
+	</div>
+	<hr style="border:1px solid grey;margin-top:0px;margin-bottom:5px;" ng-if="kunde.Rechte.PreiseAusblenden!='True'"></hr>
+	<div class="row" ng-if="kunde.Rechte.PreiseAusblenden!='True'">
+		<div class="col-xs-12" id="warenkorbvoransicht_preis">
+			<a ng-if="WK.data.A.Gesamtpreis.Netto && !WK.data.A.Gesamtpreis.Brutto" ui-sref="angebot"><span>{{WK.data.A.Gesamtpreis.Netto | currency:''}}€</span></a>
+			<a ng-if="WK.data.A.Gesamtpreis.Netto && WK.data.A.Gesamtpreis.Brutto" ui-sref="angebot"><span>{{WK.data.A.Gesamtpreis.Netto | currency:''}}€ ({{WK.data.A.Gesamtpreis.Brutto | currency:''}}€<sup>*</sup>)</span></a>
+			<a ng-if="WK.data.A.Gesamtpreis.Brutto && !WK.data.A.Gesamtpreis.Netto" ui-sref="angebot"><span>{{WK.data.A.Gesamtpreis.Brutto | currency:''}}€</span></a>
+		</div>
+	</div>
+</script>
+
+<!-- Breadcrumb -->
+<script type="text/ng-template" id="breadcrumb.html">
+	<ol class="breadcrumb">
+		<li ng-repeat="prev in state.prev">
+			<a ui-sref="{{prev.state}}">{{prev.titel}}</a>
+		</li>
+		<li>{{state.titel}}</li>
+	</ol>
+</script>
+
+<!-- Suche -->
+<script type="text/ng-template" id="search.html">
+	<form ng-submit="suchen(search.suche)" class="searchform" role="search" ng-if="!dynalink">
+		<div class="form-group input-group">
+			<input id="search" name="search" class="form-control" placeholder="{{l.lng_suche_platzhalter}}" ng-model="search.schnellsuche"
+			 type="text">
+			<div ng-click="suchen(search.suche)" class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></div>
+		</div>
+	</form>
+
+	<div class="input-group" style="width:100%" ng-if="dynalink">
+		<autocomplete ng-model="search.schnellsuche" data="dynalink_data.suggestions" on-type="searchOnPageOne" on-select="searchOnPageOne"
+		 attr-input-class="form-control" attr-input-id="query" attr-placeholder="Artikelsuche..."></autocomplete>
+		<span class="input-group-btn">
+			<button class="btn btn-primary" type="button" ng-click="search({page: 1})"><i class="fa fa-search"></i></button>
+		</span>
+	</div>
+</script>
+
+<!-- Newsletter -->
+<script type="text/ng-template" id="newsletter.html">
+	<div ng-show="newsletterSubscribed != 'OK'">
+		<form ng-submit="subscribeNewsletter(mail)">
+			<div class="input-group">
+				<input id="newsletter" class="form-control" ng-model="mail" type="text" placeholder="Newsletter anmelden">
+				<span class="input-group-btn">
+					<button type="submit" class="btn btn-primary">OK</button>
+				</span>
+			</div>
+		</form>
+	</div>
+	<div ng-show="newsletterSubscribed" class="animate-switch-container" ng-switch on="newsletterSubscribed">
+		<div class="animate-switch" ng-switch-when="OK">{{l.lng_nl_subscribe}}</div>
+		<div class="animate-switch" ng-switch-when="ALREADY">{{l.lng_nl_already_subscribed}}</div>
+		<div class="animate-switch" ng-switch-default>Ooops, ERROR!</div>
+	</div>
+</script>
+
+<!-- TMG Links -->
+<script type="text/ng-template" id="tmg_links.html">
+	<div ng-if="t.tmg_id != 8" ng-repeat="t in tmg">
+		<a ui-sref="{{t.tmg_angabe| lowercase}}">
+			<p>{{l[t.sprachvariable_link]}}</p>
+		</a>
+	</div>
+</script>
+
+<!-- Sprachauswahl -->
+<script type="text/ng-template" id="sprachauswahl.html">
+	<div class="row">
+		<div class="col-xs-8">
+			<p>Sprache / Language</p>
+		</div>
+		<div class="col-xs-4" style="text-align:right;">
+			<div ng-show="(lang| filter:{activ: true}).length > 1" ng-repeat="l in lang" ng-click="!l.select && setSprache(l.lang)" style="cursor: pointer; float:left; font-size: 20px; margin-left: 10px;border-radius: 5px;"
+			 class="hidden-sm pull-right flag-icon flag-icon-{{l.flag}}">
+				<div class="xxx-hover" ng-style="l.select && {'background-color': 'rgba(255,255,255,0.0)'}"></div>
+			</div>
+			<!--<img ng-click="setSprache('de')" src="3xios/images/de_flagge.gif">
+			<img ng-click="setSprache('E')" src="3xios/images/en_flagge.gif">-->
+		</div>
+	</div>
+</script>
+
+<!--Smartphone Navbar Kopf-->
+<script type="text/ng-template" id="navbar_header_smartphone.html">
+	<div class="navbar-header">
+		<div style="height:50px;float:left;">
+			<a ng-href="home"><img style="height:34px;margin-top:10px;" src="template/images/head_logo_sm.png"></a>
+		</div>
+		<div style="height:50px;float:right;padding-top:3px;">
+			<button type="button" class="navbar-toggle" ng-click="navbar.collapsed = !navbar.collapsed">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+		</div>
+		<div class="navbar-icon" style="height:50px;float:right;" ng-repeat="node in menu" ng-if="node.values.mobil && node.values.icon">
+			<a ng-if="node.values.action.type=='login' && !kunde.eingeloggt" ng-href="#" ng-click="openLoginModal(node.values.template.list,'sm')">
+				<i class="fa {{node.values.icon}}" aria-hidden="true"></i>
+			</a>
+			<a ng-if="node.values.action.type!='login' && node.values.action.type!='formular'" ui-sref="{{node.state}}">
+				<i class="fa {{node.values.icon}}" aria-hidden="true"></i>
+			</a>
+			<a ng-if="node.values.action.type=='login' && kunde.eingeloggt" ng-href="#" ng-click="logout()">
+				<i class="fa {{node.values.icon_alt}}" aria-hidden="true"></i>
+			</a>
+		</div>
+	</div>
+</script>
+
+<!-- Links -->
+<script type="text/ng-template" id="links.html">
+	<!--Link zum Öffnen des Login-Modals / Logout-->
+	<a ng-if="node.values.action.type=='login'" ng-href="#" ng-click="!kunde.eingeloggt ? openLoginModal(node.values.template.list,'sm') : logout()">
+		<span>
+			<i ng-if="node.values.icon" class="fa" ng-class="!kunde.eingeloggt ? node.values.icon : node.values.icon_alt"></i> 
+			<span ng-if="!kunde.eingeloggt">{{node.values.titel | uppercase }}</span>
+		<span ng-if="kunde.eingeloggt">{{node.values.titel_alt | uppercase}}</span>
+		</span>
+	</a>
+	<!--Links fuer interne Links-->
+	<a ng-if="node.values.action.type!='login' && node.values.action.type!='link'" ui-sref="{{node.state}}({id:node.values.action.value})"
+	 class="dropdown-toggle" data-toggle="dropdown">
+		<span><i ng-if="node.values.icon" class="fa" ng-class="node.values.icon"></i> {{node.values.titel | uppercase }}</span>
+	</a>
+	<!--Link fuer externe Links-->
+	<a ng-if="node.values.action.type=='link'" ng-href="{{node.values.action.value}}" ng-click="navbar.collapsed = true;" target="{{node.values.action.blank ? '_blank' :'_self'}}"
+	 du-smooth-scroll du-scrollspy offset="75">
+		<span><i ng-if="node.values.icon" class="fa" ng-class="node.values.icon"></i> {{node.values.titel | uppercase }}</span>
+	</a>
+</script>
+
+<!-- Loading Image -->
+<script type="text/ng-template" id="loading.html">
+	<img class="xxx-rotate" src="template/images/loading.png">
+</script>
+
+<!-- Preisdarstellung -->
+<script type="text/ng-template" id="preisdarstellung.html">
+	<div ng-if="!Artikel.Artikelpreis.Aktion">
+		<!--Nur Nettopreis-->
+		<div ng-if="Artikel.Artikelpreis.Netto != undefined && Artikel.Artikelpreis.Brutto == undefined">
+			<p ng-if="Artikel.Artikelpreis.Netto != 0 || (Artikel.Artikelpreis.Netto == 0 && !row.kein_nullpreis_auch_wk)">
+				{{Artikel.Artikelpreis.Netto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup>
+			</p>
+			<p ng-if="Artikel.Artikelpreis.Netto == 0 && row.kein_nullpreis_auch_wk">{{l.lng_artikelliste_preis_auf_anfrage}}</p>
+		</div>
+		<!--Nur Bruttopreis-->
+		<div ng-if="Artikel.Artikelpreis.Netto == undefined && Artikel.Artikelpreis.Brutto != undefined">
+			<p ng-if="Artikel.Artikelpreis.Brutto != 0 || (Artikel.Artikelpreis.Brutto == 0 && !row.kein_nullpreis_auch_wk)">
+				{{Artikel.Artikelpreis.Brutto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup>
+			</p>
+			<p ng-if="Artikel.Artikelpreis.Brutto == 0 && row.kein_nullpreis_auch_wk">{{l.lng_artikelliste_preis_auf_anfrage}}</p>
+		</div>
+		<!--Netto und Bruttopreis-->
+		<div ng-if="Artikel.Artikelpreis.Netto != undefined && Artikel.Artikelpreis.Brutto != undefined">
+			<p ng-if="Artikel.Artikelpreis.Netto != 0 || (Artikel.Artikelpreis.Netto == 0 && !row.kein_nullpreis_auch_wk)">
+				{{Artikel.Artikelpreis.Netto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><br> ({{Artikel.Artikelpreis.Brutto
+				| currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup>)
+			</p>
+			<p ng-if="Artikel.Artikelpreis.Netto == 0 && row.kein_nullpreis_auch_wk">{{l.lng_artikelliste_preis_auf_anfrage}}</p>
+		</div>
+	</div>
+	<div ng-if="Artikel.Artikelpreis.Aktion">
+		<p ng-if="Artikel.Artikelpreis.Aktion.Netto && !Artikel.Artikelpreis.Aktion.Brutto">
+			{{Artikel.Artikelpreis.Aktion.Netto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup>
+		</p>
+		<p ng-if="!Artikel.Artikelpreis.Aktion.Netto && Artikel.Artikelpreis.Aktion.Brutto">
+			{{Artikel.Artikelpreis.Aktion.Brutto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup>
+		</p>
+		<p ng-if="Artikel.Artikelpreis.Aktion.Netto && Artikel.Artikelpreis.Aktion.Brutto">
+			{{Artikel.Artikelpreis.Aktion.Netto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><br>			({{Artikel.Artikelpreis.Aktion.Brutto | currency:''}}<span ng-bind-html="trust(Artikel.Artikelpreis.Symbol)"></span><sup>*</sup>)
+		</p>
+	</div>
+</script>

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+
+<div class="modal-header">
+	<button type="button" class="close" ng-click="closeModal()">&times;</button>
+	<h3 class="modal-title">Preislistendownload</h3>
+</div>
+<div class="modal-body">
+	<a style="color:white;" class="btn btn-primary btn-block" ng-href="{{url}}" download="{{titel}}" ng-click="createXML()">XML</a>
+	<a style="color:white;" class="btn btn-primary btn-block" ng-href="{{url}}" download="{{titel}}" ng-click="createCSV()">CSV</a>
+	<!-- <a class="btn btn-primary btn-block">HTML</a> -->
+</div>
+<div class="modal-footer">
+	<button style="float:right" class="btn btn-default" ng-click="closeModal()">Schließen</button>
+</div>

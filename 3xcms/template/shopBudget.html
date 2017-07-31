@@ -1,0 +1,54 @@
+<div class="col-md-6">
+    <h2>Budget
+        <a class="btn btn-sm btn-default" href="../api/budget/csvBudget" target="_BLANK"><i class="fa fa-download"></i></a>
+        <a class="btn btn-sm btn-default" href="../api/budget/printBudget" target="_BLANK"><i class="fa fa-print"></i></a>
+    </h2>
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Kunde</th>
+                <th>Email</th>
+                <th>Budget</th>
+                <th>Verbraucht</th>
+                <th>Offen</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="b in data.budget">
+                <td>{{b.XBudget_ID}}</td>
+                <td>{{b._KUNDENNUMMER}}</td>
+                <td>{{b._EMAIL}}</td>
+                <td>{{b._BUDGET}}</td>
+                <td>{{b.VERBRAUCH}}</td>
+                <td>{{b.OFFEN}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="col-md-6">
+    <h2>Verbrauch
+        <a class="btn btn-sm btn-default" href="../api/budget/csvVerbrauch" target="_BLANK"><i class="fa fa-download"></i></a>
+        <a class="btn btn-sm btn-default" href="../api/budget/printVerbrauch" target="_BLANK"><i class="fa fa-print"></i></a>
+    </h2>
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Kunde</th>
+                <th>Belegnummer</th>
+                <th>Wert</th>
+                <th>Datum</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="b in data.verbrauch">
+                <td>{{b.Budgetnummer}}</td>
+                <td>{{b.Kundennummer}}</td>
+                <td>{{b.Belegnummer}}</td>
+                <td>{{b.Wert}}</td>
+                <td>{{b.Datum}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<div class="form-group">
+	<div class="col-md-12" ng-class="{'has-error': !form.drop.$valid}">
+		<div class="input-group" style="width: 100%;">
+			<div ngf-drop="setImage($file)" ngf-select="setImage($file)" name="drop" ng-model="image" ngf-multiple="false" ngf-allow-dir="false"
+				ngf-resize="{width: 1920, height: 1080}" ngf-resize-if="$width > 1920 || $height > 1080" accept="image/*" ngf-pattern="'image/*'"
+				ngf-max-size="20MB">
+				<input type="text" class="form-control" value="{{link}}" placeholder="Bild hinzufügen..." readonly>
+			</div>
+			<span ng-show="link" class="input-group-btn">
+				<button class="btn btn-default" ng-click="data.showImg = !data.showImg"><i class="fa fa-eye"></i></button>
+				<button class="btn btn-default" ng-click="deleteImg()"><i class="fa fa-trash-o"></i></button>
+			</span>
+		</div>
+		<span class="help-block" ng-show="!form.drop.$valid">Fehler!</span>
+		<span class="help-block" ng-show="form.drop.$error.maxSize">Datei ist zu groß! (maximal 20MB)</span>
+	</div>
+</div>
+<div style="overflow:hidden;">
+	<img class="slide" ng-if="data.showImg && link && !image" ng-src="../api/datei/{{link}}" style="width:100%" />
+	<img class="slide" ng-if="data.showImg && image" ngf-src="image" style="width:100%" />
+</div>
+<div class="form-group">
+	<div class="col-md-12">
+		<input ng-show="(image || link) && !disableNotation" type="text" class="form-control" placeholder="Bild-Text" ng-model="imgtext">
+	</div>
+</div>
+<div class="form-group">
+	<div class="col-md-12">
+		<div text-angular ta-unsafe-sanitizer="true" ta-toolbar="[['p','h1','h2','h3'],['bold','italics','underline'],['ul','ol'], ['indent','outdent'], ['insertLink','html']]"
+			ng-model="text"></div>
+	</div>
+</div>

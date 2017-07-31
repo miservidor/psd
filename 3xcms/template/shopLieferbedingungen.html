@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<h1>Lieferbedingungen</h1>
+
+<div class="row">
+    <div class="col-xs-12">
+        <p>Wählen Sie hier, ob und wie Lieferbedingungen eingesetzt werden sollen! Lieferbedingungen und Preisstaffeln können
+            in jeder Anzeigeart konfiguriert und ggf. später hier aktiviert werden.</p>
+    </div>
+    <div class="col-xs-12" style="margin-bottom:20px;">
+        <form class="form-inline">
+            <div class="btn-group">
+                <label class="btn" ng-class="{'btn-success':settings.show=='on', 'btn-danger':settings.show=='off'}" ng-model="settings.show"
+                    uib-btn-radio="'on'" ng-click="updateAnzeige(settings)">Aktiv</label>
+                <label class="btn" ng-class="{'btn-success':settings.show=='off', 'btn-danger':settings.show=='on'}" ng-model="settings.show"
+                    uib-btn-radio="'off'" ng-click="updateAnzeige(settings)">Inaktiv</label>
+            </div>
+            <br>
+            <div class="checkbox" ng-if="settings.show=='on'">
+                <label>
+                    <input type="checkbox" ng-click="updateAnzeige(settings)" ng-model="settings.checkbox"> mit Preisberechnung
+                </label>
+            </div>
+        </form>
+        <hr>
+    </div>
+
+    <div class="col-xs-12">
+        <form name="form" class="row" novalidate>
+            <div class="col-xs-3 form-group" ng-class="{'has-error' : !form.lb.$valid && form.submit}">
+                <label for="lb" class="control-label">Lieferbedingung*</label>
+                <input type="text" ng-model="newLB.LB" class="form-control" id="lb" name="lb" placeholder="Lieferbedingung" required>
+                <span ng-if="!form.lb.$valid && form.submit" class="help-block">Bitte ausfüllen!</span>
+            </div>
+            <div class="col-xs-3 form-group" ng-class="{'has-error' : !form.versand.$valid && form.submit}">
+                <label for="versand" class="control-label">Versandartikel*</label>
+                <input type="text" ng-model="newLB.Versandartikel" class="form-control" id="versand" name="versand" placeholder="Versandartikel"
+                    required>
+                <span ng-if="!form.versand.$valid && form.submit" class="help-block">Bitte ausfüllen!</span>
+            </div>
+            <div class="col-xs-3 form-group" ng-class="{'has-error' : !form.bez.$valid && form.submit}">
+                <label for="bez" class="control-label">Bezeichnung*</label>
+                <input type="text" ng-model="newLB.Bezeichnung" class="form-control" id="bez" name="bez" placeholder="Bezeichnung" required>
+                <span ng-if="!form.lb.$valid && form.submit" class="help-block">Bitte ausfüllen!</span>
+            </div>
+            <button style="margin-top:24px;" type="submit" class="col-xs-2 btn btn-success" ng-click="form.$valid ? createLieferbedingung(newLB) : form.submit = true">Erstellen</button>
+        </form>
+    </div>
+
+    <div class="col-xs-12">
+        <small>Die mit * gekennzeichneten Felder sind Pflichtfelder!</small>
+    </div>
+
+
+    <div class="col-xs-12" style="margin-top:20px;">
+        <hr>
+        <div class="row">
+            <div class="col-xs-2">
+                <label>Lieferbedingung</label>
+            </div>
+            <div class="col-xs-3">
+                <label>Versandartikel</label>
+            </div>
+            <div class="col-x-5">
+                <label>Bezeichnung</label>
+            </div>
+        </div>
+        <uib-accordion close-others="true">
+            <div uib-accordion-group class="panel-default" ng-repeat="lb in daten" ng-init="lb.open=false" is-open="lb.open">
+                <uib-accordion-heading>
+                    <div class="row" ng-class="{'lb_hinweis':lb.Hinweis}" ng-click="!lb.open ? getDaten(lb.LB) : ''">
+                        <div class="col-xs-2">
+                            <label>{{lb.LB}}</label>
+                        </div>
+                        <div class="col-xs-3">
+                            <label>{{lb.Versandartikel}}</label>
+                        </div>
+                        <div class="col-xs-5" style="padding-left:0px;">
+                            <label>{{lb.Bezeichnung}}</label>
+                        </div>
+                        <div class="col-xs-2"><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': lb.open, 'glyphicon-chevron-right': !lb.open}"></i></div>
+                    </div>
+                </uib-accordion-heading>
+                <form name="form2" class="form-horizontal" novalidate>
+                    <div class="form-group" ng-class="{'has-error' : !form2.lieferbedingung.$valid && form2.submit}">
+                        <label for="lieferbedingung" class="col-xs-2 control-label">Lieferbedingung*</label>
+                        <div class="col-xs-2"><input type="text" class="form-control" id="lieferbedingung" name="lieferbedingung" ng-model="data.LB"
+                                required></div>
+                        <span style="padding-top:5px;" class="col-xs-8">(eine frei definierbare Kennzeichnung - alphanumerisch)</span>
+                    </div>
+                    <div class="form-group" ng-class="{'has-error' : !form2.versandartikel.$valid && form2.submit, 'lb_hinweis':lb.Hinweis}">
+                        <label for="versandartikel" class="col-xs-2 control-label">Versandartikel*</label>
+                        <div class="col-xs-2"><input type="text" class="form-control" id="versandartikel" name="versandartikel" ng-model="data.Versandartikel"
+                                required></div>
+                        <span style="padding-top:5px;" class="col-xs-8">(eine Artikelnummer die im Datenstamm vorhanden sein muss)</span>
+                    </div>
+                    <div class="form-group" ng-class="{'has-error' : !form2.bezeichnung.$valid && form2.submit}">
+                        <label for="bezeichnung" class="col-xs-2 control-label">Bezeichnung*</label>
+                        <div class="col-xs-6"><input type="text" class="form-control" id="bezeichnung" name="bezeichnung" ng-model="data.Bezeichnung"
+                                required></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="beschreibung" class="col-xs-2 control-label">Beschreibung</label>
+                        <div class="col-xs-6"><textarea style="resize:vertical" class="form-control" id="beschreibung" rows="3" ng-model="data.Zusatz"></textarea></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label for="land1" class="col-xs-4 control-label">Land zuweisen</label>
+                                <div class="col-xs-8"><select id="land1" class="form-control" ng-model="data.Land" ng-options="land.Id as land.Bezeichnung for land in data.Laender.Liste"><option value="">-- Bitte wählen --</option></select></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="land2" class="col-xs-4 control-label">Ländergruppe zuweisen</label>
+                                <div class="col-xs-8"><select id="land2" class="form-control" ng-model="data.Land" ng-options="land.Id as land.Bezeichnung for land in data.Laender.Gruppe"><option value="">-- Bitte wählen --</option></select></div>
+                            </div>
+                        </div>
+                        <div class="col-xs-offset-1 col-xs-5">
+                            <div class="checkbox"><label><input type="checkbox" ng-model="data.Ausblenden">Im Pull-Down-Menü des Warenkorbs ausblenden</label></div>
+                            <div class="checkbox"><label><input type="checkbox" ng-model="data.Standard">Als Standardlieferbedingung definieren</label></div>
+                            <div class="checkbox"><label><input type="checkbox" ng-model="data.festeZahlungsart">Feste Zahlungsbedingung</label></div>
+                        </div>
+                    </div>
+                    <small>Die mit * gekennzeichneten Felder sind Pflichtfelder!</small>
+                    <div class="row">
+                        <div class="col-xs-offset-8 col-xs-4" style="text-align:right;">
+                            <button class="btn btn-danger" ng-click="deleteLieferbedingung(lb.LB)">Löschen</button>
+                            <button type="submit" class="btn btn-success" ng-click="form2.$valid ? update(lb.LB,data,$index) : form2.submit = true;">Speichern</button>
+                        </div>
+                    </div>
+                </form>
+                <hr>
+                <div ng-include="'preisstaffel.html'"></div>
+            </div>
+        </uib-accordion>
+    </div>
+</div>
+
+
+
+<script type="text/ng-template" id="preisstaffel.html">
+    <uib-accordion>
+        <div uib-accordion-group class="panel-default" ng-init="preisstaffel.open = false" is-open="preisstaffel.open">
+            <uib-accordion-heading>
+                <div class="row">
+                    <div class="col-xs-10">
+                        <label>Preisstaffeln ({{data.Preisstaffel.length}})</label>
+                    </div>
+                    <div class="col-xs-2"><i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': preisstaffel.open, 'glyphicon-chevron-right': !preisstaffel.open}"></i></div>
+                </div>
+            </uib-accordion-heading>
+            <table class="table table-bordered" >
+                <thead>
+                    <th>LB</th>
+                    <th>Umsatz in EUR (Nettobetrag)*</th>
+                    <th>Umsatz in EUR (Bruttobetrag)*</th>
+                    <th>Versandkosten in EUR (Nettobetrag)*</th>
+                    <th>Altern. Versandartikel</th>
+                    <th></th>
+                    <th></th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="preisstaffel in data.Preisstaffel" ng-if="data.Preisstaffel.length>0">
+                        <td>{{preisstaffel.LB}}</td>
+                        <td ng-class="{'has-error' : !form2.preisstaffel_umsatz_{{$index}}.$valid && form2.submit}"><input type="text" class="form-control" name="preisstaffel_umsatz_{{$index}}" ng-blur="updatePreisstaffel($index,preisstaffel)" ng-model="preisstaffel.Umsatz" required/></td>
+                        <td ng-class="{'has-error' : !form2.preisstaffel_umsatzbrutto_{{$index}}.$valid && form2.submit}"><input type="text" class="form-control" name="preisstaffel_umsatzbrutto_{{$index}}" ng-blur="updatePreisstaffel($index,preisstaffel)" ng-model="preisstaffel.UmsatzBrutto" required/></td>
+                        <td ng-class="{'has-error' : !form2.preisstaffel_versandkosten_{{$index}}.$valid && form2.submit}"><input type="text" class="form-control" name="preisstaffel_versandkosten_{{$index}}" ng-blur="updatePreisstaffel($index,preisstaffel)" ng-model="preisstaffel.Versandkosten" required/></td>
+                        <td ng-class="{'has-error' : Error7[{{$index}}]}"><input type="text" class="form-control" ng-blur="updatePreisstaffel($index,preisstaffel)" ng-model="preisstaffel.AltVersandartikel"/></td>
+                        <td style="text-align:center"><button class="btn btn-default" uib-tooltip="Gewichtsstaffel hinzufügen / entfernen" ng-click="openGewichtstaffelModal(preisstaffel)"><i class="fa fa-pencil" aria-hidden="true"></i></button></td>
+                        <td style="text-align:center"><button class="btn btn-danger" uib-tooltip="Preisstaffel entfernen" ng-click="removePreisstaffel($index,preisstaffel)"><i class="fa fa-minus" aria-hidden="true"></i></button></td>
+                    </tr>
+                    <tr>
+                        <td>{{data.LB}}</td>
+                        <td ng-class="{'has-error' : Error3}">
+                            <input type="text" class="form-control" ng-model="newPS.Umsatz">
+                            <span ng-if="Error3" class="help-block">Doppelter Umsatzeintrag!</span>
+                        </td>
+                        <td><input type="text" class="form-control" ng-model="newPS.UmsatzBrutto"></td>
+                        <td><input type="text" class="form-control" ng-model="newPS.Versandkosten"></td>
+                        <td ng-class="{'has-error' : Error8}"><input type="text" class="form-control" ng-model="newPS.AltVersandartikel"></td>
+                        <td></td>
+                        <td style="text-align:center"><button class="btn btn-success" ng-disabled="!newPS.Umsatz || !newPS.UmsatzBrutto || !newPS.Versandkosten" uib-tooltip="Preisstaffel hinzufügen" ng-click="addPreisstaffel(newPS)"><i class="fa fa-plus" aria-hidden="true"></i></button></td>
+                    </tr>
+                </tbody>
+            </table>
+			<p class="bg-danger" ng-if="Error7_text">Keine gültige Artikelnummer übergeben!</p>
+        </div>
+    </uib-accordion>
+</script>
+
+<script type="text/ng-template" id="template/modalShopLieferbedingungGewichtstaffel.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Gewichtsstaffeln ({{data.Gewichtstaffel.length}})</h3>
+    </div>
+    <div class="modal-body">
+        <table class="table table-bordered" >
+            <thead>
+                <th>LB</th>
+                <th>Nettoumsatz in EUR</th>
+                <th>Gewicht in kg *</th>
+                <th>Versandkosten in EUR (Nettobetrag) *</th>
+                <th>Altern. Versandartikel</th>
+                <th></th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="g in data.Gewichtstaffel" ng-if="data.Gewichtstaffel.length>0">
+                    <td>{{g.LB}}</td>
+                    <td>{{g.Umsatz}}</td>
+                    <td ng-class="{'has-error' : Error5 && $index==Error5_Index}">
+                        <input type="text" class="form-control" ng-blur="updateGewichtstaffel($index,g)" ng-model="g.Gewicht"/>
+                        <span ng-if="Error5 && $index==Error5_Index" class="help-block">Doppelter Gewichteintrag!</span>
+                    </td>
+                    <td><input type="text" class="form-control" ng-blur="updateGewichtstaffel($index,g)" ng-model="g.VersandkostenGewicht"/></td>
+                    <td ng-class="{'has-error' : Error7[{{$index}}]}"><input type="text" class="form-control" ng-blur="updateGewichtstaffel($index,g)" ng-model="g.AltVersandartikel"/></td>
+                    <td style="text-align:center"><button class="btn btn-danger" ng-click="removeGewichtstaffel($index,g)"><i class="fa fa-minus" aria-hidden="true"></i></button></td>
+                </tr>
+                <tr>
+                    <td>{{newGS.LB}}</td>
+                    <td>{{newGS.Umsatz}}</td>
+                    <td ng-class="{'has-error' : Error4}">
+                        <input type="text" class="form-control" ng-model="newGS.Gewicht"/>
+                        <span ng-if="Error4" class="help-block">Doppelter Gewichteintrag!</span>
+                    </td>
+                    <td><input type="text" class="form-control" ng-model="newGS.VersandkostenGewicht"/></td>
+                    <td ng-class="{'has-error' : Error10}"><input type="text" class="form-control" ng-model="newGS.AltVersandartikel"/></td>
+                    <td style="text-align:center"><button class="btn btn-success" ng-disabled="!newGS.Gewicht || !newGS.VersandkostenGewicht" ng-click="addGewichtstaffel(newGS)"><i class="fa fa-plus" aria-hidden="true"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="bg-danger" ng-if="Error7_text">Keine gültige Artikelnummer übergeben!</p>
+    </div>
+    <div class="modal-footer">
+        <div style="text-align:left;">
+            <small>Die mit * gekennzeichneten Felder sind Pflichtfelder!</small>
+        </div>
+        <button class="btn btn-default" type="button" ng-click="cancel()">Schließen</button>
+    </div>
+</script>

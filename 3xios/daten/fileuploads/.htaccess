@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "Sicherheits-Bereich"
+AuthUserFile E:/xampp/htdocs/pwiese/3xios/sec_daten/fileuploads/.htusers
+require valid-user

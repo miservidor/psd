@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<form name="form" class="form-horizontal" novalidate>
+	<div class="modal-header">
+		<h3 class="modal-title">Sprache</h3>
+	</div>
+	<div class="modal-body">
+		<form name="form" class="form-horizontal" novalidate>
+			<div class="form-group" ng-class="{'has-error': form.sub && !form.lang.$valid}">
+				<label class="col-md-4 control-label">Kürzel:</label>
+				<div class="col-md-8">
+					<input type="text" name="lang" class="form-control" ng-model="lang.lang" ng-maxlength="5" required>
+					<span class="help-block" ng-show="form.sub && form.lang.$error.required">Erforderlich!</span>
+					<span class="help-block" ng-show="form.sub && form.lang.$error.maxlength">Maximal 5 Zeichen!</span>
+				</div>
+			</div>
+			<div class="form-group" ng-class="{'has-error': form.sub && !form.flag.$valid}">
+				<label class="col-md-4 control-label">Flagge:</label>
+				<div class="col-md-8">
+					<input type="text" name="flag" class="form-control" ng-model="lang.flag" ng-maxlength="5" required>
+					<span class="help-block" ng-show="form.sub && form.flag.$error.required">Erforderlich!</span>
+					<span class="help-block" ng-show="form.sub && form.flag.$error.maxlength">Maximal 5 Zeichen!</span>
+				</div>
+			</div>
+			<div class="form-group" ng-class="{'has-error': form.sub && !form.description.$valid}">
+				<label class="col-md-4 control-label">Name:</label>
+				<div class="col-md-8">
+					<input type="text" class="form-control" name="description" ng-model="lang.description" required>
+					<span class="help-block" ng-show="form.sub && form.description.$error.required">Erforderlich!</span>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer has-error">
+		<span class="help-block" ng-if="form.sub && !form.$valid">Eingaben überprüfen!</span>
+		<div class="row">
+			<div class="col-md-4" align="left">
+				<button class="btn btn-link btn-sm" type="button" ng-click="delLang()" ng-if="!create"><i class="fa fa-trash-o"></i> Löschen</button>
+			</div>
+			<div class="col-md-8">
+				<button class="btn btn-primary btn-sm" type="button" ng-click="form.$valid ? addLang() : form.sub=true" ng-if="create">Erstellen</button>
+				<button class="btn btn-default btn-sm" type="button" ng-click="close()">Abbrechen</button>
+			</div>
+		</div>
+	</div>
+</form>

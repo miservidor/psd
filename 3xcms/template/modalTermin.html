@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<form name="form" class="form-horizontal" novalidate>
+	<div class="modal-header">
+		<h3 class="modal-title">Termin</h3>
+	</div>
+	<div class="modal-body">
+		<div uib-tabset justified="false" class="no-tab-headder">
+			<div uib-tab>
+				<div uib-tab-heading><i class="fa fa-info"></i> Info</div>
+				<div class="row" style="border-bottom: 1px solid #DDD"></div>
+				<div class="row" style="border-bottom: 1px solid #DDD; margin-bottom: 20px;background-color: rgba(66,139,202,0.05);">
+					<div class="col-md-12">
+						<div class="form-group" style="padding-top: 20px" ng-class="{'has-error': form.sub && !form.hk.$valid}">
+							<label class="col-md-4 control-label">Hauptkategorie</label>
+							<div class="col-md-8">
+								<select name="hk" class="form-control" ng-model="hk" ng-options="hk.name for hk in kats[2]" ng-change="termin.cat_nr = hk.uks[0].id"
+									required>
+									<option value="">--- Bitte Wählen ---</option>
+									</select>
+									<span class="help-block" ng-show="form.sub && !form.hk.$valid">Erforderlich!</span>
+							</div>
+						</div>
+						<div class="form-group" ng-class="{'has-error': form.sub && !form.k.$valid}">
+							<label class="col-md-4 control-label">Unterkategorie</label>
+							<div class="col-md-8">
+								<select ng-disabled="!hk" name="k" class="form-control" ng-model="termin.cat_nr" ng-options="k.id as k.name for k in hk.uks"
+									required>
+									<option value="">--- Bitte Wählen ---</option>
+									</select>
+									<span class="help-block" ng-show="form.sub && !form.k.$valid">Erforderlich!</span>
+							</div>
+						</div>
+						<div class="form-group" ng-class="{'has-error': form.sub && !form.sort.$valid}">
+							<label class="col-md-4 control-label">Sortierung</label>
+							<div class="col-md-4">
+								<input name="sort" type="number" string-to-number class="form-control" placeholder="Sortnr." ng-model="termin.sortindex">
+							</div>
+							<div class="col-md-4">
+								<div ng-show="!rechte.hasRedakteur" class="checkbox">
+									<label><input type="checkbox" ng-model="termin.sichtbar" ng-init="termin.sichtbar= termin.sichtbar ? termin.sichtbar: '1'" ng-true-value="'1'" ng-false-value="'0'">Sichtbar</label>
+								</div>
+								<div ng-show="rechte.hasRedakteur == true" class="checkbox">
+									<label><input type="checkbox" ng-model="termin.freigabeanforderung" ng-init="termin.freigabeanforderung='0'" ng-true-value="'1'" ng-false-value="'0'">Freigabeanforderung</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<small>
+			<div class="form-group" ng-class="{'has-error': form.sub && !form.name.$valid}">
+				<label class="col-md-4 control-label">Bezeichnung</label>
+				<div class="col-md-8">
+					<input type="text" class="form-control" name="name" placeholder="Überschrift" ng-model="termin.titel" required>
+					<span class="help-block" ng-show="form.sub && !form.name.$valid">Erforderlich!</span>
+				</div>
+			</div>
+			<div class="form-group" ng-class="{'has-error': form.sub && (!form.dstart.$valid || !form.dend.$valid)}">
+				<label class="col-md-4 control-label">Datum</label>
+				<div class="col-md-4" >
+					<div class="input-group">
+						<input type="text" name="dstart" class="form-control" placeholder="von" ng-model="termin.date1" is-open="openStart" show-button-bar="false" datepicker-options="{showWeeks: false,	minDate: minDate}" uib-datepicker-popup="dd.MM.yyyy" required/>
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-default" ng-click="openStart=true"><i class="fa fa-calendar"></i></button>
+						</span>
+					</div>
+					<div class="help-block" ng-show="form.sub && !form.dstart.$valid">tt.mm.jjjj</div>
+				</div>
+				<div ng-show="termin.date1" class="col-md-4">
+					<div class="input-group">
+						<input type="text" name="dend" class="form-control" placeholder="bis" ng-model="termin.date2" is-open="openEnd" show-button-bar="false" datepicker-options="{showWeeks: false,	minDate: termin.date1}" uib-datepicker-popup="dd.MM.yyyy"/>
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-default" ng-click="openEnd=true"><i class="fa fa-calendar"></i></button>
+						</span>
+					</div>
+					<div class="help-block" ng-show="form.sub && !form.dend.$valid">tt.mm.jjjj</div>
+				</div>
+			</div>
+			<div ng-show="termin.date1" class="form-group">
+				<label class="col-md-4 control-label">Zeit</label>
+				<div class="col-md-4" ng-class="{'has-error': form.sub && !form.time1.$valid}">
+					<div class="input-group" uib-dropdown>
+						<input type="text" name="time1" class="form-control" placeholder="von" ng-model="termin.time1" pattern="([01]?[0-9]|2[0-4]):[0-5][0-9](:[0-5][0-9])?"/>
+						<ul uib-dropdown-menu style="max-height: 100px; overflow-x: hidden;">
+							<li ng-repeat="time in times" ng-click="termin.time1=time">{{time}}</li>
+						</ul>
+						<div class="input-group-btn" >
+							<button uib-dropdown-toggle type="button" class="btn btn-default" data-toggle="dropdown"><i class="fa fa-clock-o"></i></button>
+						</div>
+					</div>
+					<div class="help-block" ng-show="form.sub && !form.time1.$valid">ss:mm</div>
+				</div>
+				<div class="col-md-4" ng-class="{'has-error': form.sub && !form.time2.$valid}">
+					<div class="input-group" uib-dropdown> 
+						<input type="text" name="time2" class="form-control" placeholder="bis" ng-model="termin.time2" pattern="([01]?[0-9]|2[0-4]):[0-5][0-9](:[0-5][0-9])?"/>
+						<ul uib-dropdown-menu style="max-height: 100px; overflow-x: hidden;">
+							<li ng-repeat="time in times" ng-click="termin.time2=time">{{time}}</li>
+						</ul>
+						<span class="input-group-btn">
+							<button uib-dropdown-toggle type="button" class="btn btn-default"><i class="fa fa-clock-o"></i></button>
+						</span>
+					</div>
+					<div class="help-block" ng-show="form.sub && !form.time2.$valid">ss:mm</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label">Ort</label>
+				<div class="col-md-8">
+					<input type="text" class="form-control" placeholder="Veranstaltungsort" ng-model="termin.ort">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label">Dokument</label>
+				<div class="col-md-8">
+					<div class="input-group" style="width: 100%;">
+						<div ngf-drop="setFile($file)" ngf-select="setFile($file)" ng-model="file" ngf-multiple="false" ngf-allow-dir="false">
+							<input type="text" class="form-control" value="{{filename}}" placeholder="Durchsuchen..." readonly>
+						</div>
+						<span ng-if="termin.doclink" class="input-group-btn">
+							<a  target="_blank" ng-href="../api/termin/termin/file/{{termin.id}}" type="button" class="btn btn-default"><i class="fa fa-download"></i></a>
+							<button class="btn btn-default" ng-click="deleteFile()"><i class="fa fa-trash-o"></i></button>
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group" ng-if="termin.doclink || file" ng-class="{'has-error': form.sub && !form.docnotation.$valid}">
+				<div class="col-md-offset-4 col-md-8">
+					<input  type="text" class="form-control" name="docnotation" placeholder="Dokument-Text" ng-model="termin.docnotation" required>
+					<span class="help-block" ng-show="form.sub && !form.docnotation.$valid">Erforderlich!</span>
+				</div>
+			</div>
+			<div class="form-group" ng-class="{'has-error': form.sub && !form.link.$valid}">
+				<label class="col-md-4 control-label">Externer Link</label>
+				<div class="col-md-8">
+					<input type="url" name="link" class="form-control" placeholder="http://..." ng-model="termin.link" ng-change="termin.linktext = (termin.link == '' || !termin.link  ? null : termin.linktext)">
+					<span class="help-block" ng-show="form.sub && !form.link.$valid">Falsches Format!</span>
+				</div>
+			</div>
+			<div class="form-group" ng-if="termin.link">
+				<div class="col-md-offset-4 col-md-8">
+					<input type="text" class="form-control" placeholder="Link-Text" ng-model="termin.linktext">
+				</div>
+			</div>
+		</small>
+			</div>
+			<div uib-tab>
+				<div uib-tab-heading><i class="fa fa-pencil"></i> Inhalt</div>
+				<div class="row" style="border-bottom: 1px solid #DDD"></div>
+				<div style="padding-top: 20px"></div>
+				<my-inhalt form="form" image="data.image" link="termin.imglink" imgtext="termin.imgnotation" text="termin.inhalt" delete="deleteImage()"></my-inhalt>
+			</div>
+			<div uib-tab>
+				<div uib-tab-heading><i class="fa fa-paperclip"></i> Zuordnung</div>
+				<div class="row" style="border-bottom: 1px solid #DDD"></div>
+				<div uib-accordion>
+					<my-acc-group label="'Katalog'" bereich="'katalog'" values="termin.katalog.items" kats="kats[4]"></my-acc-group>
+					<my-acc-group label="'News'" bereich="'news'" values="termin.news.items" kats="kats[1]"></my-acc-group>
+					<my-acc-group label="'Termine'" bereich="'termin'" values="termin.termin.items" kats="kats[2]"></my-acc-group>
+					<my-acc-group label="'Dokumente'" bereich="'dokument'" values="termin.dokument" kats="kats[6]"></my-acc-group>
+					<my-acc-group label="'Galerie'" bereich="'galerie'" values="termin.galerie" kats="kats[5]"></my-acc-group>
+					<my-acc-group label="'Adresse'" bereich="'nutzer'" values="termin.nutzer" kats="kats[3]"></my-acc-group>
+					<my-acc-group label="'Formulare'" values="termin.formular"></my-acc-group>
+					<my-acc-group label="'Artikel'" values="termin.artikel"></my-acc-group>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer has-error">
+		<span class="help-block" ng-show="form.sub && !form.$valid">Eingaben überprüfen!</span>
+		<div class="row">
+			<div class="col-md-6" align="left">
+				<button class="btn btn-link btn-sm" type="button" ng-click="close('delete')" ng-show="termin.id && (editable || termin.cat_nr==0)"><i class="fa fa-trash-o"></i> Löschen</button>
+				<button class="btn btn-link btn-sm" type="button" ng-click="termin.id=null;termin.titel=null" ng-show="termin.id && (editable || termin.cat_nr==0)"><i class="fa fa-clone"></i> Kopieren</button>
+			</div>
+			<div class="col-md-6">
+				<button class="btn btn-primary btn-sm" type="button" ng-click="form.$valid ? close('put') : form.sub=true" ng-show="termin.id && (editable || termin.cat_nr==0)">Ändern</button>
+				<button class="btn btn-primary btn-sm" type="button" ng-click="form.$valid ? close('post') : form.sub=true" ng-show="!termin.id">Erstellen</button>
+				<button class="btn btn-default btn-sm" type="button" ng-click="close()">Abbrechen</button>
+			</div>
+		</div>
+	</div>
+</form>

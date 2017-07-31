@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<div ng-cloak>
+	<h1>{{title}}</h1>
+	<hr>
+	<div class="row">
+		<div class="col-md-6 ">
+			<form class="form-horizontal" ng-controller="KatCtrl">
+				<div class="form-group">
+					<label class="col-md-3 control-label">Hauptkategorie</label>
+					<div class="col-md-9">
+						<div ng-class="{'input-group': rechte.admin.kategv}">
+							<select class="form-control" ng-model="selectKat.hk" ng-options="(hk.name + (hk.sicher == '1' ? ' (Geschützt)' : '')) for hk in kats[bereich_id]">
+								<option value="">--- Alle ---</option>
+							</select>
+							<span ng-if="rechte.admin.kategv" class="input-group-btn">
+								<button class="btn btn-default" type="button" ng-disabled="!selectKat.hk" ng-click="openKatModal('hk')"><i class="fa fa-pencil"></i></button>
+								<button class="btn btn-default" type="button" ng-click="openKatModal('hk', true)"><i class="fa fa-plus"></i></button>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">Unterkategorie</label>
+					<div class="col-md-9">
+						<div ng-class="{'input-group': rechte.admin.kategv}">
+							<select class="form-control" ng-model="selectKat.k" ng-disabled="!selectKat.hk" ng-options="k.name for k in selectKat.hk.uks">
+								<option value="">--- Alle ---</option>
+							</select>
+							<span ng-if="rechte.admin.kategv" class="input-group-btn">
+								<button class="btn btn-default" type="button" ng-disabled="!selectKat.k" ng-click="openKatModal('k')"><i class="fa fa-pencil"></i></button>
+								<button class="btn btn-default" type="button" ng-disabled="!selectKat.hk" ng-click="openKatModal('k', true)"><i class="fa fa-plus"></i></button>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label">Stichwort</label>
+					<div class="col-md-9">
+						<input class="form-control" type="search" ng-model="selectKat.filter" ng-change="currentPage = 1">
+					</div>
+				</div>
+				<div class="form-group" ng-show="selectKat.hk">
+					<label class="col-md-3 control-label"></label>
+					<div class="col-md-9">
+						<small><a ng-click="selectKat.hk = null; selectKat.k = null" href="">{{title}}</a> &gt; <a ng-click="selectKat.k = null" href="">{{selectKat.hk.name}}</a> {{selectKat.k ? '&gt; '+selectKat.k.name : ''}}</small>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="col-md-6 text-right">
+			<button class="btn btn-success" ng-click="openModal()"><i class="fa fa-plus"></i> Neu</button>
+		</div>
+	</div>
+	<hr>
+	<div ng-if="rows && rows.length > 0" ng-init="currentPage=1">
+		<div>
+			<table class="table table-condensed table-hover">
+				<thead ng-init="sortType='stamp';sortReverse=true">
+					<tr>
+						<th class="hidden-xs hidden-sm"></th>
+						<th style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+							<a href="" ng-click="sortType='titel'; sortReverse=!sortReverse; currentPage=1">Name
+								<small><span ng-show="sortType=='titel'" ng-class="{true:'fa fa-caret-down',false:'fa fa-caret-up'}[sortReverse]"></span></small>
+							</a>
+						</th>
+						<th class="hidden-xs">
+							<a href="" ng-click="sortType = 'stamp'; sortReverse=!sortReverse; currentPage=1">Letzte Aktion
+								<small><span ng-show="sortType=='stamp'" ng-class="{true:'fa fa-caret-down',false:'fa fa-caret-up'}[sortReverse]"></span></small>
+							</a>
+						</th>
+						<th align="right" class="text-right">
+							<a href="" ng-click="sortType = 'sichtbar'; sortReverse=!sortReverse; currentPage=1">Sichtbar
+								<small><span ng-show="sortType=='sichtbar'" ng-class="{true:'fa fa-caret-down',false:'fa fa-caret-up'}[sortReverse]"></span></small>
+							</a>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="row in (filtered = (rows | filter:{titel: selectKat.filter})) | orderBy:sortType:sortReverse | limitTo:10:(currentPage-1)*10"
+					 ng-click="openModal(row.id)" style="cursor:pointer" ng-style="row.archiv && !enter && {'opacity': 0.5}" ng-mouseenter="enter=true"
+					 ng-mouseleave="enter=false">
+						<td class="hidden-xs hidden-sm">
+							<div ng-if="bereich != 'dokument'" class="thumb text-center" style="height:60px; width:60px;" ng-style="row.imgthumb && {'background-image': 'url(../api/datei/'+row.imgthumb+')'}"><i ng-if="!row.imgthumb" class="fa fa-3x" ng-class="{'fa-newspaper-o': bereich=='news', 'fa-book': bereich=='katalog','fa-user': bereich=='nutzer','fa-picture-o': bereich=='galerie','fa-calendar': bereich=='termin'}"></i></div>
+							<div ng-if="bereich == 'dokument'" style="height:60px; width:60px;" class="text-center">
+								<span class="fa fa-file-o fa-3x" ng-class="{'fa-file-pdf-o': row.typ=='pdf', 'fa-file-excel-o': row.typ=='xls' || row.typ=='xlsx', 'fa-file-text-o': row.typ=='txt', 'fa-file-image-o': row.typ=='jpg' || row.typ=='jpeg' || row.typ=='png' || row.typ=='gif'}"></span>
+							</div>
+						</td>
+						<td style="width:70%;">
+							<div><strong><span ng-show="row.sicher == '1'"><i class="fa fa-lock"></i> </span>{{row.titel}}</strong></div>
+							<div ng-if="row.red"><small>Redakteur: {{row.red}}</small></div>
+							<div ng-if="row.date1" ng-switch="row.archiv==1">
+								<div ng-switch-when="true" class="text-danger">
+									<s><b>{{row.date1}}</b><b ng-if="row.date2"> - {{row.date2}}</b></s>
+								</div>
+								<div ng-switch-when="false" ng-class="{true:'text-warning',false:'text-success'}[row.upcoming==1]"><b>{{row.date1}}</b><b ng-if="row.date2"> - {{row.date2}}</b></div>
+							</div>
+						</td>
+						<td class="hidden-xs"><small>{{row.stamp}}</small></td>
+						<td align="right">
+							<a type="button" class="btn btn-sm" ng-class="{1:'btn-success',0:'btn-danger', 2:'btn-warning'}[row.freigabeanforderung == 1 ? 2 : row.sichtbar]"
+							 ng-click="$event.stopPropagation(); toggleSichtbar(row);"><span class="fa fa-fw" ng-class="row.sichtbar==1 ? 'fa-check':'fa-times'"></span></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="text-center" ng-show="filtered.length > 10">
+				<div uib-pagination class="pagination-sm my-pagination" total-items="filtered.length" ng-model="currentPage" max-size="5"
+				 previous-text="&#xf048;" next-text="&#xf051;" first-text="&#xf049;" last-text="&#xf050;" boundary-links="true"></div>
+			</div>
+		</div>
+	</div>
+	<!--<div ng-show="!rows" class="text-center" ><i class="text-primary fa fa-circle-o-notch fa-spin fa-3x fa-fw margin-bottom"></i></div>-->
+	<div ng-show="!rows" class="text-center"><img class="xxx-rotate" src="../template/images/loading.png"></div>
+</div>

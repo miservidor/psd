@@ -1,0 +1,112 @@
+<div class="row">
+	<div class="col-xs-3">
+		<p class="search-stats small text-muted" style="padding:10px;">
+			<span ng-if="list.page <= 1">{{data.totalCount}} Ergebnisse</span>
+			<span ng-if="list.page > 1">Seite {{list.page}} von {{data.totalCount}} Ergebnissen</span>
+			({{data.timing / 1000 | number}} Sekunden)
+		</p>
+	</div>
+	<div class="col-xs-9">
+		<span class="label label-primary" style="cursor:pointer;" ng-click="list.facet_gruppen_pfade = ''; list.page = 1;" ng-if="list.facet_gruppen_pfade">Artikelgruppe: {{list.facet_gruppen_pfade}} <i class="fa fa-times"></i></span>
+		<span class="label label-primary" style="cursor:pointer;" ng-click="list.facet_price_range = ''; list.page = 1;" ng-if="list.facet_price_range">Preis: {{list.facet_price_range}} <i class="fa fa-times"></i></span>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-xs-3">
+		<div class="search-facets" ng-include="'article/search/facets.html'"></div>
+	</div>
+	<div class="col-xs-9">
+		<div ng-repeat="article in data.articles track by $index" style="margin-bottom:10px;" ng-include="'article/search/result-list.html'"></div>
+		<div class="search-pagination" ng-include="'article/search/pagination.html'"></div>
+	</div>
+</div>
+
+
+<script type="text/ng-template" id="article/search/facets.html">
+	<h4>Artikelgruppen</h4>
+	<ul id="search-aggregation-gruppen" class="category-list">
+		<li ng-repeat="group in data.aggregations.gruppen.groups" ng-include="'article/search/facet-gruppe.html'"></li>
+	</ul>
+
+	<h4>Preise</h4>
+	<ul id="search-aggregation-prices" class="ranges-list">
+		<li ng-repeat="range in data.aggregations.prices.ranges" ng-if="range.doc_count > 0" ng-include="'article/search/facet-price.html'"></li>
+	</ul>
+</script>
+
+<script type="text/ng-template" id="article/search/facet-gruppe.html">
+	<a style="cursor:pointer;" ng-click="list.facet_gruppen_pfade = group.path; list.page = 1;" ng-class="{'active': group.path == list.facet_gruppen_pfade}"><span>{{facets_groups[group.name]}}</span><span>({{group.articleCount}})</span></a>
+	<ul ng-if="group.subGroups">
+		<li ng-repeat="group in group.subGroups" ng-include="'article/search/facet-gruppe.html'"></li>
+	</ul>
+</script>
+
+<script type="text/ng-template" id="article/search/facet-price.html">
+	<label style="cursor:pointer;"><input type="radio" name="price" ng-checked="range.desc == list.facet_price_range" ng-click="list.facet_price_range = range.desc; list.page = 1;"/> {{range.desc}} € <span>({{range.doc_count}})</span></label>
+</script>
+
+<script type="text/ng-template" id="article/search/result-list.html">
+	<a ui-sref="article({id:article.bezeichnung,artnr:article.artikelnummer})">
+		<div class="row">
+			<div class="col-md-2">
+				<div class="artikelliste_liste_bildcontainer">
+					<img ng-src="{{article.artikelbild[0]}}">
+				</div>
+			</div>
+			<div class="col-md-10" style="margin-bottom: 1ex;">
+				<p><strong>{{article.bezeichnung}}</strong></p>
+				<p>{{article.zusatz}}</p>
+				<p ng-if="row.bestandsanzeige_als_zahl && article.bestand">{{article.bestand.Value}}</p>
+				<p ng-if="!row.bestandsanzeige_als_zahl && article.bestand">
+					<i class="fa fa-circle" ng-class="{'circle_red':article.bestand.Ampel=='r','circle_yellow':article.bestand.Ampel=='y','circle_green':article.bestand.Ampel=='g'}" aria-hidden="true"></i>
+					{{l[article.bestand.Sprachvariable]}}
+				</p>
+				<div ng-if="!article.artikelpreis.Aktion">
+					<p ng-if="article.artikelpreis.Netto && !article.artikelpreis.Brutto">{{article.artikelpreis.Netto | currency:''}}<span ng-bind-html="trust(article.artikelpreis.Symbol)"></span><sup>*</sup></p>
+					<p ng-if="article.artikelpreis.Netto &&  article.artikelpreis.Brutto">{{article.artikelpreis.Netto | currency:''}}<span ng-bind-html="trust(article.artikelpreis.Symbol)"></span> ({{article.artikelpreis.Brutto
+						| currency:''}} <span ng-bind-html="trust(article.artikelpreis.Symbol)"></span><sup>*</sup>)</p>
+					<p ng-if="!article.artikelpreis.Netto && article.artikelpreis.Brutto">{{article.artikelpreis.Brutto | currency:''}}<span ng-bind-html="trust(article.artikelpreis.Symbol)"></span><sup>*</sup></p>
+					<p ng-if="!article.artikelpreis.Netto && !article.artikelpreis.Brutto">{{l.lng_artikelliste_preis_auf_anfrage}}</p>
+				</div>
+				<div ng-if="article.artikelpreis.Aktion">
+					<p ng-if="article.artikelpreis.Aktion.Netto && !article.artikelpreis.Aktion.Brutto">{{article.artikelpreis.Aktion.Netto | currency:''}}<span ng-bind-html="trust(article.artikelpreis.Symbol)"></span><sup>*</sup></p>
+					<p ng-if="!article.artikelpreis.Aktion.Netto && article.artikelpreis.Aktion.Brutto">{{article.artikelpreis.Aktion.Brutto | currency:''}}<span ng-bind-html="trust(article.artikelpreis.Symbol)"></span><sup>*</sup></p>
+					<p ng-if="article.artikelpreis.Aktion.Netto && article.artikelpreis.Aktion.Brutto">{{article.artikelpreis.Aktion.Netto | currency:''}}<span ng-bind-html="trust(article.artikelpreis.Symbol)"></span> ({{article.artikelpreis.Aktion.Brutto
+						| currency:''}}<span ng-bind-html="trust(article.artikelpreis.Symbol)"></span><sup>*</sup>)</p>
+				</div>
+				<p><small>{{article._score}}</small></p>
+			</div>
+		</div>
+	</a>
+</script>
+
+<script type="text/ng-template" id="article/search/pagination.html">
+	<nav ng-if="data.pageCount > 1">
+		<ul class="pagination pagination-sm">
+			<li ng-class="{'disabled': list.page <= 1}" >
+				<a ng-if="list.page > 1" ng-click="list.page = (list.page - 1)" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+				<span ng-if="list.page <= 1" aria-hidden="true">&laquo;</span>
+			</li>
+			<li ng-if="data.pageCount > 10 && list.page > 3">
+				<a ng-click="list.page = 1" aria-label="First"><span aria-hidden="true">First</span></a>
+			</li>
+			<li ng-if="data.pageCount > 10 && list.page > 3">
+				<span aria-hidden="true">...</span>
+			</li>
+			<li ng-repeat="p in range(data.pageCount) track by $index" ng-if="data.pageCount <= 10 || ($index >= list.page - 3 && $index < list.page + 2)" ng-class="{'active': list.page == $index + 1}">
+				<a ng-click="list.page = ($index + 1)">{{$index + 1}}</a>
+			</li>
+			<li ng-if="data.pageCount > 10 && list.page < data.pageCount - 2">
+				<span aria-hidden="true">...</span>
+			</li>
+			<li ng-if="data.pageCount > 10 && list.page < data.pageCount - 2">
+				<a ng-click="list.page = data.pageCount" aria-label="Last"><span aria-hidden="true">Last</span></a>
+			</li>
+			<li ng-class="{'disabled': list.page >= data.pageCount}" >
+				<a ng-if="list.page < data.pageCount" ng-click="list.page = (list.page + 1)" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+				<span ng-if="list.page >= data.pageCount" aria-hidden="true">&raquo;</span>
+			</li>
+		</ul>
+	</nav>
+</script>

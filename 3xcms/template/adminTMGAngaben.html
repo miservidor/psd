@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<h1>TMG Angaben</h1>
+<hr>
+
+<div class="row" style="margin-bottom:20px;">
+    <div class="col-xs-offset-10 col-xs-2">
+        <select class="form-control" ng-model="l.lang" ng-options="lang.lang as lang.description + ' ('+lang.lang+')' for lang in list"></select>
+    </div>
+</div>
+
+<uib-tabset active="l.tmg">
+    <uib-tab ng-repeat="t in tmg" index="t.id" heading="{{t.titel}}" ng-click="l.tmg=t.id">
+        <div class="row" ng-include="'tmg.html'"></div>
+    </uib-tab>
+</uib-tabset>
+
+
+<script type="text/ng-template" id="tmg.html">
+    <div class="col-xs-12" style="margin-top:20px;text-align:right">
+        <div class="col-xs-offset-7 col-xs-2"><div ng-show="t.id==3 || t.id==4"><label>dyn. Angaben</label><br><button class="btn" ng-class="{'btn-success':data.dynangaben==1,'btn-danger':data.dynangaben!=1}" ng-click="data.dynangaben = data.dynangaben==1 ? 0 : 1"><span class="fa fa-fw" ng-class="data.dynangaben=='1' ? 'fa-check':'fa-times'"></span></button></div></div>
+        <div class="col-xs-2"><label>Position</label><input type="number" min="1" max="6" class="form-control" ng-model="data.sortindex"/></div>
+        <div class="col-xs-1"><label>Aktiv</label><button class="btn" ng-class="{'btn-success':data.aktiv==1,'btn-danger':data.aktiv!=1}" ng-click="data.aktiv = data.aktiv==1 ? 0 : 1"><span class="fa fa-fw" ng-class="data.aktiv=='1' ? 'fa-check':'fa-times'"></span></button></div>
+    </div>
+    <div class="col-xs-12" style="text-align:left;">
+        <div text-angular ta-unsafe-sanitizer="true" ta-toolbar="[['p','h1','h2','h3'],['bold','italics','underline'],['ul','ol'], ['indent','outdent'], ['insertLink','html']]" ng-model="data[l.lang]"  ta-show-html="true"></div>
+    </div>
+    <div class="col-xs-12" ng-if="(t.id==3) && data.dynangaben" style="margin-top:10px;" ng-include="'dyn_lieferangaben.html'"></div>
+    <div class="col-xs-12" ng-if="(t.id==4) && data.dynangaben" style="margin-top:10px;" ng-include="'dyn_zahlungsangaben.html'"></div>
+    <div class="col-xs-12" style="margin-top:20px;text-align:right">
+        <button class="btn btn-success" ng-click="save(data)">Speichern</button>
+    </div>
+</script>
+
+<script type="text/ng-template" id="dyn_lieferangaben.html">
+	<table class="table TmgTab1" ng-if="data.data">
+        <thead>
+            <th width="20%"></th>
+            <th width="35%">Bestellwert</th>
+            <th width="35%">Gewicht</th>
+            <th width="10%" style="text-align:right">Versandkosten</th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="d in data.data">
+                <td><b>{{d.Bezeichnung}}</b></td>
+                <td colspan="3">
+                    <table class="table TmgTab2">
+                        <tr ng-repeat="v in d.Versandkosten" >
+                            <td width="399px" ng-class="{'noBorder':$last}">
+                                <table class="table TmgTab3">
+                                    <tr>
+                                        <td width="10%"><span ng-if="v.Umsatz.Bis">von</span><span ng-if="!v.Umsatz.Bis">ab</span></td>
+                                        <td width="20%">{{v.Umsatz.Von | currency:''}} €</td>
+                                        <td width="10%"><span ng-if="v.Umsatz.Bis">bis</span></td>
+                                        <td width="20%"><span ng-if="v.Umsatz.Bis">{{v.Umsatz.Bis | currency:''}} €</span></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td width="399px" ng-class="{'noBorder':$last}">
+                                <table class="table TmgTab3">
+                                    <tr ng-repeat="vg in v.Gewicht">
+                                        <td width="10%"><span ng-if="vg.Bis">von</span><span ng-if="!vg.Bis">ab</span></td>
+                                        <td width="20%">{{vg.Von}} kg</td>
+                                        <td width="10%"><span ng-if="vg.Bis">bis</span></td>
+                                        <td width="20%"><span ng-if="vg.Bis">{{vg.Bis}} kg</span></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td width="113px" ng-if="v.Gewicht" ng-class="{'noBorder':$last}" style="text-align:right">
+                                <table class="table  TmgTab3"><tr ng-repeat="vg in v.Gewicht"><td><b>{{vg.Versandkosten | currency:''}}€</b></td></tr></table>
+                            </td>
+                            <td  width="113px" ng-if="!v.Gewicht" ng-class="{'noBorder':$last}" style="text-align:right">
+                                <table class="table  TmgTab3"><tr><td><b>{{v.Versandkosten | currency:''}}€</b></td></tr></table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</script>
+
+<script type="text/ng-template" id="dyn_zahlungsangaben.html">
+    <table class="table" ng-if="data.data">
+        <thead>
+            <th>Zahlungsmethode</th>
+            <th>Beschreibung</th>
+            <th>Daten</th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="d in data.data">
+                <td>{{d.Bezeichnung}}</td>
+                <td>{{d.zb_zusatz}}</td>
+                <td>
+                    <div ng-if="d.Id==1">
+                        <label>Kreditinstitut:</label> {{d.zb_angaben.kreditinstitut}}<br>
+                        <label>IBAN:</label> {{d.zb_angaben.iban}}<br>
+                        <label>BIC:</label> {{d.zb_angaben.bic}}
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</script>

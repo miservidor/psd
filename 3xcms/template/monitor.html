@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<h1>Monitor</h1>
+<hr>
+<div class="col-md-6">
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h2 class="panel-title">Allgemeines</h2>
+		</div>
+		<div class="panel-body">
+			<table class="table table-condensed">
+				<col class="col-md-4"/>
+				<col class="col-md-8"/>
+				<tbody>
+					<tr><td style="border-top: none;"><strong>Angemeldet als:</strong></td><td style="border-top: none;">{{mdata.user.usern}}</td></tr>
+					<tr><td><strong>Angemeldet seit:</strong></td><td>{{mdata.user.curr_login_stamp}}</td></tr>
+					<tr><td><strong>Letzte Anmeldung:</strong></td><td>{{mdata.user.last_login_stamp}}</td></tr>
+					<tr><td><strong>Sprachen:</strong></td><td>{{mdata.user.sprache}}</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h2 class="panel-title">Daten</h2>
+		</div>
+		<div class="panel-body">
+			<div class="table-responsive">
+				<table class="table table-condensed rightTable">
+					<thead>
+						<tr><th>Kategorie</th><th>Aktuell</th><th>Vorbereitet</th><th>Gesamt <small>(inkl. Archiv)</small></th></tr>
+					</thead>
+					<tbody>
+						<tr ng-if="mdata.data.katalog"><td><a ui-sref="katalog"><i class="fa fa-book fa-fw"></i> Katalog</a></td>
+							<td>{{mdata.data.katalog.aktuell}}</td>
+							<td>{{mdata.data.katalog.vorbereitet}}</td>
+							<td>{{mdata.data.katalog.anzahl}}</td>
+						</tr>
+						<tr ng-if="mdata.data.news"><td><a ui-sref="news"><i class="fa fa-newspaper-o fa-fw"></i> News</a></td>
+							<td>{{mdata.data.news.aktuell}}</td>
+							<td>{{mdata.data.news.vorbereitet}}</td>
+							<td>{{mdata.data.news.anzahl}}</td>
+						</tr>
+						<tr ng-if="mdata.data.termin"><td><a ui-sref="termin"><i class="fa fa-calendar fa-fw"></i> Termine</a></td>
+							<td>{{mdata.data.termin.aktuell}}</td>
+							<td>{{mdata.data.termin.vorbereitet}}</td>
+							<td>{{mdata.data.termin.anzahl}}</td>
+						</tr>
+						<tr ng-if="mdata.data.dokument"><td><a ui-sref="dokument"><i class="fa fa-files-o fa-fw"></i> Dokumente</a></td>
+							<td>{{mdata.data.dokument.aktuell}}</td>
+							<td>{{mdata.data.dokument.vorbereitet}}</td>
+							<td>{{mdata.data.dokument.anzahl}}</td>
+						</tr>
+						<tr ng-if="mdata.data.galerie"><td><a ui-sref="galerie"><i class="fa fa-picture-o fa-fw"></i> Galerie</a></td>
+							<td>{{mdata.data.galerie.aktuell}}</td>
+							<td>{{mdata.data.galerie.vorbereitet}}</td>
+							<td>{{mdata.data.galerie.anzahl}}</td>
+						</tr>
+						<tr ng-if="mdata.data.nutzer"><td><a ui-sref="nutzer"><i class="fa fa-envelope-o fa-fw"></i> Adressen</a></td>
+							<td>{{mdata.data.nutzer.aktuell}}</td>
+							<td>{{mdata.data.nutzer.vorbereitet}}</td>
+							<td>{{mdata.data.nutzer.anzahl}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div ng-if="mdata.change" class="panel panel-primary">
+		<div class="panel-heading">
+			<h2 class="panel-title">Veröffentlichungen / Änderungen der letzten 14 Tage</h2>
+		</div>
+		<div class="panel-body" ng-init="size = 1">
+			<table class="table table-condensed rightTable">
+				<col class="col-md-8"/>
+				<col class="col-md-4"/>
+				<tr ng-if="mdata.change.news.length > 0">
+					<th><a ui-sref="news"><i class="fa fa-newspaper-o fa-fw"></i> News</a></th>
+					<th>letzte Aktion</th>
+				</tr>
+				<tr ng-repeat="i in mdata.change.news | limitTo:size">
+					<td><small><a ui-sref="news({id: i.id})">{{i.titel}}</a></small></td>
+					<td><small>{{i.stamp}}</small></td>
+				</tr>
+				<tr ng-if="mdata.change.termin.length > 0">
+					<th><a ui-sref="termin"><i class="fa fa-calendar fa-fw"></i>  Termine</a></th>
+					<th>letzte Aktion</th>
+				</tr>
+				<tr ng-repeat="i in mdata.change.termin | limitTo:size">
+					<td><small><a ui-sref="termin({id: i.id})">{{i.titel}}</a></small></td>
+					<td><small>{{i.tstamp}}</small></td>
+				</tr>
+				<tr ng-if="mdata.change.nutzer.length > 0">
+					<th><a ui-sref="nutzer"><i class="fa fa-envelope-o fa-fw"></i>  Adressen</a></th>
+					<th>letzte Aktion</th>
+				</tr>
+				<tr ng-repeat="i in mdata.change.nutzer | limitTo:size">
+					<td><small><a ui-sref="nutzer({id: i.id})">{{i.name2}}</a></small></td>
+					<td><small>{{i.bstamp}}</small></td>
+				</tr>
+				<tr ng-if="mdata.change.katalog.length > 0">
+					<th><a ui-sref="katalog"><i class="fa fa-book fa-fw"></i>  Katalog</a></th>
+					<th>letzte Aktion</th>
+				</tr>
+				<tr ng-repeat="i in mdata.change.katalog | limitTo:size">
+					<td><small><a ui-sref="katalog({id: i.id})">{{i.titel}}</a></small></td>
+					<td><small>{{i.kstamp}}</small></td>
+				</tr>
+				<tr ng-if="mdata.change.galerie.length > 0">
+					<th><a ui-sref="galerie"><i class="fa fa-picture-o fa-fw"></i>  Galerie</a></th>
+					<th>letzte Aktion</th>
+				</tr>
+				<tr ng-repeat="i in mdata.change.galerie | limitTo:size">
+					<td><small><a ui-sref="galerie({id: i.id})">{{i.galerie_info}}</a></small></td>
+					<td><small>{{i.gstamp}}</small></td>
+				</tr>
+				<tr ng-if="mdata.change.dokument.length > 0">
+					<th><a ui-sref="dokument"><i class="fa fa-files-o fa-fw"></i>  Dokumente</a></th>
+					<th>letzte Aktion</th>
+				</tr>
+				<tr ng-repeat="i in mdata.change.dokument | limitTo:size">
+					<td><small><a ui-sref="dokument({id: i.id})">{{i.docnotation}}</a></small></td>
+					<td><small>{{i.dstamp}}</small></td>
+				</tr>
+				<tr><td></td><td><a class="btn btn-default" ng-click="size == 1 ? size=100 : size=1">{{size == 1 ? "alle anzeigen" : "zurück"}}</a></td></tr>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="col-md-6">
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h2 class="panel-title">Besucher</h2>
+		</div>
+		<div class="panel-body">
+			<div class="table-responsive">
+				<table class="table table-condensed rightTable">
+					<thead>
+						<tr><th></th><th>Heute</th><th>Gestern</th><th>Vorgestern</th></tr>
+					</thead>
+					<tbody>
+						<tr><td><strong>Besucher</strong></td><td>{{mdata.stats.today.v}}</td><td>{{mdata.stats.yesterday.v}}</td><td>{{mdata.stats.tdbyesterday.v}}</td></tr>
+						<tr><td><strong>Seitenaufrufe</strong></td><td>{{mdata.stats.today.h}}</td><td>{{mdata.stats.yesterday.h}}</td><td>{{mdata.stats.tdbyesterday.h}}</td></tr>
+						<tr><td><strong>Online</strong></td><td>{{mdata.stats.today.o}}</td><td>{{mdata.stats.yesterday.o}}</td><td>{{mdata.stats.tdbyesterday.o}}</td></tr>
+					</tbody>
+				</table>
+			</div>
+			<hr>
+			<div class="row">
+				<div class="col-md-6 form-group">
+					<label>Jahr</label>
+					<select class="form-control" ng-model="year" ng-options="y for y in years"></select>
+				</div>
+				<div class="col-md-6 form-group">
+					<label>Monat</label>
+					<select class="form-control" ng-model="month" ng-options="m.mn for m in months | filter:{y:year}">
+						<option value="">ALLE</option>
+					</select>
+				</div>
+			</div>	
+			<canvas class="chart chart-line" chart-data="stats" chart-series="['Besucher']" chart-labels="labels" chart-options="{tooltips: {}, scales: {xAxes: [{gridLines: {display:false}}],yAxes: [{gridLines: {display:false}}]}}"></canvas>
+			<div class="row pull-right">
+				<div class="col-md-12 form-group">
+					<table class="rightTable" >
+						<tr><td class="pull-right"><small style="padding-right:10px">Durchschnitt: </small></td><td> <small>{{durchschnitt}}</small></td></tr>
+						<tr><td class="pull-right"><small style="padding-right:10px">Gesamt: </small></td><td> <small>{{gesamt}}</small></td></tr>
+					</table>
+				</div>
+			</div>		
+		</div>
+	</div>
+	<div ng-if="mdata.piwik">
+		<a ng-href="http://{{mdata.piwik}}" target="_blank">Weitere Statistiken</a>
+	</div>
+</div>
+

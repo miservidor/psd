@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<style type="text/css">
+	.angular-ui-tree-handle {
+		background: #f8faff;
+		border: 1px solid #dae2ea;
+	}
+
+	.angular-ui-tree-handle:hover {
+		background: #f4f6f7;
+		border-color: #dce2e8;
+	}
+
+	.angular-ui-tree-placeholder {
+		background: #f0f9ff;
+		border: 1px dashed #bed2db;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+
+	.tree-node {
+		border: 1px solid #dae2ea;
+		background: #f8faff;
+		padding: 10px;
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+</style>
+
+<script type="text/ng-template" id="nodes_renderer.html">
+	<div ui-tree-handle class="tree-node tree-node-content">
+		<button class="btn btn btn-default btn-sm" ng-class="{'btn-success': node.nodes.length>0}" ng-disabled="!node.nodes || node.nodes.length==0"
+		 data-nodrag ng-click="toggle(this)"><span class="fa fa-fw" ng-class="{'fa-caret-right': collapsed || node.nodes.length==0,'fa-caret-down': !collapsed}"></span></button>
+		<span ng-if="node.values.icon" class="fa fa-fw" ng-class="node.values.icon"></span> {{node.values.titel}} ({{node.values.lang}})
+		<div class="pull-right" data-nodrag>
+			<button class="btn btn-default btn-sm" ng-class="{'btn-success': node.start}" ng-click="setStart(node)"><i class="fa fa-play"></i></button>
+			<button class="btn btn-default btn-sm" ng-click="changeItem(this.$modelValue)"><i class="fa fa-fw fa-pencil"></i></button>
+			<button class="btn btn-default btn-sm" ng-click="newItem(this.$modelValue)" ng-disabled="this.$modelValue.values.action.type!='portal'"
+			 data-nodrop-enabled="this.$modelValue.values.action.type=='bereich'"><i class="fa fa-fw fa-plus"></i></button>
+			<button class="btn btn-danger btn-sm" ng-click="delete() ? remove(this): ''"><i class="fa fa-fw fa-trash-o"></i></button>
+		</div>
+	</div>
+	<ol ui-tree-nodes ng-model="node.nodes" ng-class="{'hidden': collapsed}">
+		<li ng-repeat="node in node.nodes" ui-tree-node ng-include="'nodes_renderer.html'"></li>
+	</ol>
+</script>
+
+<h1>{{title}}</h1>
+<hr>
+<button class="btn btn-default btn-sm" ng-click="newItem()"><i class="fa fa-plus"></i> Neuer Hauptpunkt</button>
+<button class="btn btn-default btn-sm" ng-click="collapse(false)"><i class="fa fa-caret-down"></i> Alle ausklappen</button>
+<button class="btn btn-default btn-sm" ng-click="collapse(true)"><i class="fa fa-caret-up"></i> Alle einklappen</button>
+
+<div ng-if="data.items.length>0">
+	<hr>
+	<div ui-tree id="tree-root">
+		<ol ui-tree-nodes ng-model="data.items">
+			<li ng-repeat="node in data.items" ui-tree-node ng-include="'nodes_renderer.html'"></li>
+		</ol>
+	</div>
+	<hr>
+</div>
+
+<script type="text/ng-template" id="template/adminMenuModalNeu.html">
+	<div class="modal-header">
+		<h3 class="modal-title">Menüpunkt</h3>
+	</div>
+	<form class="form-horizontal" name="form" novalidate>
+		<div class="modal-body">
+			<div class="form-group" ng-class="{'has-error': form.sub && !form.name.$valid}">
+				<label class="col-md-4 control-label">Name *</label>
+				<div class="col-md-8">
+					<input type="text" name="name" class="form-control" ng-model="values.titel" required>
+					<span class="help-block" ng-show="form.sub && !form.name.$valid">Erforderlich!</span>
+				</div>
+			</div>
+			<div ng-if="values.action.type=='login'" class="form-group" ng-class="{'has-error': form.sub && !form.altname.$valid}">
+				<label class="col-md-4 control-label">Name Alternativ *</label>
+				<div class="col-md-8">
+					<input type="text" name="altname" class="form-control" ng-model="values.titel_alt" required>
+					<span class="help-block" ng-show="form.sub && !form.altname.$valid">Erforderlich!</span>
+				</div>
+			</div>
+			<div class="form-group" ng-class="{'has-error': form.sub && !form.sprache.$valid}">
+				<label class="col-md-4 control-label">Sprache *</label>
+				<div class="col-md-8">
+					<select class="form-control" name="sprache" ng-model="values.lang" ng-options="l.lang as l.description for l in lang" required>
+						<option value="">--- Bitte Wählen ---</option>
+					</select>
+					<span class="help-block" ng-show="form.sub && !form.sprache.$valid">Erforderlich!</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label">Icon</label>
+				<div class="col-md-8">
+					<div class="input-group">
+						<span class="input-group-btn">
+							<a class="btn btn-default" href="http://fontawesome.io/icons/" target="_blank"><i class="fa fa-search" aria-hidden="true"></i></a>
+						</span>
+						<input type="text" class="form-control" ng-model="values.icon">
+					</div>
+				</div>
+			</div>
+			<div ng-if="values.action.type=='login'" class="form-group">
+				<label class="col-md-4 control-label">Icon Alternativ</label>
+				<div class="col-md-8">
+					<div class="input-group">
+						<span class="input-group-btn">
+							<a class="btn btn-default" href="http://fontawesome.io/icons/" target="_blank"><i class="fa fa-search" aria-hidden="true"></i></a>
+						</span>
+						<input type="text" class="form-control" ng-model="values.icon_alt">
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label">Sichtbar</label>
+				<div class="col-md-8">
+					<label class="checkbox-inline"><input type="checkbox" ng-model="values.desktop">Desktop</label>
+					<label class="checkbox-inline"><input type="checkbox" ng-model="values.mobil">Mobil</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label">Geschützt</label>
+				<div class="col-md-8">
+					<div class="checkbox">
+						<label><input type="checkbox" ng-model="values.sicher" ng-disabled="values.action.type=='registrierung' || values.action.type=='konto' || values.action.type=='merkzettel' 
+						|| values.action.type=='bestellvorschlag' || values.action.type=='login' || values.action.type=='warenkorb' || values.action.type=='angebot' || values.action.type=='lagerbuchung'"></label>
+					</div>
+				</div>
+			</div>
+			<div ng-if="values.lang && values.titel" class="form-group" ng-class="{'has-error': form.sub && !form.reaktion.$valid}">
+				<label class="col-md-4 control-label">Reaktion *</label>
+				<div class="col-md-8">
+					<select class="form-control" name="reaktion" ng-model="values.action.type" ng-change="values.action = {type: values.action.type}; values.template.list=null; values.template.detail=null;"
+					 required>
+						<optgroup>
+							<option value="">--- Bitte Wählen ---</option>
+						</optgroup>
+						<optgroup label="CMS">
+							<option value="portal">Portal</option>
+							<option value="link">Link</option>
+							<option ng-if="!hasChilds" value="bereich">Bereich</option>
+							<option ng-if="!hasChilds" value="formular">Formular</option>
+						</optgroup>
+						<optgroup label="Shop">
+							<option ng-if="!hasChilds" value="artikel">Artikel</option>
+							<option ng-if="!hasChilds" ng-click="values.sicher = true" value="konto">Konto</option>
+							<option ng-if="!hasChilds" ng-click="values.sicher = true" value="merkzettel">Merkzettel</option>
+							<option ng-if="!hasChilds" ng-click="values.sicher = false" value="warenkorb">Warenkorb</option>
+							<option ng-if="!hasChilds" ng-click="values.sicher = false" value="angebot">Angebot</option>
+							<option ng-if="!hasChilds" ng-click="values.sicher = false" value="lagerbuchung">Lagerbuchung</option>
+							<option ng-if="!hasChilds" ng-click="values.sicher = true" value="bestellvorschlag">Bestellvorschlag</option>
+							<option ng-if="!hasChilds" ng-click="values.sicher = false" value="login">Login</option>
+							<option ng-if="!hasChilds" ng-click="values.sicher = false" value="registrierung">Registration</option>
+						</optgroup>
+						</select>
+					<span class="help-block" ng-show="form.sub && !form.reaktion.$valid">Erforderlich!</span>
+				</div>
+			</div>
+			<div ng-if="values.action.type == 'portal'" class="form-group" ng-class="{'has-error': form.sub && !form.portal.$valid}">
+				<label class="col-md-4 control-label">Portal *</label>
+				<div class="col-md-8">
+					<select class="form-control" name="portal" ng-model="values.action.value" ng-options="p.id as p.name for p in portale" required>
+						<option value="">--- Bitte Wählen ---</option>
+					</select>
+					<span class="help-block" ng-show="form.sub && !form.portal.$valid">Erforderlich!</span>
+				</div>
+			</div>
+			<div ng-if="values.action.type == 'formular'" class="form-group" ng-class="{'has-error': form.sub && !form.formular.$valid}">
+				<label class="col-md-4 control-label">Formular *</label>
+				<div class="col-md-8">
+					<select class="form-control" name="formular" ng-model="values.action.value" ng-options="f.id as f.titel for f in formulare"
+					 required>
+						<option value="">--- Bitte Wählen ---</option>
+						</select>
+					<span class="help-block" ng-show="form.sub && !form.formular.$valid">Erforderlich!</span>
+				</div>
+			</div>
+			<div ng-if="values.action.type == 'artikel'" class="form-group">
+				<label class="col-md-4 control-label">Artikelgruppe</label>
+				<div class="col-md-8">
+					<select class="form-control" ng-model="values.action.value" ng-options="group.Nummer as group.Bezeichnung for group in groups">
+						<option value="">--- Bitte Wählen ---</option>					
+					</select>
+				</div>
+			</div>
+			<div ng-if="values.action.type == 'link'">
+				<div class="form-group" ng-class="{'has-error': form.sub && !form.link.$valid}">
+					<label class="col-md-4 control-label">Link *</label>
+					<div class="col-md-8">
+						<input type="text" placeholder="http://URL.domain" name="link" class="form-control" ng-model="values.action.value" required>
+						<span class="help-block" ng-show="form.sub && !form.link.$valid">Erforderlich! (Format: http://URL.domain)</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-4 control-label">Neue Seite</label>
+					<div class="col-md-8">
+						<div class="checkbox">
+							<label><input type="checkbox" ng-model="values.action.blank"></label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div ng-if="values.action.type == 'bereich'" class="form-group" ng-class="{'has-error': form.sub && !form.bereich.$valid}">
+				<label class="col-md-4 control-label">Bereich *</label>
+				<div class="col-md-8">
+					<select class="form-control" name="bereich" ng-model="values.action.value" convert-to-number required>
+						<option value="">--- Bitte Wählen ---</option>
+						<option value="1">News</option>
+						<option value="2">Termin</option>
+						<option value="3">Adresse</option>
+						<option value="4">Katalog</option>
+						<option value="5">Galery</option>
+						<option value="6">Dokument</option>
+					</select>
+					<span class="help-block" ng-show="form.sub && !form.bereich.$valid">Erforderlich!</span>
+				</div>
+			</div>
+			<div ng-if="values.action.type == 'bereich' && values.action.value" class="form-group">
+				<label class="col-md-4 control-label">Hauptkategorie</label>
+				<div class="col-md-8">
+					<select class="form-control" ng-model="values.action.hk" ng-options="hk.id as hk.name for hk in (kats[values.action.value]  | filter: {lang: values.lang}:true)"
+					 ng-change="values.action.uk = null;">
+						<option value="">--- Alle ---</option>
+						</select>
+				</div>
+			</div>
+			<div ng-if="values.action.hk" class="form-group">
+				<label class="col-md-4 control-label">Unterkategorie</label>
+				<div class="col-md-8">
+					<select class="form-control" ng-model="values.action.uk" ng-options="k.id as k.name for k in (kats[values.action.value] | filter:{id: values.action.hk}:true)[0].uks"
+					 ng-change="values.action.baum = null">
+						<option value="">--- Alle ---</option>
+						</select>
+				</div>
+			</div>
+			<div ng-if="(values.action.type == 'bereich') || (values.action.type == 'artikel')" class="form-group">
+				<label class="col-md-4 control-label">Anzahl</label>
+				<div class="col-md-8">
+					<input type="number" name="limit" class="form-control" ng-model="values.action.limit" ng-init="values.action.limit = values.action.limit || 10">
+				</div>
+			</div>
+			<div ng-if="(values.action.type == 'bereich' && !values.action.uk) || (values.action.type == 'artikel')" class="form-group">
+				<label class="col-md-4 control-label">Baumstruktur</label>
+				<div class="col-md-8">
+					<div class="checkbox">
+						<label><input type="checkbox" ng-model="values.action.baum">Aufteilung in Unterpunkte</label>
+					</div>
+				</div>
+			</div>
+			<div ng-if="values.action.type == 'bereich'  && (values.action.value == 1 || values.action.value == 2 || values.action.value == 4)"
+			 class="form-group">
+				<label class="col-md-4 control-label">Direkte Detailansicht</label>
+				<div class="col-md-8">
+					<div class="checkbox">
+						<label><input type="checkbox" ng-model="values.action.direktDetail" ng-init="values.action.direktDetail = values.action.direktDetail === false ? false : true">Wenn nur ein Eintrag vorhanden ist.</label>
+					</div>
+				</div>
+			</div>
+			<div ng-show="values.action.type == 'bereich' && (values.action.value == 1 || values.action.value == 4 || values.action.value == 3)"
+			 class="form-group" ng-init="values.action.sortierung= values.action.sortierung || 'sortindex'">
+				<label class="col-md-4 control-label">Sortierung</label>
+				<div class="col-md-8">
+					<div class="radio"><label><input type="radio" ng-model="values.action.sortierung" value="sortindex">Nummer</label></div>
+					<div class="radio" ng-show="values.action.value != 3"><label><input type="radio" ng-model="values.action.sortierung" value="date1">Startdatum</label></div>
+					<div class="radio" ng-show="values.action.value != 3"><label><input type="radio" ng-model="values.action.sortierung" value="stamp">Änderungsdatum</label></div>
+					<div class="radio" ng-show="values.action.value == 3"><label><input type="radio" ng-model="values.action.sortierung" value="name2">Name</label></div>
+				</div>
+			</div>
+			<div ng-show="values.action.type == 'bereich' && (values.action.value == 1 || values.action.value == 4 || values.action.value == 3)"
+			 class="form-group" ng-init="values.action.reihenfolge= values.action.reihenfolge || 'ASC'">
+				<label class="col-md-4 control-label">Reihenfolge</label>
+				<div class="col-md-8">
+					<div class="radio"><label><input type="radio" ng-model="values.action.reihenfolge" value="DESC">Absteigend</label></div>
+					<div class="radio"><label><input type="radio" ng-model="values.action.reihenfolge" value="ASC">Aufsteigend</label></div>
+				</div>
+			</div>
+			<div ng-show="values.action.type == 'bereich' && (values.action.value == 1 || values.action.value == 2 || values.action.value == 4)"
+			 class="form-group" ng-init="values.action.period= values.action.period || 'current'">
+				<label class="col-md-4 control-label">Zeitraum</label>
+				<div class="col-md-8">
+					<div class="radio"><label><input type="radio" ng-model="values.action.period" value="current">Aktuelle</label></div>
+					<div class="radio"><label><input type="radio" ng-model="values.action.period" value="all">Alle</label></div>
+					<div class="radio"><label><input type="radio" ng-model="values.action.period" value="archiv">Archiv</label></div>
+					<div class="radio"><label><input type="radio" ng-model="values.action.period" value="upcoming">Zukünftige</label></div>
+					<div class="radio"><label><input type="radio" ng-model="values.action.period" value="current_upcoming">Aktuelle & Zukünftige</label></div>
+				</div>
+			</div>
+			<div ng-if="values.action.type != 'link' && values.action.type">
+				<hr>
+				<div class="form-group" ng-if="values.action.type != 'login'">
+					<label class="col-md-4 control-label">Kopf</label>
+					<div class="col-md-8">
+						<select class="form-control" ng-model="values.template.head" ng-options="t.url as t.name for t in templates.head"><option value="">--- Bitte Wählen ---</option></select>
+					</div>
+				</div>
+				<!--CMS-->
+				<div ng-if="values.action.type == 'bereich' && values.action.value" class="form-group">
+					<label class="col-md-4 control-label">Inhalt - Liste</label>
+					<div class="col-md-8" ng-if="values.action.value != '6' && values.action.value != '5'">
+						<select class="form-control" ng-model="values.template.list" ng-options="t.url as t.name for t in templates.content.knt.list"><option value="">--- Bitte Wählen ---</option></select>
+					</div>
+					<div class="col-md-8" ng-if="values.action.value == '5'">
+						<select class="form-control" ng-model="values.template.list" ng-options="t.url as t.name for t in templates.content.galerie.list"><option value="">--- Bitte Wählen ---</option></select>
+					</div>
+					<div class="col-md-8" ng-if="values.action.value == '6'">
+						<select class="form-control" ng-model="values.template.list" ng-options="t.url as t.name for t in templates.content.dokument.list"><option value="">--- Bitte Wählen ---</option></select>
+					</div>
+				</div>
+				<div ng-if="values.action.type == 'bereich' && values.action.value && values.action.value != 6 && values.action.value != 5 && values.action.value != 3"
+				 class="form-group">
+					<label class="col-md-4 control-label">Inhalt - Detail</label>
+					<div class="col-md-8">
+						<select class="form-control" ng-model="values.template.detail" ng-options="t.url as t.name for t in templates.content.knt.detail"><option value="">--- Bitte Wählen ---</option></select>
+					</div>
+				</div>
+				<div ng-if="values.action.type == 'portal'" class="form-group">
+					<label class="col-md-4 control-label">Inhalt</label>
+					<div class="col-md-8">
+						<select class="form-control" ng-model="values.template.list" ng-options="t.url as t.name for t in templates.content.portal"><option value="">--- Bitte Wählen ---</option></select>
+					</div>
+				</div>
+				<div ng-if="values.action.type == 'formular'" class="form-group">
+					<label class="col-md-4 control-label">Inhalt - Detail</label>
+					<div class="col-md-8">
+						<select class="form-control" ng-model="values.template.detail" ng-options="t.url as t.name for t in templates.content.formular.detail"><option value="">--- Bitte Wählen ---</option></select>
+					</div>
+				</div>
+				<!--Ende CMS-->
+				<!--Shop-->
+				<!--Artikel-->
+				<div ng-if="values.action.type == 'artikel'" class="form-group">
+					<label class="col-md-4 control-label">Inhalt - Gruppe</label>
+					<div class="col-md-8">
+						<select class="form-control" ng-model="values.template.group" ng-options="t.url as t.name for t in templates.content.shop.group"><option value="">--- Bitte Wählen ---</option></select>
+					</div>
+				</div>
+				<div ng-if="values.action.type == 'artikel'" class="form-group">
+					<label class="col-md-4 control-label">Inhalt - Liste</label>
+					<div class="col-md-8">
+						<select class="form-control" ng-model="values.template.list" ng-options="t.url as t.name for t in templates.content.shop.list"><option value="">--- Bitte Wählen ---</option></select>
+					</div>
+				</div>
+				<div ng-if="values.action.type == 'artikel'" class="form-group">
+					<label class="col-md-4 control-label">Inhalt - Detail</label>
+					<div class="col-md-8">
+						<select class="form-control" ng-model="values.template.detail" ng-options="t.url as t.name for t in templates.content.shop.detail"><option value="">--- Bitte Wählen ---</option></select>
+					</div>
+				</div>
+				<!--Konto-->
+				<div ng-if="values.action.type == 'konto'" class="form-group">
+					<label class="col-md-4 control-label">Inhalt</label>
+					<div class="col-md-8">
+						<select class="form-control" ng-model="values.template.list" ng-options="t.url as t.name for t in templates.content.shop.konto"><option value="">--- Bitte Wählen ---</option></select>
+					</div>
+				</div>
+				<!--Warenkorb, Angebot & Lagerbuchung-->
+				<div ng-if="values.action.type == 'warenkorb' || values.action.type == 'angebot' || values.action.type == 'lagerbuchung'"
+				 class="form-group">
+					<label class="col-md-4 control-label">Inhalt</label>
+					<div class="col-md-8">
+						<select class="form-control" ng-model="values.template.list" ng-options="t.url as t.name for t in templates.content.shop.warenkorb"><option value="">--- Bitte Wählen ---</option></select>
+					</div>
+				</div>
+				<!--Merkzettel-->
+				<div ng-if="values.action.type == 'merkzettel'" class="form-group">
+					<label class="col-md-4 control-label">Inhalt</label>
+					<div class="col-md-8">
+						<select class="form-control" ng-model="values.template.list" ng-options="t.url as t.name for t in templates.content.shop.merkzettel"><option value="">--- Bitte Wählen ---</option></select>
+					</div>
+				</div>
+				<!--Bestellvorschlag-->
+				<div ng-if="values.action.type == 'bestellvorschlag'" class="form-group">
+					<label class="col-md-4 control-label">Inhalt</label>
+					<div class="col-md-8">
+						<select class="form-control" ng-model="values.template.list" ng-options="t.url as t.name for t in templates.content.shop.bestellvorschlag"><option value="">--- Bitte Wählen ---</option></select>
+					</div>
+				</div>
+				<!--Login-->
+				<div ng-if="values.action.type == 'login'" class="form-group">
+					<label class="col-md-4 control-label">Inhalt</label>
+					<div class="col-md-8">
+						<select class="form-control" ng-model="values.template.list" ng-options="t.url as t.name for t in templates.modal.login"><option value="">--- Bitte Wählen ---</option></select>
+					</div>
+				</div>
+				<!--Registration-->
+				<div ng-if="values.action.type == 'registrierung'" class="form-group">
+					<label class="col-md-4 control-label">Inhalt</label>
+					<div class="col-md-8">
+						<select class="form-control" ng-model="values.template.list" ng-options="t.url as t.name for t in templates.content.shop.registrierung"><option value="">--- Bitte Wählen ---</option></select>
+					</div>
+				</div>
+				<!--Ende Shop-->
+				<div ng-if="values.action.type != 'login'" class="form-group">
+					<label class="col-md-4 control-label">Fuß</label>
+					<div class="col-md-8">
+						<select class="form-control" ng-model="values.template.foot" ng-options="t.url as t.name for t in templates.foot"><option value="">--- Bitte Wählen ---</option></select>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<div class="row">
+				<div class="col-md-6" align="left">
+				</div>
+				<div class="col-md-6">
+					<button ng-if="!change" class="btn btn-default btn-sm" type="submit" ng-click="form.$valid ? add() : form.sub=true">Hinzufügen</button>
+					<button ng-if="change" class="btn btn-default btn-sm" type="submit" ng-click="form.$valid ? change() : form.sub=true">Ändern</button>
+					<button class="btn btn-default btn-sm" type="button" ng-click="close()">Abbrechen</button>
+				</div>
+			</div>
+		</div>
+	</form>
+</script>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<div id="hide" ng-style="'display: none;'">
+	<h1>{{title}}</h1>
+	<hr>
+	<form name="form" class="form-horizontal" ng-submit="form.$valid && change()">
+		<h3>Lizenz</h3>
+		<div class="form-group" ng-class="{'has-error': form.sub && !form.lizenz.$valid}">
+			<label class="col-md-4 control-label">Key:</label>
+			<div class="col-md-8">
+				<input type="text" name="lizenz" ng-change="checkKey()" ng-pattern="ex" class="form-control" ng-model="data.lizenz" ng-model-options="{allowInvalid: true}"
+				 required>
+				<span class="help-block" ng-show="form.sub && form.lizenz.$error.required">Erforderlich!</span>
+				<span class="help-block" ng-show="form.sub && form.lizenz.$error.pattern">XXXXX-XXXXX-XXXXX-XXXXX-XXXXX</span>
+			</div>
+		</div>
+		<hr>
+		<h3>E-Mail (SMTP)</h3>
+		<div class="form-group">
+			<label class="col-md-4 control-label">Konto</label>
+			<div class="col-md-4">
+				<div class="input-group ">
+					<select ng-disabled="!select" class="form-control" ng-model="select" ng-options="v as v.name for v in data.smtp"></select>
+					<span class="input-group-btn">
+						<button ng-disabled="!select" type="button" class="btn btn-default" ng-class="{'btn-success' : select.standard == '1'}" uib-tooltip="Standard" ng-click="accDefault(select);"><i class="fa fa-fw fa-play"></i></button>
+						<button type="button" class="btn btn-default" uib-tooltip="Neu" ng-click="accAdd();"><i class="fa fa-fw fa-plus"></i></button>
+						<button ng-disabled="!select" type="button" class="btn btn-default" uib-tooltip="Löschen" ng-click="accDelete(select);"><i class="fa fa-fw fa-trash"></i></button>
+					</span>
+				</div>
+			</div>
+		</div>
+		<div ng-show="select">
+			<div class="form-group">
+				<label class="col-md-4 control-label">Testen</label>
+				<div class="col-md-4">
+					<div class="input-group ">
+						<input type="email" class="form-control" ng-model="testmail" placeholder="empfänger@email.de">
+						<span class="input-group-btn">
+						<button ng-disabled="!testmail" type="button" class="btn btn-default" uib-tooltip="Senden" ng-click="test(select, testmail);"><i class="fa fa-fw fa-envelope"></i></button>
+					</span>
+					</div>
+					<p>{{testresult}}</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label"></label>
+				<div class="col-md-8">
+					<hr>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label">Name</label>
+				<div class="col-md-8">
+					<input type="text" class="form-control" ng-model="select.name" placeholder="Absendername" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label">Host</label>
+				<div class="col-md-8">
+					<input type="text" class="form-control" ng-model="select.host" placeholder="smtp.server.de" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label">Port</label>
+				<div class="col-md-8">
+					<input type="text" class="form-control" ng-model="select.port" placeholder="z.B. 25, 465 oder 587" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label">Verschlüsselung</label>
+				<div class="col-md-8">
+					<label class="radio-inline"><input type="radio" name="inlineRadioOptions" value="keine" ng-model="select.crypt" required> Keine</label>
+					<label class="radio-inline"><input type="radio" name="inlineRadioOptions" value="tls" ng-model="select.crypt" required> TLS</label>
+					<label class="radio-inline"><input type="radio" name="inlineRadioOptions" value="ssl" ng-model="select.crypt" required> SSL</label>
+				</div>
+			</div>
+			<!--<div class="form-group">
+				<label class="col-md-4 control-label">Helo</label>
+				<div class="col-md-8">
+					<input type="text" class="form-control" ng-model="select.helo" placeholder="helo.">
+				</div>
+			</div>-->
+			<div class="form-group">
+				<label class="col-md-4 control-label">E-Mail (Versand)</label>
+				<div class="col-md-8">
+					<input type="email" class="form-control" ng-model="select.email" placeholder="firma@domain.de" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label">E-Mail (Antwort)</label>
+				<div class="col-md-8">
+					<input type="email" class="form-control" ng-model="select.replyto" placeholder="Optional: firma@domain.de (wenn auf E-Mails geantwortet wird)">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label">Nutzer</label>
+				<div class="col-md-8">
+					<input type="text" class="form-control" ng-model="select.user" placeholder="firma@domain.de" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label">Passwort</label>
+				<div class="col-md-8">
+					<input type="password" class="form-control" ng-model="select.password" placeholder="******" required>
+				</div>
+			</div>
+			<!--<div class="form-group">
+				<label class="col-md-4 control-label">Debug</label>
+				<div class="col-md-4">
+					<div class="checkbox pull-left">
+						<label><input type="checkbox" ng-true-value="true" ng-false-value="false" string-to-number ng-model="select.debug"> Aktiv</label>
+					</div>
+				</div>
+			</div>-->
+		</div>
+		<hr>
+		<div class="pull-right has-error">
+			<span class="help-block" ng-show="form.sub && !form.$valid">Eingaben überprüfen!</span>
+			<button type="submit" ng-click="form.sub=true" class="pull-right btn btn-success">Ändern</button>
+		</div>
+	</form>
+</div>

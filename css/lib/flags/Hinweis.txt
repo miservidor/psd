@@ -1,0 +1,8 @@
+https://github.com/lipis/flag-icon-css
+
+Usage:
+<span class="flag-icon flag-icon-gr"></span>
+<span class="flag-icon flag-icon-gr flag-icon-squared"></span>
+
+Neue Flaggen:
+https://github.com/lipis/flag-icon-css/tree/master/flags

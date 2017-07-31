@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!--<pre class="code">{{ data | json }}</pre> -->
+<div ng-show="!data" class="text-center" ng-include="'loading.html'"></div>
+<!--<h1 ng-if="data.titel">{{data.titel}}</h1>-->
+<div class="portal{{data.id}}" ng-repeat="rows in data.data">
+	<div class="portalborder clearfix">
+		<div ng-repeat="col in rows" ng-class="{'col-xs-12 col-sm-12 col-md-12 col-lg-12': col.md=='12', 'col-xs-12 col-sm-6 col-md-{{col.md}} col-lg-{{col.md}}':col.md!='12'}"
+			class="col-md-offset-{{col.offset}}">
+			<div class="modul{{data.id}}-{{col.id}}" ng-if="modul.bereich && (modul.data.items || modul.data[0] || modul.inhalt)" ng-repeat="modul in col">
+				<div class="row" ng-if="modul.ueberschrift">
+					<h4 ng-bind-html="trust(modul.ueberschrift)"></h4>
+				</div>
+				<!-- HTML -->
+				<div class="row" ng-if="modul.inhalt" bind-html-compile="modul.inhalt"></div>
+				<!-- Galerie -->
+				<div class="row" ng-if="modul.bereich =='Galerie'" ng-include src="'template/content/galerie/list/default.html'" ng-init="data = modul.data; daten = modul; hidetitel = true"></div>
+				<!-- Formular -->
+				<div class="row" ng-if="modul.bereich =='Formular'" ng-include src="'template/content/formular/detail/default.html'" ng-init="data = modul.data[0]; id = modul.id; dokdesc=1;betreff=modul.ueberschrift;"></div>
+				<!-- Artikel -->
+				<div class="row" ng-if="modul.bereich =='Artikel'" ng-init="darstellung='kachel'">
+					<!-- liste oder kachel -->
+					<!--<pre class="code">{{ col | json }}</pre> {{col.md}}-{{col.offset}}-{{modul.artikelanzahl}} -->
+					<div ng-class="{'col-xs-12 col-sm-4 col-md-4 col-lg-3': modul.artikelanzahl >= '4',
+						'col-xs-12 col-sm-4 col-md-4 col-lg-4': modul.artikelanzahl == '3',
+						'col-xs-12 col-sm-6 col-md-6 col-lg-6': modul.artikelanzahl == '2',
+						'col-xs-12 col-sm-12 col-md-12 col-lg-12': modul.artikelanzahl==1}" class="kachel_in_portal" ng-if="Artikel.Artikelnummer && darstellung=='kachel'"
+						ng-repeat="Artikel in modul.data track by $index">
+						<a ui-sref="article({id:Artikel.Bezeichnung,artnr:Artikel.Artikelnummer})">
+							<div ng-include="'template/includes/kachel_include.html'"></div>
+						</a>
+					</div>
+					<div class="hidden-xs" ng-if="darstellung=='liste'">
+						<div ng-init="data.Values = modul.data" ng-include="'template/includes/list_include.html'"></div>
+					</div>
+					<div class="hidden-sm hidden-md hidden-lg" ng-repeat="Artikel in modul.data">
+						<a ui-sref="article({id:Artikel.Bezeichnung,artnr:Artikel.Artikelnummer})">
+							<div ng-include="'template/includes/kachel_include.html'"></div>
+						</a>
+					</div>
+					<!--Preisbemerkung Artikel-->
+					<div class="col-xs-12" style="text-align:center">
+						<span><sup>*</sup> {{l[modul.Preisbemerkung]}}</span><a ui-sref="lieferbedingungen" ng-if="row.versandlink_hinter_steuerinfo"
+							style="text-decoration:underline;"> {{l.lng_artikelliste_zzgl_versand}}</a>
+					</div>
+				</div>
+				<!-- Katalog News Termin -->
+				<div class="row" ng-if="modul.data.items[0]" ng-repeat="detail in modul.data.items">
+					<div ui-sref=".detail{{col.id}}({id:detail.id})" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 row">
+						<a ng-if="detail.titel" ui-sref=".detail{{col.id}}({id:detail.id})">
+							<h5 class="detailheader">{{detail.titel}}</h5>
+						</a>
+						<div ng-if="detail.imgthumb && detail.imgthumb !='k_'" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 galbild_vorsch">
+							<a ng-if="detail.imgthumb" ui-sref=".detail{{col.id}}({id:detail.id})">
+								<img ng-src="{{file+detail.imgthumb}}">
+							</a>
+						</div>
+						<div class="termin" ng-if="modul.bereich=='Termin'">
+							<p>
+								<span ng-if="detail.date1">{{detail.date1 |	date:'dd.MM.yyyy'}}</span>
+								<span ng-if="detail.date2"> - {{detail.date2 |	date:'dd.MM.yyyy'}}</span>
+							</p>
+						</div>
+						<div class="termin" ng-if="modul.bereich=='Termin'">
+							<p>
+								<span ng-if="detail.time1">{{detail.time1 |	date:'HH:mm'}}</span>
+								<span ng-if="detail.time2"> - {{detail.time2 |	date:'HH:mm'}}</span>
+								<span ng-if="detail.time1||detail.time2"> Uhr</span>
+							</p>
+						</div>
+						<div class="termin" ng-if="detail.ort && modul.bereich=='Termin'">
+							<p>{{detail.ort}}</p>
+						</div>
+						<p class="teasertext " ng-if="detail.inhalt " ng-bind-html="trust(detail.inhalt) " style="cursor: pointer; "></p>
+						<!--<p class="teaser_button " ng-if="detail.inhalt.endsWith( 'hellip;') ">-->
+						<p class="teaser_button " ng-if="detail.inhalt.indexOf('hellip;')>0">
+							<span class="btn btn-primary btn-xs " role="button ">{{l.lng_teaser_link_description}}</span>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

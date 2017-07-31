@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<div class="artikelliste_limit_text">
+	<span ng-click="list.limitTo = 10" ng-class="{'aktiv':list.limitTo == 10}">10</span><span> | </span>
+	<span ng-click="list.limitTo = 25" ng-class="{'aktiv':list.limitTo == 25}">25</span><span> | </span>
+	<span ng-click="list.limitTo = 50" ng-class="{'aktiv':list.limitTo == 50}">50</span>
+</div>
+<div class="artikelliste_darstellung_text hidden-xs">
+	<span ng-click="list.darstellung='liste'" ng-class="{'aktiv':list.darstellung == 'liste'}"><i class="fa fa-th-list" aria-hidden="true"></i></span>
+	<span> | </span>
+	<span ng-click="list.darstellung='kachel'" ng-class="{'aktiv':list.darstellung == 'kachel'}"><i class="fa fa-th-large" aria-hidden="true"></i></span>
+</div>
+
+<div class="hidden-xs" ng-if="list.darstellung=='kachel'" ng-include="'template/content/shop/list/default_kachel.html'"></div>
+<div class="hidden-xs" ng-if="list.darstellung=='liste'" ng-include="'template/content/shop/list/default_list.html'"></div>
+<div class="visible-xs" ng-include="'template/content/shop/list/default_kachel.html'"></div>
+
